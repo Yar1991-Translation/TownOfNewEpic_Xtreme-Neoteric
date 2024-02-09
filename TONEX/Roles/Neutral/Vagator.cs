@@ -32,6 +32,10 @@ public sealed class Vagator : RoleBase, INeutralKiller
             true,
             true,
             countType: CountTypes.FAFL
+#if RELEASE
+,
+            Hidden: true
+#endif
         );
     public Vagator(PlayerControl player)
     : base(
@@ -41,6 +45,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
     )
     {
         CustomRoleManager.MarkOthers.Add(GetMarkOthers);
+        CustomRoleManager.OnCheckMurderPlayerOthers_After.Add(OnCheckMurderPlayerOthers_Before);
         ElementPowerCount = 0;
         NormalKillTimesCount = 0;
         KillTimesTotalCount = 0;
@@ -106,6 +111,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
         
             if (Feeble.Contains(pid))
                 Feeble.Remove(pid);
+        }
     }
     #endregion
     public bool CanUseKillButton() => true;
@@ -177,6 +183,16 @@ public sealed class Vagator : RoleBase, INeutralKiller
             player.RpcProtectedMurderPlayer();
             player.Notify(string.Format(GetString("PetSkillCanUse")), 2f);
         }
+    }
+    public override string GetLowerText(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false, bool isForHud = false)
+    {
+        if (!seer.IsModClient()) return"";
+        seen ??= seer;
+        //seeおよびseenが自分である場合以外は関係なし
+        if (!Is(seer) || !Is(seen)) return "";
+
+        return $"{GetString("VagorKillTimesTotalCount")}:{KillTimesTotalCount},{GetString("VagorSkillTimesTotalCount")}:{SkillTimesTotalCount},{GetString("VagorElementPowerCount")}:{ElementPowerCount}";
+
     }
     public override string GetSuffix(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false)
     {
@@ -350,3 +366,4 @@ public sealed class Vagator : RoleBase, INeutralKiller
         return true;
     }
 }
+//*/
