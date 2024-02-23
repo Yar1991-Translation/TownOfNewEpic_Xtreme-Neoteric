@@ -38,10 +38,12 @@ public sealed class Puppeteer : RoleBase, INeutralKiller
 
     static OptionItem OptionKillCooldown;
     static OptionItem OptionBeKillLimit;
+    static OptionItem OptionDuration;
     enum OptionName
     {
        PuooeteerKillCooldown,
         BeKillLimit,
+        SetPlayerDuration
     }
     Vector2 MyLastPos;
     public int BeKillLimit;
@@ -57,6 +59,8 @@ public sealed class Puppeteer : RoleBase, INeutralKiller
             .SetValueFormat(OptionFormat.Seconds);
         OptionBeKillLimit = IntegerOptionItem.Create(RoleInfo, 11, OptionName.BeKillLimit, new(1, 99, 1), 3, false)
             .SetValueFormat(OptionFormat.Times);
+        OptionDuration = FloatOptionItem.Create(RoleInfo, 12, OptionName.SetPlayerDuration, new(2.5f, 180f, 2.5f), 20f, false)
+            .SetValueFormat(OptionFormat.Seconds);
     }
     public override void Add()
     {
@@ -135,16 +139,16 @@ public sealed class Puppeteer : RoleBase, INeutralKiller
         }
     }
     public override bool OnCheckReportDeadBody(PlayerControl reporter, GameData.PlayerInfo target)
-    {
+        {
 
-        CanKill = true;
-        Timer = -1;
-        Player.RpcTeleport(MyLastPos);
-        Player.MarkDirtySettings();
-        Main.AllPlayerNames[Player.PlayerId] = Name;
-        var outfit = Skins;
-        Player.SetOutFitStatic(outfit.ColorId, outfit.HatId, outfit.SkinId, outfit.VisorId, outfit.PetId);
-        Player.MarkDirtySettings();
+            CanKill = true;
+            Timer = -1;  
+            Player.RpcTeleport(MyLastPos);
+            Player.MarkDirtySettings();
+            Main.AllPlayerNames[Player.PlayerId] = Name;
+            var outfit = Skins;
+            Player.SetOutFitStatic(outfit.ColorId, outfit.HatId, outfit.SkinId, outfit.VisorId, outfit.PetId);
+            Player.MarkDirtySettings();
         return true;
 
     }
