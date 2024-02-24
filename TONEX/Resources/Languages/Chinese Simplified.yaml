@@ -90,15 +90,8 @@ Medusa: "美杜莎"
 Skinwalker: "窃皮者"
 ViciousSeeker: "恶猎手"
 EvilGuardian: "邪恶天使"
-EvilTimeStops: "邪恶的时停者"
-MirrorSpirit: "镜妖"
-Assaulter: "强袭者"
-MimicTeam: "模仿者团队"
-MimicKiller: "模仿者（杀手）"
-MimicAssistant: "模仿者（助手）"
+
 EvilSwapper: "邪恶的换票师"
-Disperser: "分散者"
-EvilPianist: "邪恶的钢琴家"
 
 EvilSwapper: "邪恶的换票师"
 
@@ -220,6 +213,7 @@ Mini: "迷你船员"
 Libertarian: "广播员"
 Spiders: "蜘蛛"
 Diseased: "患者"
+
 
 ## 附加职业作为前缀时 / Prefixes for Add-ons
 Prefix.Neptune: "海王"

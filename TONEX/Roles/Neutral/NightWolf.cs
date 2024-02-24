@@ -93,8 +93,6 @@ ctop:true
             ProtectStartTime = Utils.GetTimeStamp();
             Cooldown = Utils.GetTimeStamp();
             Main.AllPlayerSpeed[Player.PlayerId] = OptionSpeed.GetFloat();
-            Main.CantDoActList.Add(Player.PlayerId);
-            ExtendedPlayerControl.SendCantDoActPlayer(true);
             Player.MarkDirtySettings();
             return false;
         }
@@ -109,8 +107,6 @@ ctop:true
             ProtectStartTime = Utils.GetTimeStamp();
             Cooldown = Utils.GetTimeStamp();
             Main.AllPlayerSpeed[Player.PlayerId] = OptionSpeed.GetFloat();
-            Main.CantDoActList.Add(Player.PlayerId);
-            ExtendedPlayerControl.SendCantDoActPlayer(true);
             Player.MarkDirtySettings();
         }
     }
@@ -120,8 +116,6 @@ ctop:true
         {
             ProtectStartTime = -1;
             Main.AllPlayerSpeed[Player.PlayerId] = Speed;
-            Main.CantDoActList.Remove(Player.PlayerId);
-            ExtendedPlayerControl.SendCantDoActPlayer(false);
             Player.MarkDirtySettings();
             Player.Notify(GetString("NWProtectOut"));
         }

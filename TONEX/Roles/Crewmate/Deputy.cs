@@ -48,7 +48,7 @@ public sealed class Deputy : RoleBase, IKiller
         if (!clear)
             foreach (var pc in ForDeputy)
                 sender.Writer.Write(pc);
-
+        
     }
     public override void ReceiveRPC(MessageReader reader)
     {
@@ -62,10 +62,14 @@ public sealed class Deputy : RoleBase, IKiller
         {
             var id = reader.ReadByte();
             if (!ForDeputy.Contains(id))
-            {
+    {
                 ForDeputy.Add(id);
             }
-        }
+    }
+    public override void ReceiveRPC(MessageReader reader, CustomRPC rpcType)
+    {
+        if (rpcType != CustomRPC.SetDeputyLimit) return;
+        DeputyLimit = reader.ReadInt32();
     }
     public float CalculateKillCooldown() => CanUseKillButton() ? Sheriff.DeputySkillCooldown.GetFloat() : 255f;
     public bool CanUseKillButton() => Player.IsAlive() && DeputyLimit >= 1;
@@ -81,6 +85,7 @@ public sealed class Deputy : RoleBase, IKiller
 
             ForDeputy.Add(target.PlayerId);
             SendRPC();
+            ForDeputy.Add(target.PlayerId);
         }
         info.CanKill = false;
         killer.RpcProtectedMurderPlayer(target);

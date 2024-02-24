@@ -104,7 +104,6 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
     {
         var (killer, target) = info.AttemptTuple;
         if (info.IsSuicide) return true;
-        if(target.Is(CustomRoles.Martyr)) CanKill = false;
         if (target.PlayerId == TargetId.PlayerId)
         {
              foreach (var pc in Main.AllPlayerControls.Where(x => x.PlayerId != target.PlayerId && player.Contains(x)))
