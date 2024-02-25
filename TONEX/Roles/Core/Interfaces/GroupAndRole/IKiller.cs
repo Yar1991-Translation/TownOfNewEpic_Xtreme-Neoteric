@@ -8,7 +8,8 @@ public interface IKiller
     /// <summary>
     /// 可以使用击杀键击杀玩家
     /// </summary>
-    public bool CanKill => true;
+    public bool IsNE => true;
+    /*
     /// <summary>
     /// 是按下击杀按键则击杀的职业吗<br/>
     /// 若设置为 false 则在您尝试击杀时不会请求目标进行任何检查

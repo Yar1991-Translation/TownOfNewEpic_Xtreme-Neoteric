@@ -36,6 +36,7 @@ public sealed class Hunter : RoleBase, IKiller
     {
         HunterLimit = HunterLimits.GetInt();
         ForHunter = new();
+        CustomRoleManager.OnCheckMurderPlayerOthers_After.Add(OnCheckMurderPlayerOthers_After);
     }
 
     static OptionItem HunterCooldown;
@@ -59,6 +60,11 @@ public sealed class Hunter : RoleBase, IKiller
         AfterMeetClearTarget = BooleanOptionItem.Create(RoleInfo, 12, OptionName.AfterMeetClearTarget, true, false);
         TargetMax = IntegerOptionItem.Create(RoleInfo, 13, OptionName.TargetMaxCount, new(1, 180, 1), 1, false, AfterMeetClearTarget)
             .SetValueFormat(OptionFormat.Times);
+    }
+    public override void Add()
+    {
+        HunterLimit = HunterLimits.GetInt();
+        ForHunter = new();
     }
     private void SendRPC()
     {
@@ -100,6 +106,9 @@ public sealed class Hunter : RoleBase, IKiller
             if (ForHunter.Count >= TargetMax.GetInt())
             {
                 Player.Notify(GetString("TargetMax"));
+                ForHunter.Add(target.PlayerId);
+                SendRPC_SyncList();
+                killer.SetKillCooldownV2(target: target);
                 return false;
             }
             ForHunter.Add(target.PlayerId);
@@ -112,12 +121,16 @@ public sealed class Hunter : RoleBase, IKiller
     public override bool OnCheckMurderAsTarget(MurderInfo info)
     {
         var (killer, target) = info.AttemptTuple;
-        foreach (var pc in ForHunter)
+        if (!info.IsSuicide) return true;
+        if (target.Is(CustomRoles.Hunter))
         {
-            var player = Utils.GetPlayerById(pc);
+           foreach (var pc in ForHunter)
+            {
+                var player = Utils.GetPlayerById(pc);
             if (!player.IsAlive() || player == null || Pelican.IsEaten(pc)) continue;
-            player.RpcMurderPlayerV2(player);
-            player.SetRealKiller(target);
+                player.RpcMurderPlayerV2(player);
+                player.SetRealKiller(target);
+            }
         }
         return true;
     }
