@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TONEX.Roles.Core;
+using TONEX.Roles.Impostor;
 
 namespace TONEX.Modules;
 
