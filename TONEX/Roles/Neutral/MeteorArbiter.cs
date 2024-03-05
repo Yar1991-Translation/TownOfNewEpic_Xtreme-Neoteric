@@ -64,7 +64,7 @@ public sealed class MeteorArbiter : RoleBase, INeutralKiller, IAdditionalWinner
         
     }
     public override void ReceiveRPC(MessageReader reader)
-    {
+        {
 
             Murderer = reader.ReadBoolean();
             Dust = reader.ReadBoolean();

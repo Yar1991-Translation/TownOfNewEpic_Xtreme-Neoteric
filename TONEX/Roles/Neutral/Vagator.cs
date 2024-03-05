@@ -45,7 +45,6 @@ public sealed class Vagator : RoleBase, INeutralKiller
     )
     {
         CustomRoleManager.MarkOthers.Add(GetMarkOthers);
-        CustomRoleManager.OnCheckMurderPlayerOthers_After.Add(OnCheckMurderPlayerOthers_Before);
         ElementPowerCount = 0;
         NormalKillTimesCount = 0;
         KillTimesTotalCount = 0;
