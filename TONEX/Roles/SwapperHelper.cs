@@ -118,7 +118,6 @@ public static class SwapperHelper
             reason = GetString("GGSwapMax");
             return false;
         }
-        Logger.Info("1", "test");
         if (swapper.GetRoleClass() is EvilSwapper egClass && egClass.SwapLimit < 1)
         {
             reason = GetString("EGSwapMax");
@@ -165,16 +164,10 @@ public static class SwapperHelper
                 return false;
             }
         }
-        Logger.Info("4", "test");
-        reason = string.Format(GetString("ChooseTarget"), target);
-        Logger.Info("5", "test");
         Logger.Info($"{swapper.GetNameWithRole()} 添加了 {target.GetNameWithRole()}", "Swapper");
 
 
 
-        if (swapper.Is(CustomRoles.NiceSwapper)) { (swapper.GetRoleClass() as NiceSwapper).SwapLimit--; }
-        if (swapper.Is(CustomRoles.EvilSwapper)) { (swapper.GetRoleClass() as EvilSwapper).SwapLimit--; }
-        Logger.Info("6", "test");
         CustomSoundsManager.RPCPlayCustomSoundAll("Gunfire");
 
         return true;
