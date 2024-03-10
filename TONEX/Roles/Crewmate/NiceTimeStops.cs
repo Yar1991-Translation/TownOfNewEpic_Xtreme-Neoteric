@@ -1,11 +1,11 @@
 ﻿using AmongUs.GameOptions;
-using TONEX.Modules;
 using TONEX.Roles.Core;
 using UnityEngine;
 using static TONEX.Translator;
 using Hazel;
 using System.Collections.Generic;
 using TONEX.Roles.Neutral;
+using TONEX.Modules.SoundInterface;
 
 namespace TONEX.Roles.Crewmate;
 public sealed class NiceTimeStops : RoleBase

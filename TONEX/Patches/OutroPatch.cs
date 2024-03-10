@@ -6,7 +6,7 @@ using System.Text;
 using TMPro;
 using TONEX.Modules;
 using TONEX.Roles.Core;
-using TONEX.Roles.Core.Interfaces;
+using TONEX.Patches;
 using TONEX.Templates;
 using UnityEngine;
 using static TONEX.Translator;
@@ -22,7 +22,8 @@ class EndGamePatch
     {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         GameStates.InGame = false;
-
+        SetRolePatch.playanima = true;
+        HudSpritePatch.IsEnd = true;
         Logger.Info("-----------游戏结束-----------", "Phase");
         if (!GameStates.IsModHost) return;
         SummaryText = new();

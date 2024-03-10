@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using TONEX.Modules;
+using TONEX.Modules.SoundInterface;
 using UnityEngine;
 using static TONEX.Translator;
 
@@ -102,7 +102,7 @@ public static class AudioManager
             try { ReadTagsFromFile(path); }
             catch (Exception ex)
             {
-                Logger.Error($"Load Sounds From: {path} Failed\n" + ex.ToString(), "SoundManager", false);
+                Logger.Error($"Load Sounds From: {path} Failed\n" + ex.ToString(), "AudioManager", false);
             }
         }
     }
@@ -129,11 +129,11 @@ public static class AudioManager
             try { ReadTagsFromFile(file); }
             catch (Exception ex)
             {
-                Logger.Error($"Load Tag From: {file} Failed\n" + ex.ToString(), "SoundManager", false);
+                Logger.Error($"Load Tag From: {file} Failed\n" + ex.ToString(), "AudioManager", false);
             }
         }
 
-        Logger.Msg($"{CustomMusic.Count} Sounds Loaded", "SoundManager");
+        Logger.Msg($"{CustomMusic.Count} Sounds Loaded", "AudioManager");
     }
     public static void ReadTagsFromFile(string path)
     {
@@ -142,8 +142,43 @@ public static class AudioManager
         if (sound != null && !AllSounds.ContainsKey(sound) && !TONEXMusic.ContainsKey(sound))
         {
             CustomMusic.TryAdd(sound,false);
-            Logger.Info($"Sound Loaded: {sound}", "SoundManager");
+            Logger.Info($"Sound Loaded: {sound}", "AudioManager");
         }
     }
+    public static void GetPostfix(string path)
+    {
+        int i = 0;
+        while (!File.Exists(path))
+        {
+            i++;
+            Logger.Error($"{path} No Found", "AudioManager");
+            string matchingKey = formatMap.Keys.FirstOrDefault(key => path.Contains(key));
+            if (matchingKey != null)
+            {
+                string newFormat = formatMap[matchingKey];
+                path = path.Replace(matchingKey, newFormat);
+                Logger.Warn($"{path} Founded", "AudioManager");
+                break;
+            }
+            else
+            {
+                Logger.Error($"Path:{path} Is Null", "AudioManager");
+            }
+            if (i == formatMap.Count)
+            {
+                Logger.Error($"{path} Cannot Be Finded", "AudioManager");
+                break;
+            }
+        }
+    }
+    public static Dictionary<string, string> formatMap = new()
+    {
+    { ".wav", ".flac" },
+    { ".flac", ".aiff" },
+    { ".aiff", ".mp3" },
+    { ".mp3", ".aac" },
+    { ".aac", ".ogg" },
+    { ".ogg", ".m4a" }
+};
 }
 #nullable disable

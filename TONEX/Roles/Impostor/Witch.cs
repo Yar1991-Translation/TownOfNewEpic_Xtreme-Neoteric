@@ -2,7 +2,7 @@ using AmongUs.GameOptions;
 using Hazel;
 using System.Collections.Generic;
 using System.Text;
-using TONEX.Modules;
+using TONEX.Modules.SoundInterface;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
 using static TONEX.Translator;

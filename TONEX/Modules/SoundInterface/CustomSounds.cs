@@ -10,20 +10,11 @@ using System.Media;
 using static TONEX.AudioManager;
 
 
-namespace TONEX.Modules;
+namespace TONEX.Modules.SoundInterface;
 
 public static class CustomSoundsManager
 {
-    public static Dictionary<string, string> formatMap = new()
-    {
-    { ".wav", ".flac" },
-    { ".flac", ".aiff" },
-    { ".aiff", ".mp3" },
-    { ".mp3", ".aac" },
-    { ".aac", ".ogg" },
-    { ".ogg", ".m4a" }
-};
-    public static void RPCPlayCustomSound(this PlayerControl pc , string sound, int playmode=0, bool force = false)
+    public static void RPCPlayCustomSound(this PlayerControl pc, string sound, int playmode = 0, bool force = false)
     {
         if (pc == null || pc.AmOwner)
         {
@@ -52,57 +43,40 @@ public static class CustomSoundsManager
     {
         if (!Constants.ShouldPlaySfx() || !Main.EnableCustomSoundEffect.Value) return;
         var path = SOUNDS_PATH + sound + ".wav";
-        
+
         if (!Directory.Exists(SOUNDS_PATH)) Directory.CreateDirectory(SOUNDS_PATH);
         DirectoryInfo folder = new(SOUNDS_PATH);
         if ((folder.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
             folder.Attributes = FileAttributes.Hidden;
-        var i = 0;
-        while (!File.Exists(path))
-        {
-            i++;
-            Logger.Error($"{path} No Found", "CustomSoundsManager.Play");
-            string matchingKey = formatMap.Keys.FirstOrDefault(key => path.Contains(key));
-            if (matchingKey != null)
-            {
-                string newFormat = formatMap[matchingKey];
-                path = path.Replace(matchingKey, newFormat);
-                Logger.Warn($"Try To Find {path} ", "CustomSoundsManager.Play");
-            }
-            if (i == formatMap.Count)
-            {
-                Logger.Error($"{path} Cannot Be Finded", "CustomSoundsManager.Play");
-                break;
-            }
-        }
+        GetPostfix(path);
         if (File.Exists(path))
         {
             path = path.Replace(SOUNDS_PATH, PLAY_PATH);
             Logger.Warn($"{path} Finded", "CustomSoundsManager.Play");
         }
-            /*if (!File.Exists(path))
+        /*if (!File.Exists(path))
+        {
+            Logger.Warn($"未找到{path}", "CustomSoundsManager.Play");
+            string originalFormat = Path.GetExtension(path);
+            if (formatMap.ContainsKey(originalFormat))
             {
-                Logger.Warn($"未找到{path}", "CustomSoundsManager.Play");
-                string originalFormat = Path.GetExtension(path);
-                if (formatMap.ContainsKey(originalFormat))
-                {
-                    string newFormat = formatMap[originalFormat];
-                    path = path.Replace(originalFormat, newFormat);
+                string newFormat = formatMap[originalFormat];
+                path = path.Replace(originalFormat, newFormat);
 
-                    goto Retry;
-                }
+                goto Retry;
+            }
 
-                var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TONEX.Resources.Sounds." + sound + ".wav");
-                if (stream == null)
-                {
-                    Logger.Warn($"声音文件缺失：{sound}", "CustomSounds");
-                    return;
-                }
-                var fs = File.Create(path);
-                stream.CopyTo(fs);
-                fs.Close();
-            }*/
-            switch (playmode)
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("TONEX.Resources.Sounds." + sound + ".wav");
+            if (stream == null)
+            {
+                Logger.Warn($"声音文件缺失：{sound}", "CustomSounds");
+                return;
+            }
+            var fs = File.Create(path);
+            stream.CopyTo(fs);
+            fs.Close();
+        }*/
+        switch (playmode)
         {
             case 0:
                 StartPlay(path);
@@ -110,9 +84,9 @@ public static class CustomSoundsManager
             case 1:
                 StartPlayLoop(path);
                 break;
-            
+
         }
-        
+
         Logger.Msg($"播放声音：{sound}", "CustomSounds");
     }
 
@@ -124,8 +98,8 @@ public static class CustomSoundsManager
     public static void StartPlayLoop(string path)
     {
 
-        
-      //  if (@$"{path}".Contains(".mp3"))
+
+        //  if (@$"{path}".Contains(".mp3"))
         //    PlaySoundInMedia(path);
         PlaySound(@$"{path}", 0, 9);
     }

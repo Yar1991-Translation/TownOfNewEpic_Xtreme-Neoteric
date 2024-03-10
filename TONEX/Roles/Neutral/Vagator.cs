@@ -8,11 +8,11 @@ using TONEX.Roles.Neutral;
 using System.Collections.Generic;
 using Hazel;
 using static Il2CppSystem.Net.Http.Headers.Parser;
-using TONEX.Modules;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
 using TONEX.Roles.Core.Interfaces;
 using System.Linq;
 using TONEX.Roles.Crewmate;
+using TONEX.Modules.SoundInterface;
 
 namespace TONEX.Roles.Neutral;
 

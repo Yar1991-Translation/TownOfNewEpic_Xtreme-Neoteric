@@ -147,25 +147,8 @@ public static class SoundPanel
                 Object.Destroy(button.GetComponent<NumberButton>());
                 button.transform.GetChild(0).GetComponent<TextMeshPro>().text = AllTONEX.ContainsKey(sound) ? GetString($"{sound}") : sound;
                 var path = @$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/{sound}.wav";
-                int i = 0;
-                while (!File.Exists(path))
-                {
-                    i++;
-                    Logger.Error($"{path} No Found", "SoundsPanel");
-                    string matchingKey = formatMap.Keys.FirstOrDefault(key => path.Contains(key));
-                    if (matchingKey != null)
-                    {
-                        string newFormat = formatMap[matchingKey];
-                        path = path.Replace(matchingKey, newFormat);
-                        Logger.Warn($"Try To Find{path} ", "SoundsPanel");
-                    }
-                    if (i == formatMap.Count)
-                    {
-                        Logger.Error($"{path} Cannot Be Finded", "SoundsPanel");
-                        break;
-                    }
-                }
-                var renderer = button.GetComponent<SpriteRenderer>();
+            GetPostfix(path);
+            var renderer = button.GetComponent<SpriteRenderer>();
                 var rollover = button.GetComponent<ButtonRolloverHandler>();
                 if  (File.Exists(path))
                 {
@@ -201,13 +184,5 @@ public static class SoundPanel
         scroller.SetYBoundsMin(0f);
         scroller.SetYBoundsMax(0.6f * numItems);
     }
-    public static Dictionary<string, string> formatMap = new()
-    {
-    { ".wav", ".flac" },
-    { ".flac", ".aiff" },
-    { ".aiff", ".mp3" },
-    { ".mp3", ".aac" },
-    { ".aac", ".ogg" },
-    { ".ogg", ".m4a" }
-};
+
 }

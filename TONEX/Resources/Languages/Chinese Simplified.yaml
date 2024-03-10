@@ -177,7 +177,7 @@ Puppeteer: "傀儡师"
 
 Plaguebearer: "瘟疫之源"
 GodOfPlagues: "万疫之神"
-
+MeteorArbiter: "陨星判官"
 
 ## 附加职业 / Add-ons
 LastImpostor: "绝境者"
@@ -280,6 +280,7 @@ WinnerRoleText.Martyr: "带着后辈走向希望的曙光"
 WinnerRoleText.NightWolf: "嗷呜~~~~~~~~"
 WinnerRoleText.Puppeteer: "【链接已屏蔽】"
 WinnerRoleText.GodOfPlagues: "病毒扩散.png"
+WinnerRoleText.MeteorArbiter: "星陨天坠"
 
 
 ## 胜利界面职业名 / Role Name for End Screen
@@ -320,6 +321,7 @@ WinnerRoleText.InEnd.Martyr: "先烈"
 WinnerRoleText.InEnd.NightWolf: "月下狼人"
 WinnerRoleText.InEnd.Puppeteer: "傀儡师"
 WinnerRoleText.InEnd.GodOfPlague: "月下狼人"
+WinnerRoleText.InEnd.MeteorArbiter: "陨星判官"
 
 
 # 以下是职业简介（显示在开局以及任务栏的文本）/ Shows at Impostor/Crewmate Screen
@@ -464,6 +466,7 @@ NightWolfInfo: "狂暴，杀人，简单！"
 PuppeteerInfo: "操纵提线，铃铃作响"
 PlaguebearerInfo: "我的身上全是病毒喔"
 GodOfPlaguesInfo: "你，是我的神！"
+MeteorArbiterInfo: "旧星辉已尽"
 
 ## 附加职业 / Add-ons Blurbs
 LoversInfo: "最重要的是，记得照顾好您的另一半"
@@ -636,6 +639,7 @@ NightWolfInfoLong: "月下狼人可以使用管道/宠物进入狂暴状态，�
 PlaguebearerInfoLong: "瘟疫之源需要感染所有人，成为万疫之神"
 GodOfPlaguesInfoLong: "万疫之神可以反杀所有击杀万疫之神的人，万疫之神需要杀死所有人获得胜利"
 PuppeteerInfoLong: "傀儡师可以通过击杀按钮取样并且通过宠物按钮变成取样目标样式，在傀儡师被击杀后会传送回变身地点，傀儡师被击杀达到一定次数后胜利"
+MeteorArbiterInfoLong: "陨星判官初始有100％概率闪避击杀，有10%概率成功击杀他人。每次闪避击杀会增加5疲劳值，使用击杀会增加1疲劳值；\n每一点疲劳值都会使陨星判官闪避的概率减少4%，成功击杀的概率增加5%\n每当陨星判官击杀成功或报告时，都会根据不同阵营获得不同LV，LV上限为20\n内鬼/中立杀手：10LV\n其余中立：5LV\n船员：1LV\n当LV大于5时，陨星判官将进入【杀戮】状态：击杀成功概率与闪避成功概率各增加50%；\n当LV等于20时，陨星判官将进入【天坠】状态：击杀成功概率为99％，但闪避概率为1%\n如果陨星戮者在场，每5溢出LV都会额外为陨星判官提供1HP\n如果陨星判官没有获得LV或者LV＜5且陨星戮者在场，则可以存活时跟随任意阵营胜利，否则需击杀所有人胜利"
 
 ## 附加职业 / Add-ons Descriptions
 LastImpostorInfoLong: "这个效果在内鬼仅剩一人时赋予该内鬼。使其击杀冷却缩短。"
@@ -916,6 +920,8 @@ MadmateKnowWhosImp: "<color=#ff1919>叛徒</color>知道谁是<color=#ff1919>内
 MadmateKnowWhosMadmate: "<color=#ff1919>叛徒</color>可以互认"
 ImpCanKillMadmate: "<color=#ff1919>内鬼</color>可以击杀<color=#ff1919>叛徒</color>"
 MadmateCanKillImp: "<color=#ff1919>叛徒</color>可以击杀<color=#ff1919>内鬼</color>"
+SetImpNum: "重新设定<color=#ff1919>内鬼</color>玩家数量"
+ImpNum: "<color=#ff1919>内鬼</color>玩家数量"
 EGCanGuessImp: "可以猜测<color=#ff1919>内鬼</color>"
 GGCanGuessCrew: "可以猜测<color=#8cffff>船员</color>"
 EGCanGuessAdt: "可以猜测<color=#ff9ace>附加职业</color>"

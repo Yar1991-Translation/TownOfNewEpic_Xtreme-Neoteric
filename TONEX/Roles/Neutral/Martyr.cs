@@ -26,7 +26,8 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
             true,
             CanKill,
             countType: CountTypes.Martyr,
-            introSound: () => GetIntroSound(RoleTypes.Crewmate)
+            introSound: () => GetIntroSound(RoleTypes.Crewmate),
+            ctop: true
         );
     public Martyr(PlayerControl player)
     : base(
@@ -49,7 +50,7 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
     }
 
     public static PlayerControl TargetId;
-    public static bool CanKill;
+    public static bool CanKill = false;
     public bool HasProtect;
     public bool IsNK { get; private set; } = CanKill;
     public bool IsNE { get; private set; } = CanKill;

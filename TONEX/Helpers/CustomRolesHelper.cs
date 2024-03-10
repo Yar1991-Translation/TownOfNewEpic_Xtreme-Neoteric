@@ -229,6 +229,28 @@ static class CustomRolesHelper
             _ => role.IsImpostor() ? RoleTypes.Impostor : RoleTypes.Crewmate,
         };
     }
+    public static CustomWinner ToCustomWinner(this CountTypes countTypes)
+    {
+        return countTypes switch
+        {
+            CountTypes.OutOfGame => CustomWinner.None,
+            CountTypes.None => CustomWinner.None,
+            CountTypes.Crew => CustomWinner.Crewmate,
+            CountTypes.Impostor => CustomWinner.Impostor,
+            CountTypes.Jackal => CustomWinner.Jackal,
+            CountTypes.Pelican => CustomWinner.Pelican,
+            CountTypes.Demon => CustomWinner.Demon,
+            CountTypes.BloodKnight => CustomWinner.BloodKnight,
+            CountTypes.Succubus => CustomWinner.Succubus,
+            CountTypes.FAFL => CustomWinner.FAFL,
+            CountTypes.Martyr => CustomWinner.Martyr,
+            CountTypes.NightWolf => CustomWinner.NightWolf,
+            CountTypes.GodOfPlagues => CustomWinner.GodOfPlagues,
+            CountTypes.MeteorArbiter => CustomWinner.MeteorArbiter,
+            CountTypes.MeteorMurder => CustomWinner.MeteorMurder,
+            _ => CustomWinner.None,
+        };
+    }
 }
 public enum CountTypes
 {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
-using TONEX.Modules;
+using TONEX.Modules.SoundInterface;
 using TONEX.Roles.Core;
 using TONEX.Roles.Crewmate;
 using TONEX.Roles.Impostor;

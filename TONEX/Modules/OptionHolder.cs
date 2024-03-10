@@ -7,6 +7,7 @@ using TONEX.Modules;
 using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.AddOns.Crewmate;
 using TONEX.Roles.AddOns.Impostor;
+using TONEX.MoreGameModes;
 using TONEX.Roles.Core;
 using UnityEngine;
 
@@ -51,12 +52,13 @@ public static class Options
         => GameMode.GetInt() switch
         {    
             1 => CustomGameMode.HotPotato,
+            //2 => CustomGameMode.AllCrewMod,
             _ => CustomGameMode.Standard
         };
 
     public static readonly string[] gameModes =
     {
-        "Standard","HotPotatoMode"
+        "Standard","HotPotatoMode",//"AllCrewMode"
     };
 
     // 地图启用
@@ -66,6 +68,8 @@ public static class Options
     public static bool IsActiveAirship => AddedTheAirShip.GetBool() || Main.NormalOptions.MapId == 4;
     public static bool IsActiveFungle => AddedTheFungle.GetBool() || Main.NormalOptions.MapId == 5;
 
+
+    public static bool IsAllCrew => CurrentGameMode == (CustomGameMode)0x03;
     // 职业数量・生成模式&概率
     public static Dictionary<CustomRoles, OptionItem> CustomRoleCounts;
     public static Dictionary<CustomRoles, StringOptionItem> CustomRoleSpawnChances;
@@ -115,6 +119,8 @@ public static class Options
     public static OptionItem MadmateKnowWhosMadmate;
     public static OptionItem ImpCanKillMadmate;
     public static OptionItem MadmateCanKillImp;
+    public static OptionItem SetImpNum;
+    public static OptionItem ImpNum;
 
     public static OptionItem NeutralRolesMinPlayer;
     public static OptionItem NeutralRolesMaxPlayer;
@@ -518,6 +524,13 @@ public static class Options
             .SetGameMode(CustomGameMode.Standard);
         MadmateCanKillImp = BooleanOptionItem.Create(1_001_003, "MadmateCanKillImp", true, TabGroup.ImpostorRoles, false)
             .SetGameMode(CustomGameMode.Standard);
+
+        SetImpNum = BooleanOptionItem.Create(1_001_004, "SetImpNum", false, TabGroup.ImpostorRoles, false)
+            .SetHeader(true)
+            .SetGameMode(CustomGameMode.Standard);
+        ImpNum = IntegerOptionItem.Create(1_003_005, "ImpNum", new(0, 15, 1), 2, TabGroup.ImpostorRoles, false)
+            .SetGameMode(CustomGameMode.Standard)
+            .SetValueFormat(OptionFormat.Players);
 
         DefaultShapeshiftCooldown = FloatOptionItem.Create(1_002_001, "DefaultShapeshiftCooldown", new(5f, 999f, 5f), 15f, TabGroup.ImpostorRoles, false)
             .SetGameMode(CustomGameMode.Standard)

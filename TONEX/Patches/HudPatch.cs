@@ -154,8 +154,8 @@ class HudManagerPatch
                 }
                 else
                 {
-                    __instance.AbilityButton.Hide();
-                    __instance.AbilityButton.OverrideText(GetString(StringNames.HauntAbilityName));
+                    __instance.AbilityButton.OverrideText(GetString(StringNames.SeekButton));
+                    __instance.AbilityButton.Show();
                 }
                 __instance.PetButton.Hide();
                 if (LowerInfoText != null) LowerInfoText.enabled = false;

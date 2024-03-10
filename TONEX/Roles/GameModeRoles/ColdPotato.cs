@@ -4,6 +4,7 @@ using Hazel;
 using TONEX.Roles.Core;
 using static TONEX.Translator;
 using System.Text;
+using TONEX.MoreGameModes;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
 
 namespace TONEX.Roles.GameModeRoles;
@@ -29,7 +30,8 @@ public sealed class ColdPotato : RoleBase, IKiller
     : base(
         RoleInfo,
         player,
-        () => HasTask.False
+        () => HasTask.False,
+        true
     )
     {
         CustomRoleManager.MarkOthers.Add(MarkOthers);
@@ -64,6 +66,6 @@ public sealed class ColdPotato : RoleBase, IKiller
         //seeおよびseenが自分である場合以外は関係なし
         if (!Is(seer) || !Is(seen)) return "";
 
-        return string.Format(GetString("HotPotatoTimeRemain"), HotPotatoManager.BoomTimes);
+        return string.Format(GetString("HotPotatoTimeRemain"), HotPotatoManager.RemainExplosionTime);
     }
 }

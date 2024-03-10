@@ -29,6 +29,7 @@ class GameEndChecker
 
         //ゲーム終了判定
         predicate.CheckForEndGame(out reason);
+
         //热土豆用
         if (Options.CurrentGameMode == CustomGameMode.HotPotato)
         {
@@ -71,25 +72,63 @@ class GameEndChecker
                         .Where(pc => (pc.Is(CustomRoleTypes.Impostor) || pc.Is(CustomRoles.Madmate)) && !pc.Is(CustomRoles.Charmed) && !pc.Is(CustomRoles.Wolfmate))
                         .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
                     break;
-                case CustomWinner.Succubus:
-                    Main.AllPlayerControls
-                        .Where(pc => pc.Is(CustomRoles.Succubus) || pc.Is(CustomRoles.Charmed))
-                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
-                    break;
                 case CustomWinner.Jackal:
                     Main.AllPlayerControls
                      .Where(pc => pc.Is(CustomRoles.Jackal) || pc.Is(CustomRoles.Wolfmate) || pc.Is(CustomRoles.Sidekick) || pc.Is(CustomRoles.Whoops))
                      .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
                     break;
+                case CustomWinner.Pelican:
+                    Main.AllPlayerControls
+                        .Where(pc => pc.Is(CustomRoles.Pelican))
+                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    break;
+                case CustomWinner.Demon:
+                    Main.AllPlayerControls
+                        .Where(pc => pc.Is(CustomRoles.Demon))
+                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    break;
+                case CustomWinner.BloodKnight:
+                    Main.AllPlayerControls
+                        .Where(pc => pc.Is(CustomRoles.BloodKnight))
+                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    break;
+
+                case CustomWinner.Succubus:
+                    Main.AllPlayerControls
+                        .Where(pc => pc.Is(CustomRoles.Succubus) || pc.Is(CustomRoles.Charmed))
+                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    break;
+
                 case CustomWinner.FAFL:
                     Main.AllPlayerControls
                      .Where(pc => pc.Is(CustomRoles.Vagator) )
                      .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
                     break;
+
                 case CustomWinner.Martyr:
                     Main.AllPlayerControls
                      .Where(pc => pc.Is(CustomRoles.Martyr) || pc == Martyr.TargetId)
                      .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    break;
+                case CustomWinner.NightWolf:
+                    Main.AllPlayerControls
+                        .Where(pc => pc.Is(CustomRoles.NightWolf))
+                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    break;
+                case CustomWinner.GodOfPlagues:
+                    Main.AllPlayerControls
+                        .Where(pc => pc.Is(CustomRoles.GodOfPlagues))
+                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    break;
+                case CustomWinner.MeteorArbiter:
+                    Main.AllPlayerControls
+                        .Where(pc => pc.Is(CustomRoles.MeteorArbiter))
+                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    break;
+                case CustomWinner.MeteorMurder:
+                    Main.AllPlayerControls
+                        .Where(pc => pc.Is(CustomRoles.MeteorMurder))
+                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
                     break;
             }
             if (CustomWinnerHolder.WinnerTeam is not CustomWinner.Draw and not CustomWinner.None and not CustomWinner.Error)
@@ -169,8 +208,7 @@ class GameEndChecker
         var sender = new CustomRpcSender("EndGameSender", SendOption.Reliable, true);
         sender.StartMessage(-1); // 5: GameData
         MessageWriter writer = sender.stream;
-        HudSpritePatch.IsEnd = true;
-        RPC.SyncEndRPC(true);
+       
 
         //ゴーストロール化
         List<byte> ReviveRequiredPlayerIds = new();
@@ -271,26 +309,50 @@ class GameEndChecker
 
             if (CustomRoles.Sunnyboy.IsExist() && Main.AllAlivePlayerControls.Count() > 1) return false;
 
-            int Imp = Utils.AlivePlayersCount(CountTypes.Impostor);
-            int Crew = Utils.AlivePlayersCount(CountTypes.Crew);
-            int JK = Utils.AlivePlayersCount(CountTypes.Jackal);
-            int PL = Utils.AlivePlayersCount(CountTypes.Pelican);
-            int DM = Utils.AlivePlayersCount(CountTypes.Demon);
-            int BK = Utils.AlivePlayersCount(CountTypes.BloodKnight);
-            int SC = Utils.AlivePlayersCount(CountTypes.Succubus);
-            int FAFL = Utils.AlivePlayersCount(CountTypes.FAFL);
-            int MA = Martyr.CanKill ? Utils.AlivePlayersCount(CountTypes.Martyr) : 0;
-            int NW = Utils.AlivePlayersCount(CountTypes.NightWolf); 
-            int GO = Utils.AlivePlayersCount(CountTypes.GodOfPlagues); 
-
-            foreach (var dualPc in Main.AllAlivePlayerControls.Where(p => p.Is(CustomRoles.Schizophrenic)))
+            // 计数阵营记录字典
+            Dictionary<CountTypes, int> playerTypeCounts = new();
+            playerTypeCounts.Clear();
+            foreach (var ct in System.Enum.GetValues(typeof(CountTypes)))
             {
-                if (dualPc.Is(CountTypes.Impostor)) Imp++;
-                else if (dualPc.Is(CountTypes.Crew)) Crew++;
-                else if (dualPc.Is(CountTypes.Succubus)) SC++;
+                if (ct is CountTypes.OutOfGame or CountTypes.None) continue;
+                playerTypeCounts.TryAdd((CountTypes)ct, 0);
             }
 
-            if (Imp == 0 && Crew == 0 && JK == 0 && PL == 0 && DM == 0 && BK == 0 && SC == 0 && FAFL == 0) //全灭
+            foreach (var Player in Main.AllAlivePlayerControls)// 判断阵营玩家数量
+            {
+                if ((Player.GetRoleClass() as MeteorArbiter)?.CanWin ?? false || Player.Is(CustomRoles.Martyr) && !Martyr.CanKill) continue;// 先烈、陨星判官独立判断
+                var playerType = Player.GetCountTypes();
+                if (playerTypeCounts.ContainsKey(playerType))
+                {
+                    playerTypeCounts[playerType]++;
+                    if (Player.Is(CustomRoles.Schizophrenic))// 双重人格独立判断
+                        playerTypeCounts[playerType]++;
+                }
+            }
+
+            var win = false;// 是否进入判断阵营胜利的bool
+            KeyValuePair<CountTypes, int> maywinner = new();// 定义存储胜利者的键值对
+            var crewValue = playerTypeCounts.ElementAt(0).Value;// 船员阵营数量
+            var nonCrewPlayerTypes = playerTypeCounts.Skip(1).Where(kv => kv.Value >= crewValue && kv.Value != 0).ToList(); // 没有船员阵营的可能的胜利者键值对列表
+            foreach (var maywin in nonCrewPlayerTypes)// 寻找剩余玩家数量大于等于船员的阵营键值对
+            { 
+                win = true; // 假设为胜利者
+                foreach (var kv in playerTypeCounts.Skip(1))
+                {
+                    if (kv.Key == maywin.Key || kv.Value == 0) continue;
+                    win = false; // 如果有其他阵营的值不为 0，则不是胜利者
+                    
+                    break;
+                }
+                if (win)
+                {
+                    maywinner = maywin; // 确定胜利者
+                    Logger.Info($"胜利阵营{maywinner.Key.ToString()}", "CheckGameEnd");
+                    break;
+                }
+            }
+            
+            if (playerTypeCounts.All(pair => pair.Value == 0)) //全灭
             {
                 reason = GameOverReason.ImpostorByKill;
                 CustomWinnerHolder.ResetAndSetWinner(CustomWinner.None);
@@ -300,71 +362,23 @@ class GameEndChecker
                 reason = GameOverReason.ImpostorByKill;
                 CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Lovers);
             }
-            else if (JK == 0 && PL == 0 && DM == 0 && BK == 0 && FAFL == 0 && SC == 0 && Crew <= Imp && GO == 0 && MA == 0 && NW == 0) //内鬼胜利
+            else if (win)// 确定有胜利阵营，开始根据不同阵营判断
             {
                 reason = GameOverReason.ImpostorByKill;
-                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Impostor);
+                CustomWinnerHolder.ResetAndSetWinner(maywinner.Key.ToCustomWinner());// 将胜利阵营键值对的键写入并且转化为CustomWinner
             }
-            else if (Imp == 0 && PL == 0 && DM == 0 && BK == 0 && FAFL == 0 && SC == 0 && Crew <= JK && GO == 0 && MA == 0 && NW == 0) //豺狼胜利
-            {
-                reason = GameOverReason.ImpostorByKill;
-                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Jackal);
-            }
-            else if (Imp == 0 && JK == 0 && DM == 0 && BK == 0 && FAFL == 0 && SC == 0 && Crew <= PL && MA == 0 && NW == 0) //鹈鹕胜利
-            {
-                reason = GameOverReason.ImpostorByKill;
-                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Pelican);
-                CustomWinnerHolder.WinnerRoles.Add(CustomRoles.Pelican);
-            }
-            else if (Imp == 0 && JK == 0 && PL == 0 && BK == 0 && FAFL == 0 && SC == 0 && Crew <= DM && GO == 0 && MA == 0 && NW == 0) //玩家胜利
-            {
-                reason = GameOverReason.ImpostorByKill;
-                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Demon);
-                CustomWinnerHolder.WinnerRoles.Add(CustomRoles.Demon);
-            }
-            else if (Imp == 0 && JK == 0 && PL == 0 && DM == 0 && FAFL == 0 && SC == 0 && Crew <= BK && GO == 0 && MA == 0 && NW == 0) //嗜血骑士胜利
-            {
-                reason = GameOverReason.ImpostorByKill;
-                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.BloodKnight);
-                CustomWinnerHolder.WinnerRoles.Add(CustomRoles.BloodKnight);
-            }
-            else if (Imp == 0 && JK == 0 && PL == 0 && DM == 0 && FAFL == 0 && BK == 0 && Crew <= SC && GO == 0 && MA == 0 && NW == 0) //魅惑者胜利
-            {
-                reason = GameOverReason.ImpostorByKill;
-                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Succubus);
-            }
-            else if (JK == 0 && PL == 0 && Imp == 0 && BK == 0 && DM == 0 && SC == 0 && Crew <= FAFL && GO == 0 && MA == 0 && NW == 0) //异世阵营胜利
-            {
-                reason = GameOverReason.ImpostorByKill;
-                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.FAFL);
-            }
-            else if (JK == 0 && PL == 0 && Imp == 0 && BK == 0 && DM == 0 && SC == 0 && Crew <= MA && GO == 0 && Martyr.CanKill && NW == 0) //先烈胜利
-            {
-                reason = GameOverReason.ImpostorByKill;
-                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Martyr);
-
-            } 
-            else if (JK == 0 && PL == 0 && Imp == 0 && BK == 0 && DM == 0 && SC == 0 && MA == 0 && GO == 0 && Crew <= NW) //月下狼人胜利
-            {
-                reason = GameOverReason.ImpostorByKill;
-                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.NightWolf);
-                CustomWinnerHolder.WinnerRoles.Add(CustomRoles.NightWolf);
-            }
-            else if (JK == 0 && PL == 0 && Imp == 0 && BK == 0 && DM == 0 && SC == 0 && MA == 0 && Crew <= GO) //瘟神胜利
-            {
-                reason = GameOverReason.ImpostorByKill;
-                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.GodOfPlagues);
-                CustomWinnerHolder.WinnerRoles.Add(CustomRoles.GodOfPlagues);
-            }
-            else if (JK == 0 && PL == 0 && Imp == 0 && BK == 0 && FAFL == 0 && DM == 0 && SC == 0 && MA == 0 && NW == 0 && GO == 0) //船员胜利
+            else if (playerTypeCounts.Skip(1).All(kv => kv.Value == 0)) //船员胜利
             {
                 reason = GameOverReason.HumansByVote;
                 CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Crewmate);
             }
-            else return false; //胜利条件未达成
-
+            else
+            {
+                return false; //胜利条件未达成
+            }
             return true;
         }
+
     }
     class HotPotatoGameEndPredicate : GameEndPredicate
     {
