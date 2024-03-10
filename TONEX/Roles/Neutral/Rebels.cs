@@ -1,10 +1,10 @@
 ﻿using AmongUs.GameOptions;
-using TONEX.Modules;
 using System.Collections.Generic;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces;
 using static TONEX.Translator;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
+using TONEX.Modules.SoundInterface;
 
 namespace TONEX.Roles.Neutral;
 public sealed class Rebels : RoleBase, IOverrideWinner, INeutral

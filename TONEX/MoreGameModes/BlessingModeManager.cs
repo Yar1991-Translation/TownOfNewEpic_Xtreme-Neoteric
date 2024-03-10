@@ -19,7 +19,7 @@ using static UnityEngine.GraphicsBuffer;
 using static TONEX.Modules.MeetingVoteManager;
 using TONEX.Roles.GameModeRoles;
 
-namespace TONEX;
+namespace TONEX.MoreGameModes;
 
 internal static class BlessingModeManager
 {

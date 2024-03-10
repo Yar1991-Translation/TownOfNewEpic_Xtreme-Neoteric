@@ -104,13 +104,25 @@ class OnPlayerJoinedPatch
         BanManager.CheckBanPlayer(client);
         BanManager.CheckDenyNamePlayer(client);
         RPC.RpcVersionCheck();
-
+        var player = client.Character;
+        
         if (AmongUsClient.Instance.AmHost)
         {
             if (Main.SayStartTimes.ContainsKey(client.Id)) Main.SayStartTimes.Remove(client.Id);
             if (Main.SayBanwordsTimes.ContainsKey(client.Id)) Main.SayBanwordsTimes.Remove(client.Id);
             if (Main.NewLobby && Options.ShareLobby.GetBool()) Cloud.ShareLobby();
         }
+        new LateTask(() => 
+        {
+            if (Options.IsAllCrew && !player.IsModClient())
+            {
+
+                Utils.KickPlayer(client.Id, true, "NoMod");
+                RPC.NotificationPop(string.Format(GetString("Message.NotInstalled"), client.PlayerName));
+                Logger.Info($"{client.PlayerName}无模组", "BAN");
+            }
+        },5f);
+        
     }
 }
 [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerLeft))]

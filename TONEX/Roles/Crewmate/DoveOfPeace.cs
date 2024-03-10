@@ -1,8 +1,7 @@
 ﻿using AmongUs.GameOptions;
 using HarmonyLib;
 using System.Linq;
-
-using TONEX.Modules;
+using TONEX.Modules.SoundInterface;
 using TONEX.Roles.Core;
 
 using static TONEX.Translator;

@@ -3,7 +3,6 @@ using HarmonyLib;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TONEX.Modules;
 using TONEX.Roles.Core;
 using UnityEngine;
 using static TONEX.Translator;
@@ -13,6 +12,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using TONEX.Roles.Core.Interfaces;
+using TONEX.Modules.SoundInterface;
 
 namespace TONEX;
 

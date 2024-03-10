@@ -70,10 +70,6 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
             _team = value;
         }
     }
-    public static TeamType TeamStatic
-    {
-        get => (PL.GetRoleClass() as SchrodingerCat).Team;
-    }
     public bool AmMadmate => Team == TeamType.Mad;
     public Color DisplayRoleColor => GetCatColor(Team);
     private static LogHandler logger = Logger.Handler(nameof(SchrodingerCat));
@@ -90,6 +86,7 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
     }
     public override bool OnCheckMurderAsTarget(MurderInfo info)
     {
+
         var killer = info.AttemptKiller;
 
         //自殺ならスルー
@@ -225,10 +222,10 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
             TeamType.BloodKnight => CustomWinnerHolder.WinnerTeam == CustomWinner.BloodKnight,
             TeamType.Demon => CustomWinnerHolder.WinnerTeam == CustomWinner.Demon,
             TeamType.Hater => CustomWinnerHolder.AdditionalWinnerRoles.Contains(CustomRoles.Hater),
-            TeamType.GodOfPlagues => CustomWinnerHolder.WinnerTeam == (CustomWinner.GodOfPlagues),
-            TeamType.Opportunist => PL.IsAlive() || CustomWinnerHolder.AdditionalWinnerRoles.Contains(CustomRoles.Opportunist),
-            TeamType.NightWolf => CustomWinnerHolder.WinnerTeam == (CustomWinner.NightWolf),
-            TeamType.RewardOfficer => CustomWinnerHolder.WinnerTeam == (CustomWinner.RewardOfficer),
+            TeamType.GodOfPlagues => CustomWinnerHolder.WinnerTeam == CustomWinner.GodOfPlagues,
+            TeamType.Opportunist => Player.IsAlive() || CustomWinnerHolder.AdditionalWinnerRoles.Contains(CustomRoles.Opportunist),
+            TeamType.NightWolf => CustomWinnerHolder.WinnerTeam == CustomWinner.NightWolf,
+            TeamType.RewardOfficer => CustomWinnerHolder.WinnerTeam == CustomWinner.RewardOfficer,
             _ => null,
         };
         if (!won.HasValue)

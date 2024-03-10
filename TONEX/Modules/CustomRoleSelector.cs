@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using TONEX.MoreGameModes;
 using TONEX.Roles.Core;
 using TONEX.Roles.Crewmate;
 
@@ -19,8 +19,8 @@ internal static class CustomRoleSelector
         RoleResult = new();
         var rd = IRandom.Instance;
         int playerCount = Main.AllAlivePlayerControls.Count();
-        int optImpNum = Main.RealOptionsData.GetInt(Int32OptionNames.NumImpostors);
-        int optHPNum = HotPotatoManager.HotQuan.GetInt();
+        int optImpNum = Options.SetImpNum.GetBool()? Options.ImpNum.GetInt():Main.RealOptionsData.GetInt(Int32OptionNames.NumImpostors);
+        int optHPNum = HotPotatoManager.HotPotatoMaxNum.GetInt();
         int optNeutralNum = 0;
         if (Options.NeutralRolesMaxPlayer.GetInt() > 0 && Options.NeutralRolesMaxPlayer.GetInt() >= Options.NeutralRolesMinPlayer.GetInt())
             optNeutralNum = rd.Next(Options.NeutralRolesMinPlayer.GetInt(), Options.NeutralRolesMaxPlayer.GetInt() + 1);
@@ -49,7 +49,6 @@ internal static class CustomRoleSelector
             foreach (var pc in Main.AllAlivePlayerControls)
             {
                 RoleResult.Add(pc, CustomRoles.ColdPotato);
-                HotPotatoManager.IsAliveCold++;
             }
             return;
         }
@@ -81,7 +80,6 @@ internal static class CustomRoleSelector
         }
 
         #region 抽取隐藏职业
-#if RELEASE
         if (!Options.DisableHiddenRoles.GetBool())
         {
             if (readyRoleNum >= playerCount) goto EndOfAssign;
@@ -141,7 +139,6 @@ internal static class CustomRoleSelector
             }
             if (readyRoleNum >= playerCount) goto EndOfAssign;*/
         }
-#endif
 #endregion
         // 抽取优先职业（内鬼）
         while (ImpOnList.Count > 0)
@@ -341,7 +338,7 @@ internal static class CustomRoleSelector
         }
 
         if (AllPlayer.Count > 0)
-            Logger.Error("职业分配错误：存在未被分配职业的玩家", "CustomRoleSelector");
+            Logger.Warn("职业分配错误：存在未被分配职业的玩家", "CustomRoleSelector");
         if (rolesToAssign.Count > 0)
             Logger.Error("职业分配错误：存在未被分配的职业", "CustomRoleSelector");
 

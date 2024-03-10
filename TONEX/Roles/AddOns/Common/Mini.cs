@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TONEX.Attributes;
-using TONEX.Modules;
+using TONEX.Modules.SoundInterface;
 using TONEX.Roles.Core;
 using UnityEngine;
 using static TONEX.Options;

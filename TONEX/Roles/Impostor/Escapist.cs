@@ -1,6 +1,6 @@
 ﻿using AmongUs.GameOptions;
 using Hazel;
-using TONEX.Modules;
+using TONEX.Modules.SoundInterface;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
 using UnityEngine;

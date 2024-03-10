@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TONEX.Modules;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces;
 using TONEX.Roles.Crewmate;
@@ -13,6 +12,7 @@ using TONEX.Roles.AddOns.Common;
 using static TONEX.Translator;
 using TONEX.Roles.Impostor;
 using TONEX.Roles.Neutral;
+using TONEX.Modules.SoundInterface;
 namespace TONEX;
 
 public enum CustomRPC
@@ -307,9 +307,6 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.SetDeathReason:
                 RPC.GetDeathReason(reader);
-                break;
-            case CustomRPC.IsEnd:
-                HudSpritePatch.IsEnd = reader.ReadBoolean();
                 break;
             case CustomRPC.EndGame:
                 RPC.EndGame(reader);

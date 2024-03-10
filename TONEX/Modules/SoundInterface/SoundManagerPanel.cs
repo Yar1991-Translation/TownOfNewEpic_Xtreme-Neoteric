@@ -115,25 +115,7 @@ public static class SoundManagerPanel
             Object.Destroy(button.GetComponent<UIScrollbarHelper>());
             Object.Destroy(button.GetComponent<NumberButton>());
             var path = @$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/{sound}.wav";
-            int i = 0;
-            while (!File.Exists(path))
-            {
-                i++;
-                Logger.Error($"{path} No Found", "SoundsManagerPanel");
-                string matchingKey = formatMap.Keys.FirstOrDefault(key => path.Contains(key));
-                if (matchingKey!=null)
-                {
-                    string newFormat = formatMap[matchingKey];
-                    path = path.Replace(matchingKey, newFormat);
-                    Logger.Warn($"{path} Founded", "SoundsManagerPanel");
-                    break;
-                }
-                if (i == formatMap.Count)
-                {
-                    Logger.Error($"{path} Cannot Be Finded", "SoundsManagerPanel");
-                    break; 
-                }
-            }
+            GetPostfix(path);
             var renderer = button.GetComponent<SpriteRenderer>();
             var rollover = button.GetComponent<ButtonRolloverHandler>();
             if (File.Exists(path) || File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/SoundNames/{sound}.json"))
@@ -267,13 +249,4 @@ public static class SoundManagerPanel
         }
         return;
     }
-    public static Dictionary<string, string> formatMap = new()
-    {
-    { ".wav", ".flac" },
-    { ".flac", ".aiff" },
-    { ".aiff", ".mp3" },
-    { ".mp3", ".aac" },
-    { ".aac", ".ogg" },
-    { ".ogg", ".m4a" }
-};
 }

@@ -1,10 +1,10 @@
 ﻿using AmongUs.GameOptions;
 using UnityEngine;
-using TONEX.Modules;
 using TONEX.Roles.Core;
 using static TONEX.Translator;
 using Hazel;
 using static UnityEngine.GraphicsBuffer;
+using TONEX.Modules.SoundInterface;
 
 namespace TONEX.Roles.Crewmate;
 public sealed class Veteran : RoleBase

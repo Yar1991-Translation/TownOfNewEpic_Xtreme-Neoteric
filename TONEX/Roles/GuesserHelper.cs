@@ -12,6 +12,7 @@ using TONEX.Roles.Impostor;
 using UnityEngine;
 using static TONEX.Translator;
 using TONEX.Roles.AddOns.Common;
+using TONEX.Modules.SoundInterface;
 
 namespace TONEX;
 public static class GuesserHelper

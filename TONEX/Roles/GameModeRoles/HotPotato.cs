@@ -5,6 +5,7 @@ using TONEX.Roles.Core;
 using static TONEX.Translator;
 using static UnityEngine.GraphicsBuffer;
 using System.Collections.Generic;
+using TONEX.MoreGameModes;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
 
 namespace TONEX.Roles.GameModeRoles;
@@ -45,7 +46,7 @@ public sealed class HotPotato : RoleBase, IKiller
     }
     public override void Add()
     {
-        BoomTime = HotPotatoManager.BoomTimes;
+        BoomTime = HotPotatoManager.ExplosionTotalTime.GetInt();
     }
     public static bool KnowTargetRoleColor(PlayerControl target, bool isMeeting)
     => target.Is(CustomRoles.HotPotato);
@@ -63,7 +64,7 @@ public sealed class HotPotato : RoleBase, IKiller
     public override void ApplyGameOptions(IGameOptions opt)
     {
         opt.SetVision(false);
-        AURoleOptions.ShapeshifterCooldown = HotPotatoManager.Boom.GetInt();
+        AURoleOptions.ShapeshifterCooldown = HotPotatoManager.ExplosionTotalTime.GetInt();
     }
     public bool OnCheckMurderAsKiller(MurderInfo info)
     {
@@ -87,6 +88,6 @@ public sealed class HotPotato : RoleBase, IKiller
         //seeおよびseenが自分である場合以外は関係なし
         if (!Is(seer) || !Is(seen)) return "";
 
-        return string.Format(GetString("HotPotatoTimeRemain"), HotPotatoManager.BoomTimes);
+        return string.Format(GetString("HotPotatoTimeRemain"), HotPotatoManager.RemainExplosionTime);
     }
 }

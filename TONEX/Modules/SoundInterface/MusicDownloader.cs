@@ -141,7 +141,7 @@ public class MusicDownloader
     private static void OnDownloadProgressChanged(long? totalFileSize, long totalBytesDownloaded, double? progressPercentage)
     {
         string msg = $"{GetString("updateInProgress")}\n{totalFileSize / 1000}KB / {totalBytesDownloaded / 1000}KB  -  {(int)progressPercentage}%";
-        Logger.Info(msg, "DownloadDLL");
+        Logger.Info(msg, "DownloadSounds");
     }
     public static string GetMD5HashFromFile(string fileName)
     {

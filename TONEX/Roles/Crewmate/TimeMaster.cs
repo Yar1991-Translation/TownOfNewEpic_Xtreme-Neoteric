@@ -1,11 +1,11 @@
 ﻿using AmongUs.GameOptions;
-using TONEX.Modules;
 using TONEX.Roles.Core;
 using System;
 using static TONEX.Translator;
 using UnityEngine;
 using Hazel;
 using System.Collections.Generic;
+using TONEX.Modules.SoundInterface;
 
 namespace TONEX.Roles.Crewmate;
 public sealed class TimeMaster : RoleBase

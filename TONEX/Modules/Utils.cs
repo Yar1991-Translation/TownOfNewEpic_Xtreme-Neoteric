@@ -1554,7 +1554,7 @@ public static class Utils
     public static int AllAlivePlayersCount => Main.AllAlivePlayerControls.Count(pc => !pc.Is(CountTypes.OutOfGame));
     public static bool IsAllAlive => PlayerState.AllPlayerStates.Values.All(state => state.CountType == CountTypes.OutOfGame || !state.IsDead);
     public static int PlayersCount(CountTypes countTypes) => PlayerState.AllPlayerStates.Values.Count(state => state.CountType == countTypes);
-    public static int AlivePlayersCount(CountTypes countTypes) => Main.AllAlivePlayerControls.Count(pc => pc.Is(countTypes));
+    public static int AlivePlayersCount(CountTypes countTypes) => Main.AllAlivePlayerControls.Count(pc => pc.Is(countTypes) && (!(pc.GetRoleClass() as MeteorArbiter)?.CanWin ?? true) && (pc.Is(CustomRoles.Martyr)&& Martyr.CanKill));
 
     private const string ActiveSettingsSize = "70%";
     private const string ActiveSettingsLineHeight = "55%";

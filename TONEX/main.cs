@@ -410,6 +410,8 @@ public enum CustomWinner
     NightWolf = CustomRoles.NightWolf,
     GodOfPlagues = CustomRoles.GodOfPlagues,
     Puppeteer = CustomRoles.Puppeteer,
+    MeteorArbiter = CustomRoles.MeteorArbiter,
+    MeteorMurder = CustomRoles.MeteorMurder,
 }
 public enum SuffixModes
 {
