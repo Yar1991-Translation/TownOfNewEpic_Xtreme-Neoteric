@@ -42,7 +42,6 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
 
     private static OptionItem OptionKillCooldown;
     private static OptionItem OptionCanGetKillButton;
-    public static OptionItem OptionCanUseSabotage;
     private static OptionItem OptionHasImpostorVision;
     enum OptionName
     {
@@ -60,7 +59,6 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
         OptionKillCooldown = FloatOptionItem.Create(RoleInfo, 10, GeneralOption.KillCooldown, new(2.5f, 180f, 2.5f), 20f, false)
             .SetValueFormat(OptionFormat.Seconds);
         OptionCanGetKillButton = BooleanOptionItem.Create(RoleInfo, 11, OptionName.MartryCanUseKillButtonOnGameStart, true, false);
-        OptionCanUseSabotage = BooleanOptionItem.Create(RoleInfo, 12, GeneralOption.CanUseSabotage, false, false);
         OptionHasImpostorVision = BooleanOptionItem.Create(RoleInfo, 13, GeneralOption.ImpostorVision, true, false);
     }
     public override void Add()
