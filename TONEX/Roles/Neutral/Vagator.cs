@@ -110,7 +110,6 @@ public sealed class Vagator : RoleBase, INeutralKiller
         
             if (Feeble.Contains(pid))
                 Feeble.Remove(pid);
-        }
     }
     #endregion
     public bool CanUseKillButton() => true;
@@ -365,4 +364,3 @@ public sealed class Vagator : RoleBase, INeutralKiller
         return true;
     }
 }
-//*/

@@ -66,9 +66,9 @@ public sealed class Deputy : RoleBase, IKiller
                 ForDeputy.Add(id);
             }
     }
-    public override void ReceiveRPC(MessageReader reader, CustomRPC rpcType)
+    public override void ReceiveRPC(MessageReader reader)
     {
-        if (rpcType != CustomRPC.SetDeputyLimit) return;
+        
         DeputyLimit = reader.ReadInt32();
         var clear = reader.ReadBoolean();
         if (clear)
