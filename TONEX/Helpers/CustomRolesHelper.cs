@@ -229,44 +229,24 @@ static class CustomRolesHelper
             _ => role.IsImpostor() ? RoleTypes.Impostor : RoleTypes.Crewmate,
         };
     }
-    public static CustomWinner ToCustomWinner(this CountTypes countTypes)
-    {
-        return countTypes switch
-        {
-            CountTypes.OutOfGame => CustomWinner.None,
-            CountTypes.None => CustomWinner.None,
-            CountTypes.Crew => CustomWinner.Crewmate,
-            CountTypes.Impostor => CustomWinner.Impostor,
-            CountTypes.Jackal => CustomWinner.Jackal,
-            CountTypes.Pelican => CustomWinner.Pelican,
-            CountTypes.Demon => CustomWinner.Demon,
-            CountTypes.BloodKnight => CustomWinner.BloodKnight,
-            CountTypes.Succubus => CustomWinner.Succubus,
-            CountTypes.FAFL => CustomWinner.FAFL,
-            CountTypes.Martyr => CustomWinner.Martyr,
-            CountTypes.NightWolf => CustomWinner.NightWolf,
-            CountTypes.GodOfPlagues => CustomWinner.GodOfPlagues,
-            CountTypes.MeteorArbiter => CustomWinner.MeteorArbiter,
-            CountTypes.MeteorMurder => CustomWinner.MeteorMurder,
-            _ => CustomWinner.None,
-        };
-    }
+   
 }
 public enum CountTypes
 {
-    OutOfGame,
-    None,
-    Crew,
-    Impostor,
-    Jackal,
-    Pelican,
-    Demon,
-    BloodKnight,
-    Succubus,
-    FAFL,
-    Martyr,
-    NightWolf,
-    GodOfPlagues,
-    MeteorArbiter,
-    MeteorMurder,
+    OutOfGame = CustomWinner.None,
+    None = CustomWinner.None,
+    Crew = CustomWinner.Crewmate,
+    Impostor = CustomWinner.Impostor,
+    Jackal= CustomWinner.Jackal,
+    Pelican= CustomWinner.Pelican,
+    Demon= CustomWinner.Demon,
+    BloodKnight= CustomWinner.BloodKnight,
+    Succubus= CustomWinner.Succubus,
+    FAFL= CustomWinner.FAFL,
+    Martyr= CustomWinner.Martyr,
+    NightWolf= CustomWinner.NightWolf,
+    GodOfPlagues= CustomWinner.GodOfPlagues,
+    MeteorArbiter= CustomWinner.MeteorArbiter,
+    MeteorMurder= CustomWinner.MeteorMurder,
+    SharpShooter= CustomWinner.SharpShooter,
 }

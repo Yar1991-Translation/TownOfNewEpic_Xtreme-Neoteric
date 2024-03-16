@@ -412,6 +412,7 @@ public enum CustomWinner
     Puppeteer = CustomRoles.Puppeteer,
     MeteorArbiter = CustomRoles.MeteorArbiter,
     MeteorMurder = CustomRoles.MeteorMurder,
+    SharpShooter = CustomRoles.SharpShooter,
 }
 public enum SuffixModes
 {

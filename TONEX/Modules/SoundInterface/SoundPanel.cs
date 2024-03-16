@@ -147,7 +147,7 @@ public static class SoundPanel
                 Object.Destroy(button.GetComponent<NumberButton>());
                 button.transform.GetChild(0).GetComponent<TextMeshPro>().text = AllTONEX.ContainsKey(sound) ? GetString($"{sound}") : sound;
                 var path = @$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/{sound}.wav";
-            GetPostfix(path);
+            //GetPostfix(path);
             var renderer = button.GetComponent<SpriteRenderer>();
                 var rollover = button.GetComponent<ButtonRolloverHandler>();
                 if  (File.Exists(path))
