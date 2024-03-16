@@ -130,6 +130,11 @@ class GameEndChecker
                         .Where(pc => pc.Is(CustomRoles.MeteorMurder))
                         .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
                     break;
+                case CustomWinner.SharpShooter:
+                    Main.AllPlayerControls
+                        .Where(pc => pc.Is(CustomRoles.SharpShooter))
+                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    break;
             }
             if (CustomWinnerHolder.WinnerTeam is not CustomWinner.Draw and not CustomWinner.None and not CustomWinner.Error)
             {
@@ -365,7 +370,7 @@ class GameEndChecker
             else if (win)// 确定有胜利阵营，开始根据不同阵营判断
             {
                 reason = GameOverReason.ImpostorByKill;
-                CustomWinnerHolder.ResetAndSetWinner(maywinner.Key.ToCustomWinner());// 将胜利阵营键值对的键写入并且转化为CustomWinner
+                CustomWinnerHolder.ResetAndSetWinner((CustomWinner)maywinner.Key);// 将胜利阵营键值对的键写入并且转化为CustomWinner
             }
             else if (playerTypeCounts.Skip(1).All(kv => kv.Value == 0)) //船员胜利
             {

@@ -115,7 +115,7 @@ public static class SoundManagerPanel
             Object.Destroy(button.GetComponent<UIScrollbarHelper>());
             Object.Destroy(button.GetComponent<NumberButton>());
             var path = @$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/{sound}.wav";
-            GetPostfix(path);
+           // GetPostfix(path);
             var renderer = button.GetComponent<SpriteRenderer>();
             var rollover = button.GetComponent<ButtonRolloverHandler>();
             if (File.Exists(path) || File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/SoundNames/{sound}.json"))
