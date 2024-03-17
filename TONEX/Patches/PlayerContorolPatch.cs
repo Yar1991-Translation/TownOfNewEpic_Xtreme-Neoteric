@@ -365,7 +365,7 @@ class ReportDeadBodyPatch
         //对于仅仅是报告尸体的处理
         if (target != null)
         {
-            if (__instance.Is(CustomRoles.Oblivious)) return false;
+            if (__instance.Is(CustomRoles.Oblivious) && Utils.GetPlayerById(target.PlayerId).Is(CustomRoles.Bait)) return false;
             if (target.Object.GetRealKiller().Is(CustomRoles.Spiders))
             {
                 Main.AllPlayerSpeed[__instance.PlayerId] = Spiders.OptionSpeed.GetFloat();

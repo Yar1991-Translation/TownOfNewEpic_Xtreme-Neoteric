@@ -106,7 +106,8 @@ public sealed class MeteorMurder : RoleBase, INeutralKiller
             color = Color.red;
         if (LOVE == 20)
             color = Palette.Purple;
-        return Utils.ColorString(color, $"(LV{LOVE})"  +$"HP{Shield+1}");
+        var hp = Player.IsAlive() ? Shield + 1 : 0;
+        return Utils.ColorString(color, $"(LV{LOVE})"  +$"HP{hp}");
     }
   
     public override bool OnCheckReportDeadBody(PlayerControl reporter, GameData.PlayerInfo target)
