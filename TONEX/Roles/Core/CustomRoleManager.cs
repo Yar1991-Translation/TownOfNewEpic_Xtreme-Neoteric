@@ -647,6 +647,7 @@ public enum CustomRoles
     CopyCat,//TODO 效颦者
     Deputy,
     InjusticeSpirit,//TODO 冤魂
+    Scout,
     //Neutral
     Arsonist,
     Jester,
@@ -700,7 +701,7 @@ public enum CustomRoles
     Phantom,//TODO 幻影
     MeteorArbiter,//TODO 陨星判官,1.2限定
     MeteorMurder,//TODO 陨星戮者,1.2限定
-    SharpShooter,//TODO 神射手
+    SharpShooter,
     //GameMode
     HotPotato,
     ColdPotato,

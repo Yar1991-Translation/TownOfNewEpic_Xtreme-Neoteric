@@ -207,6 +207,10 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
         {
             candidates.Add(TeamType.RewardOfficer);
         }
+        if (CustomRoles.SharpShooter.IsExist())
+        {
+            candidates.Add(TeamType.SharpShooter);
+        }
         var team = candidates[rand.Next(candidates.Count)];
         RpcSetTeam(team);
     }
@@ -226,6 +230,7 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
             TeamType.Opportunist => Player.IsAlive() || CustomWinnerHolder.AdditionalWinnerRoles.Contains(CustomRoles.Opportunist),
             TeamType.NightWolf => CustomWinnerHolder.WinnerTeam == CustomWinner.NightWolf,
             TeamType.RewardOfficer => CustomWinnerHolder.WinnerTeam == CustomWinner.RewardOfficer,
+            TeamType.SharpShooter => CustomWinnerHolder.WinnerTeam == CustomWinner.SharpShooter,
             _ => null,
         };
         if (!won.HasValue)
@@ -271,7 +276,7 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
         Opportunist,
         NightWolf,
         RewardOfficer,
-
+        SharpShooter,
     }
     public static Color GetCatColor(TeamType catType)
     {
@@ -289,6 +294,7 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
             TeamType.Opportunist => Utils.GetRoleColor(CustomRoles.Opportunist),
             TeamType.NightWolf => Utils.GetRoleColor(CustomRoles.NightWolf),
             TeamType.RewardOfficer => Utils.GetRoleColor(CustomRoles.RewardOfficer),
+            TeamType.SharpShooter => Utils.GetRoleColor(CustomRoles.SharpShooter),
             _ => null,
         };
         if (!color.HasValue)

@@ -192,7 +192,8 @@ public sealed class MeteorArbiter : RoleBase, INeutralKiller, IAdditionalWinner
             color = Color.red;
         if (Dust)
             color = Palette.Purple;
-        return Utils.ColorString(color, $"(LV{LOVE})" + GetString("Tired")+ $" {Tired}" +$"HP{Shield+1}");
+        var hp = Player.IsAlive() ? Shield + 1 : 0;
+        return Utils.ColorString(color, $"(LV{LOVE})" + GetString("Tired")+ $" {Tired}，" +$"HP{hp}");
     }
   
     public override bool OnCheckReportDeadBody(PlayerControl reporter, GameData.PlayerInfo target)
