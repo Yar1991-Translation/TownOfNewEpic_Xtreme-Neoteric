@@ -49,7 +49,7 @@ public static class NameTagManager
         string name = player.GetTrueName();
         if (Main.HostNickName != "" && player.AmOwner) name = Main.HostNickName;
 
-        if (AmongUsClient.Instance.IsGameStarted && player.AmOwner)
+        if (AmongUsClient.Instance.IsGameStarted && player.AmOwner )
         {
             if (Options.FormatNameMode.GetInt() == 1 && Main.HostNickName == "")
                 name = Palette.GetColorName(Camouflage.PlayerSkins[PlayerControl.LocalPlayer.PlayerId].ColorId);

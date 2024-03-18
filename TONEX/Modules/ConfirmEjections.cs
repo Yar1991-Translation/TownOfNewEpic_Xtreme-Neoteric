@@ -83,7 +83,7 @@ public static class ConfirmEjections
             Main.DoBlockNameChange = true;
             if (GameStates.IsInGame)
             {
-        player.RpcSetName(text);
+                player.RpcSetName(text);
             }
         }, 3.0f, "Change Exiled Player Name");
         _ = new LateTask(() =>
@@ -98,8 +98,6 @@ public static class ConfirmEjections
     public static void GetLatest()
     {
         if (!AmongUsClient.Instance.AmHost) return;
-        
-
 
         string text = string.Empty;
         int impNum = Main.AllAlivePlayerControls.Count(p => p.Is(CustomRoleTypes.Impostor) || p.Is(CustomRoles.Madmate));

@@ -137,10 +137,11 @@
   </br>
 
 >> ***Contributors：***<BR>
+>[KARPED1EM]()- **Technical Support** -<br>
 >[Night_瓜(Yu遇千知)]()- **Develop In TOHEX** -<br>
 >[ryuk]()- **Provide Some Ideas Of Features** -<br>
 >[水木年华]()- **Translate&Bugs Fix** -<br>
->[Niko]()- **Bugs Fix** -<br>
+>[Niko]()- **Bugs Fix&Technical Support** -<br>
 >[Farewell]()- **Support** -<br>
 >[LeZaiYa]()- **Support** -<br>
 </div>
