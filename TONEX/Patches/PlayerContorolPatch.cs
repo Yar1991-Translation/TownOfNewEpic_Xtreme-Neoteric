@@ -500,7 +500,8 @@ class FixedUpdatePatch
             if (GameStates.IsInGame && player.AmOwner)
                 DisableDevice.FixedUpdate();
 
-            NameTagManager.ApplyFor(player);
+            if (!Main.DoBlockNameChange)
+                NameTagManager.ApplyFor(player);
         }
         //LocalPlayer専用
         if (__instance.AmOwner)

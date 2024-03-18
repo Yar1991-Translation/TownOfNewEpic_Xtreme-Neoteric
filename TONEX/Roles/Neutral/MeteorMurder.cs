@@ -24,10 +24,10 @@ public sealed class MeteorMurder : RoleBase, INeutralKiller
             CustomRoles.MeteorMurder,
             () => RoleTypes.Impostor,
             CustomRoleTypes.Neutral,
-            75_1_2_0100,
+            75_1_2_0200,
             null,
             "Frisk|MeteorMurder|SFBF!Frisk",
-             "#C0EAFF",
+             "#ff0000",
             true,
             true,
             countType: CountTypes.MeteorMurder

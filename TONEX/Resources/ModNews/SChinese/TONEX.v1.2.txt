@@ -26,6 +26,8 @@
 (修复 By Slok)
 - 修复了先烈无法胜利的问题
 (修复 By Slok)
+- 修复驱逐房主时没有驱逐确认的问题
+(修复 By Slok, 技术指导：Karped1em)
 
 ## 优化
 - 重写游戏结束判断以优化
@@ -52,7 +54,7 @@
 - 独立阵营：陨星戮者（版本限定）
 (想法&制作 By Slok)
 - 独立阵营：神射手
-(想法来源： Town Of Host:The Other Roles 制作 By 喜)
+(想法来源：Town Of Host:The Other Roles, 制作 By 喜)
 附加：
 
 
