@@ -6,6 +6,7 @@ using static TONEX.Translator;
 using Hazel;
 using static UnityEngine.GraphicsBuffer;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
+using System.Collections.Generic;
 
 namespace TONEX.Roles.Crewmate;
 public sealed class Unyielding : RoleBase, IKiller
@@ -52,9 +53,9 @@ public sealed class Unyielding : RoleBase, IKiller
     public bool CanUseSabotageButton() => false;
     public bool CanUseImpostorVentButton() => false;
     public override void ApplyGameOptions(IGameOptions opt) => opt.SetVision(false);
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool SkillEffects(SkillReleaseType type, PlayerControl user = null, List<PlayerControl> effectTargetList = null, MurderInfo info = null)
     {
-        if (info.IsSuicide) return true;
+        if (info.IsSuicide || (int)type != 1) return true;
         var (killer, target) = info.AttemptTuple;
         if (Player.IsAlive() && Player.PlayerId == target.PlayerId)
         {

@@ -1,10 +1,13 @@
+using AmongUs.GameOptions;
 using Hazel;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using TONEX.Attributes;
 using TONEX.Modules;
 using TONEX.Roles.Core;
+using TONEX.Roles.Neutral;
 namespace TONEX;
 
 public static class AntiBlackout
@@ -12,14 +15,42 @@ public static class AntiBlackout
     ///<summary>
     ///是否覆盖放逐处理
     ///</summary>
-    public static bool OverrideExiledPlayer => Options.NoGameEnd.GetBool()
-      //  || CustomRoles.Jackal.IsExistCountDeath()
-      //  || CustomRoles.Pelican.IsExistCountDeath()
-      //  || CustomRoles.Demon.IsExistCountDeath()
-      //  || CustomRoles.BloodKnight.IsExistCountDeath()
-      //  || CustomRoles.Succubus.IsExistCountDeath()
-      //  || CustomRoles.Vagator.IsExistCountDeath()
-        ;
+    public static bool OverrideExiledPlayer => IsRequired && (IsSingleImpostor || Diff_CrewImp == 1);
+    ///<summary>
+    ///是否只有一个内鬼
+    ///</summary>
+    public static bool IsSingleImpostor => (Main.RealOptionsData?.GetInt(Int32OptionNames.NumImpostors) ?? Main.NormalOptions.NumImpostors) - Main.AllPlayerControls.Count(x => GameStates.IsInGame && x.Is(CustomRoles.CrewPostor)) <= 1;
+    ///<summary>
+    ///AntiBlackout内的处理是否必要
+    ///</summary>
+    public static bool IsRequired => Options.NoGameEnd.GetBool()
+        || Enum.GetValues(typeof(CustomRoles))
+        .Cast<CustomRoles>()
+        .Any(role => role.GetRoleInfo().IsNK && role.IsExistCountDeath());
+    ///<summary>
+    ///非内鬼玩家人数与内鬼人数之差
+    ///</summary>
+    public static int Diff_CrewImp
+    {
+        get
+        {
+            int numImpostors = 0;
+            int numCrewmates = 0;
+            foreach (var pc in Main.AllPlayerControls)
+            {
+                if (pc.Data.Role.IsImpostor)
+                {
+                    numImpostors++;
+                }
+                else
+                {
+                    numCrewmates++;
+                }
+            }
+            return numCrewmates - numImpostors;
+        }
+    }
+
 
     public static bool IsCached { get; private set; } = false;
     private static Dictionary<byte, (bool isDead, bool Disconnected)> isDeadCache = new();

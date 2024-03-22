@@ -28,7 +28,6 @@ public sealed class Blackmailer : RoleBase, IImpostor
     {
         ForBlackmailer = new();
         CustomRoleManager.MarkOthers.Add(MarkOthers);
-        CustomRoleManager.ReceiveMessage.Add(OnReceiveMessage);
         BlackmailerLimit = new();
     }
 
@@ -74,8 +73,13 @@ public sealed class Blackmailer : RoleBase, IImpostor
         {
             if (!target.IsAlive())
                 Player.Notify(GetString("TargetIsDead"));
+            else if (ForBlackmailer.Contains(target.PlayerId))
+                Player.Notify(string.Format(GetString("HasBlackmailed"), target.GetRealName()));
             else
+            {
                 ForBlackmailer.Add(target.PlayerId);
+                Player.Notify(string.Format(GetString("BlackmailSucceed"), target.GetRealName()));
+            }
         }
         return false;
     }
@@ -101,10 +105,5 @@ public sealed class Blackmailer : RoleBase, IImpostor
     {
         seen ??= seer;
         return (ForBlackmailer.Contains(seen.PlayerId) && isForMeeting == true) ? Utils.ColorString(RoleInfo.RoleColor, "‼") : "";
-    }
-    public static void OnReceiveMessage(MessageControl msgControl)
-    {
-        msgControl.IsCommand = ForBlackmailer.Contains(msgControl.Player.PlayerId) ? true : false;
-        msgControl.RecallMode = ForBlackmailer.Contains(msgControl.Player.PlayerId) ? MsgRecallMode.Spam : MsgRecallMode.None;
     }
 }

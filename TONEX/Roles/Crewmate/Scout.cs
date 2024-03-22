@@ -54,7 +54,7 @@ public sealed class Scout : RoleBase, IKiller
             .SetValueFormat(OptionFormat.Seconds);
         Limits = IntegerOptionItem.Create(RoleInfo, 11, GeneralOption.SkillLimit, new(1, 180, 1), 3, false)
             .SetValueFormat(OptionFormat.Times);
-        Radius = FloatOptionItem.Create(RoleInfo, 10, OptionName.ScoutRadius, new(0.5f, 10f, 0.5f), 1.5f, false)
+        Radius = FloatOptionItem.Create(RoleInfo, 12, OptionName.ScoutRadius, new(0.5f, 10f, 0.5f), 1.5f, false)
             .SetValueFormat(OptionFormat.Multiplier);
     }
     public override void Add()

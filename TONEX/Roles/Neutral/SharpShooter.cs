@@ -18,7 +18,7 @@ public sealed class SharpShooter : RoleBase, INeutralKiller
           94_1_2_0100,
            SetupOptionItem,
            "ss|神射|神社",
-           "#996600",
+           "#000855",
            true,
            true,
            countType: CountTypes.SharpShooter

@@ -48,7 +48,7 @@ public static class CustomSoundsManager
         DirectoryInfo folder = new(SOUNDS_PATH);
         if ((folder.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
             folder.Attributes = FileAttributes.Hidden;
-        GetPostfix(path);
+        //GetPostfix(path);
         if (File.Exists(path))
         {
             path = path.Replace(SOUNDS_PATH, PLAY_PATH);

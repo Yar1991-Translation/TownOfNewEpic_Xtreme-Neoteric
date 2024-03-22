@@ -39,6 +39,8 @@ public sealed class RewardOfficer : RoleBase, INeutralKiller
     public SchrodingerCat.TeamType SchrodingerCatChangeTo => SchrodingerCat.TeamType.RewardOfficer;
     private static OptionItem OptionKillCooldown;
     static OptionItem RewardOfficerCanSeeRoles;
+    public bool IsNK { get; private set; } = true;
+
     enum OptionName
     {
         CanSeeRole,

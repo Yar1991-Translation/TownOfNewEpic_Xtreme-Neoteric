@@ -528,7 +528,7 @@ public static class Options
         SetImpNum = BooleanOptionItem.Create(1_001_004, "SetImpNum", false, TabGroup.ImpostorRoles, false)
             .SetHeader(true)
             .SetGameMode(CustomGameMode.Standard);
-        ImpNum = IntegerOptionItem.Create(1_003_005, "ImpNum", new(0, 15, 1), 2, TabGroup.ImpostorRoles, false)
+        ImpNum = IntegerOptionItem.Create(1_001_005, "ImpNum", new(0, 15, 1), 2, TabGroup.ImpostorRoles, false)
             .SetGameMode(CustomGameMode.Standard)
             .SetValueFormat(OptionFormat.Players);
 

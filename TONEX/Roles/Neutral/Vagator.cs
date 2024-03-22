@@ -46,7 +46,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
         KillTimesTotalCount = 0;
         SkillTimesTotalCount = 0;
         ShieldsCount = 0;
-        Feeble = new(15);
+        Feeble = new();
     }
 
     #region 全局变量
@@ -94,18 +94,17 @@ public sealed class Vagator : RoleBase, INeutralKiller
     public override void ReceiveRPC(MessageReader reader)
     {
 
-            ElementPowerCount = reader.ReadInt32();
-            NormalKillTimesCount = reader.ReadInt32();
-            KillTimesTotalCount = reader.ReadInt32();
-            SkillTimesTotalCount = reader.ReadInt32();
-            ShieldsCount = reader.ReadInt32();
-       
-            var pid = reader.ReadByte();
-            if (!Feeble.Contains(pid))
-                 Feeble.Add(pid);
-        
-            if (Feeble.Contains(pid))
-                Feeble.Remove(pid);
+        ElementPowerCount = reader.ReadInt32();
+        NormalKillTimesCount = reader.ReadInt32();
+        KillTimesTotalCount = reader.ReadInt32();
+        SkillTimesTotalCount = reader.ReadInt32();
+        ShieldsCount = reader.ReadInt32();
+
+        var pid = reader.ReadByte();
+        if (!Feeble.Contains(pid))
+            Feeble.Add(pid);
+        else
+            Feeble.Remove(pid);
     }
     #endregion
     public bool CanUseKillButton() => true;
@@ -113,9 +112,9 @@ public sealed class Vagator : RoleBase, INeutralKiller
     public bool CanUseImpostorVentButton() => false;
     public float CalculateKillCooldown() => KillCooldown;
     public bool IsNK { get; private set; } = true;
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool SkillEffects(SkillReleaseType type, PlayerControl user = null, List<PlayerControl> effectTargetList = null, MurderInfo info = null)
     {
-        if (info.IsSuicide) return true;
+        if (info.IsSuicide || (int)type == 1) return true;
         var (killer, target) = info.AttemptTuple;
         if (ShieldsCount > 0 && target.Is(CustomRoles.Vagator))
         {
@@ -178,12 +177,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
             player.Notify(string.Format(GetString("PetSkillCanUse")), 2f);
         }
     }
-    public override string GetSuffix(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false)
-    {
-        seen ??= seer;
-        //seeおよびseenが自分である場合以外は関係なし
-        return $"\n<color=#e6adoa>{GetString("VagatorKillTimesTotalCount")}:{KillTimesTotalCount},{GetString("VagatorSkillTimesTotalCount")}:{SkillTimesTotalCount},{GetString("VagatorElementPowerCount")}:{ElementPowerCount}</color>";
-    }
+
     public override void OnUsePet()
     {
         if (UsePetCooldown != 0)
@@ -307,9 +301,15 @@ public sealed class Vagator : RoleBase, INeutralKiller
     public static string GetMarkOthers(PlayerControl seer, PlayerControl seen, bool isForMeeting = false)
     {
 
-        if (Feeble.Contains(seen.PlayerId)) return "↓";
+        if (Feeble != null)
+        {
+            if (Feeble.Contains(seen.PlayerId))
+            {
+                return "↓";
+            }
+        }
         else if (seer == seen)
-        return Utils.ColorString(RoleInfo.RoleColor, $"({(seer.GetRoleClass() as Vagator).ShieldsCount})");
+            return Utils.ColorString(RoleInfo.RoleColor, $"({(seer.GetRoleClass() as Vagator).ShieldsCount})");
         return "";
     }
     public override bool GetPetButtonText(out string text)
@@ -348,5 +348,11 @@ public sealed class Vagator : RoleBase, INeutralKiller
     {
         buttonName = "RainOfGeo";
         return true;
+    }
+    public override string GetSuffix(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false)
+    {
+        seen ??= seer;
+        //seeおよびseenが自分である場合以外は関係なし
+        return $"\n<color=#e6adoa>{GetString("VagatorKillTimesTotalCount")}:{KillTimesTotalCount},{GetString("VagatorSkillTimesTotalCount")}:{SkillTimesTotalCount},{GetString("VagatorElementPowerCount")}:{ElementPowerCount}</color>";
     }
 }

@@ -51,6 +51,15 @@ public sealed class NiceSwapper : RoleBase, IMeetingButton
         SwapperCanStartMetting = BooleanOptionItem.Create(RoleInfo, 11, OptionName.SwapperCanStartMetting, true, false);
         SwapperCanSelf = BooleanOptionItem.Create(RoleInfo, 12, OptionName.SwapperCanSelf, false, false);
     }
+    public override bool OnCheckReportDeadBody(PlayerControl reporter, GameData.PlayerInfo target)
+    {
+        if (Is(reporter) && target == null && !SwapperCanStartMetting.GetBool())
+        {
+            Logger.Info("因禁止换票师拍灯取消会议", "Jester.OnCheckReportDeadBody");
+            return false;
+        }
+        return true;
+    }
     public override void Add()
     {
         SwapLimit = OptionSwapNums.GetInt();
@@ -78,9 +87,12 @@ public sealed class NiceSwapper : RoleBase, IMeetingButton
     }
     public bool OnClickButtonLocal(PlayerControl target)
     {
-        Swap(Player,target, out var reason);
-        if (reason != null)
-            Player.ShowPopUp(Utils.ColorString(UnityEngine.Color.cyan, Translator.GetString("SwapTitle")) + "\n" +(reason));
+        if (AmongUsClient.Instance.AmHost)
+        {
+            if (!Swap(PlayerControl.LocalPlayer, target, out var reason, true))
+                PlayerControl.LocalPlayer.ShowPopUp(reason);
+        }
+        else SwapperHelper.SendRPC(target.PlayerId);
         return false;
     }
     public IReadOnlyDictionary<byte, VoteData> AllVotes => allVotes;

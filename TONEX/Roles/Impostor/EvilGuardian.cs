@@ -15,7 +15,7 @@ public sealed class EvilGuardian : RoleBase, IImpostor
             CustomRoles.EvilGuardian,
             () => RoleTypes.Impostor,
             CustomRoleTypes.Impostor,
-            3254,
+            94_1_5_0100,
            SetupOptionItem,
             "eg|邪恶守护",
             ctop: true
