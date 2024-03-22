@@ -125,7 +125,7 @@ public sealed class FortuneTeller : RoleBase
                 CustomRoles.Bomber or
                 CustomRoles.Capitalist or
                 CustomRoles.NiceGuesser or
-                CustomRoles.Grenadier or
+                CustomRoles.NiceGrenadier or
                 CustomRoles.Terrorist or
                 CustomRoles.Revolutionist or
                 CustomRoles.Demon or

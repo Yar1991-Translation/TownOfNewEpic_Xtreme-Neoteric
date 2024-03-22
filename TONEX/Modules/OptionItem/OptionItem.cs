@@ -110,7 +110,7 @@ public abstract class OptionItem
         }
         else
         {
-            Logger.Error($"ID:{id}が重複しています", "OptionItem");
+            Logger.Error($"ID:{id},{name}が重複しています", "OptionItem");
         }
     }
 

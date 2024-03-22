@@ -30,6 +30,7 @@ public class AddOnsAssignData
     };
     static bool CheckRoleConflict(PlayerControl pc, CustomRoles role)
     {
+        if (role is CustomRoles.Nihility && pc.GetCustomSubRoles().Count > 0) return false;
         if (role is CustomRoles.Lighter && (!pc.GetCustomRole().IsCrewmate() || pc.Is(CustomRoles.Bewilder))) return false;
         if (role is CustomRoles.Bewilder && (pc.GetCustomRole().IsImpostor() || pc.Is(CustomRoles.Lighter))) return false;
         if (role is CustomRoles.Neptune && (pc.Is(CustomRoles.Lovers) || pc.Is(CustomRoles.Hater))) return false;

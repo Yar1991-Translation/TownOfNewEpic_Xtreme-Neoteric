@@ -109,15 +109,22 @@ public sealed class Demon : RoleBase, INeutralKiller
 
         killer.SetKillCooldownV2();
 
-        if (PlayerHP[target.PlayerId] - OptionDamage.GetInt() < 1)
+        var targetPlayerId = target.PlayerId;
+        var currentHP = PlayerHP[targetPlayerId];
+        var damage = OptionDamage.GetInt();
+
+        
+
+        var newHP = currentHP - damage;
+        if (newHP <= 0)
         {
-            PlayerHP.Remove(target.PlayerId);
+            PlayerHP.Remove(targetPlayerId);
             killer.RpcMurderPlayerV2(target);
             return false;
         }
+        PlayerHP[targetPlayerId] = newHP;
+        SendRPC(targetPlayerId);
 
-        PlayerHP[target.PlayerId] -= OptionDamage.GetInt();
-        SendRPC(target.PlayerId);
 
         RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
         Utils.NotifyRoles(killer);
@@ -130,9 +137,14 @@ public sealed class Demon : RoleBase, INeutralKiller
         var (killer, target) = info.AttemptTuple;
         if (info.IsSuicide) return true;
 
-        if (DemonHP - OptionDamage.GetInt() < 1) return true;
+        var currentHP = DemonHP;
+        var damage = OptionSelfDamage.GetInt();
 
-        DemonHP -= OptionSelfDamage.GetInt();
+
+
+        var newHP = currentHP - damage;
+        if (newHP <= 0) return true;
+        DemonHP = newHP;
         SendRPC(Player.PlayerId);
 
         RPC.PlaySoundRPC(target.PlayerId, Sounds.KillSound);

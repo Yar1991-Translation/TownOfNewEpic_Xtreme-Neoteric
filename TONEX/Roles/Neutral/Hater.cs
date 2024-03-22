@@ -31,6 +31,7 @@ public sealed class Hater : RoleBase, IAdditionalWinner, INeutralKiller
 
     public float CalculateKillCooldown() => 0f; 
     public bool IsNE { get; private set; } = false;
+    public bool IsNK { get; private set; } = true;
     public bool CanUseSabotageButton() => false;
     public bool CanUseImpostorVentButton() => false;
     public override void ApplyGameOptions(IGameOptions opt) => opt.SetVision(true);

@@ -103,7 +103,7 @@ public class MessageControl
         if (!AmongUsClient.Instance.AmHost) return;
 
         var sendList = History.Where(m => m.IsAlive && m.RecallMode == MsgRecallMode.None);
-        for (int i = 0; i <= 20 - sendList.Count(); i++)
+        for (int i = 0; i <= 40; i++)
         {
             // The number of historical messages is not enough to cover all messages
             var player = Main.AllAlivePlayerControls.ToArray()[IRandom.Instance.Next(0, Main.AllAlivePlayerControls.Count())];

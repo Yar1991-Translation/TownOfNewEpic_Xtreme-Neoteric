@@ -168,12 +168,6 @@ public class PlayerGameOptionsSender : GameOptionsSender
             Utils.NotifyRoles(player);
         }*/
         // Õ∂÷¿…µπœµ∞¿≤£°£°£°£°£°
-        if (Grenadier.IsBlinding(player))
-        {
-            opt.SetVision(false);
-            opt.SetFloat(FloatOptionNames.CrewLightMod, Grenadier.OptionCauseVision.GetFloat());
-            opt.SetFloat(FloatOptionNames.ImpostorLightMod, Grenadier.OptionCauseVision.GetFloat());
-        }
 
         AURoleOptions.EngineerCooldown = Mathf.Max(0.01f, AURoleOptions.EngineerCooldown);
 

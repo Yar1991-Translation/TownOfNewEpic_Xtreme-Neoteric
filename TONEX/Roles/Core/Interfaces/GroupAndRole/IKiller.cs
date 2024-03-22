@@ -61,6 +61,8 @@ public interface IKiller
     /// public bool CanUseImpostorVentButton() => true;
     public bool OnCheckMurderAsKiller(MurderInfo info) => true;
 
+    public void OnCheckMurderAfterCheck(MurderInfo info) { }
+
     /// <summary>
     /// MurderPlayer 作为击杀者时的处理函数
     /// </summary>

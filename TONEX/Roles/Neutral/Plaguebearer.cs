@@ -35,6 +35,8 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
     )
     {
         CanVent = OptionCanVent.GetBool();
+        CustomRoleManager.OnCheckMurderPlayerOthers_After.Add(OnCheckMurderPlayerOthers_After);
+
     }
 
     static OptionItem OptionKillCooldown;
@@ -82,6 +84,7 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
             PlaguePlayers.Add(reader.ReadByte());
     }
     public override string GetProgressText(bool comms = false) => Utils.ColorString(PlaguePlayers.Count >= 1 ? Utils.ShadeColor(RoleInfo.RoleColor, 0.25f) : Color.gray, $"({PlaguePlayers.Count}/{Main.AllAlivePlayerControls.ToList().Count - 1})");
+
     public bool OnCheckMurderAsKiller(MurderInfo info)
     {
         var (killer, target) = info.AttemptTuple;
@@ -104,6 +107,19 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
             Player.RpcSetCustomRole(CustomRoles.GodOfPlagues);
         }
     }
+    public static bool OnCheckMurderPlayerOthers_After(MurderInfo info)
+    {
+
+        var (killer, target) = info.AttemptTuple;
+        foreach (var pc in Main.AllAlivePlayerControls.Where(p => p.Is(CustomRoles.Plaguebearer)))
+            if ((pc.GetRoleClass() as Plaguebearer).PlaguePlayers.Contains(killer.PlayerId))
+            {
+                (pc.GetRoleClass() as Plaguebearer).PlaguePlayers.Remove(target.PlayerId);
+                (pc.GetRoleClass() as Plaguebearer).PlaguePlayers.Add(target.PlayerId);
+            }
+        return info.DoKill;
+    }
+
     public override string GetMark(PlayerControl seer, PlayerControl seen, bool _ = false)
     {
         //seenが省略の場合seer

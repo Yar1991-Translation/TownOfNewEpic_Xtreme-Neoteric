@@ -164,6 +164,7 @@ public static class SwapperHelper
                 return false;
             }
         }
+
         Logger.Info($"{swapper.GetNameWithRole()} 添加了 {target.GetNameWithRole()}", "Swapper");
 
 
@@ -219,5 +220,17 @@ public static class SwapperHelper
 
         error = string.Empty;
         return true;
+    }
+    public static void SendRPC(byte playerId)
+    {
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.Swap, SendOption.Reliable, -1);
+        writer.Write(playerId);
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+    }
+    public static void ReceiveRPC(MessageReader reader, PlayerControl pc)
+    {
+        int PlayerId = reader.ReadByte();
+        if (!Swap(pc, Utils.GetPlayerById(PlayerId), out var reason, true))
+            pc.ShowPopUp(reason);
     }
 }//*/

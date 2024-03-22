@@ -52,6 +52,7 @@ public static class CustomRoleManager
 
         appearanceKiller.ResetKillCooldown();
 
+        var succeed = false;
         // 無効なキルをブロックする処理 必ず最初に実行する
         if (!CheckMurderPatch.CheckForInvalidMurdering(info))
         {
@@ -83,17 +84,22 @@ public static class CustomRoleManager
                 Logger.Info($"凶手阻塞了击杀", "CheckMurder");
                 return false;
             }
-            if (killer.IsKiller && targetRole != null)
+            if (!attemptKiller.GetRoleClass().SkillEffects(RoleBase.SkillReleaseType.Kill_Killer, info: info))
             {
-                // 被害者检查击杀
-                if (!targetRole.OnCheckMurderAsTarget(info))
-                {
-                    Logger.Info($"被害者阻塞了击杀", "CheckMurder");
-                    return false;
-                }
+                Logger.Info($"凶手阻塞了击杀", "CheckMurder");
+                succeed= false;
             }
             if (killer.IsKiller)
             {
+                if (targetRole != null)
+                {
+                    // 被害者检查击杀
+                    if (!targetRole.OnCheckMurderAsTarget(info))
+                    {
+                        Logger.Info($"被害者阻塞了击杀", "CheckMurder");
+                        return false;
+                    }
+                }
                 // 其他职业类对击杀事件的事后检查
                 foreach (var onCheckMurderPlayer in OnCheckMurderPlayerOthers_After)
                 {
@@ -103,6 +109,31 @@ public static class CustomRoleManager
                         return false;
                     }
                 }
+            }
+            if (killer.IsKiller)
+            {
+                if (targetRole != null)
+                {
+                    // 被害者检查击杀
+                    if (!targetRole.SkillEffects(RoleBase.SkillReleaseType.Kill_Target, info: info))
+                    {
+                        Logger.Info($"被害者阻塞了击杀", "CheckMurder");
+                        return false;
+                    }
+                }
+                // 其他职业类对击杀事件的事后检查
+                foreach (var onCheckMurderPlayer in OnCheckMurderPlayerOthers_After)
+                {
+                    if (!onCheckMurderPlayer(info))
+                    {
+                        Logger.Info($"OtherAfter：{onCheckMurderPlayer.Method.Name} 阻塞了击杀", "CheckMurder");
+                        return false;
+                    }
+                }
+            }
+            if (!info.DoKill)
+            {
+                Nihility.OnCheckMurderPlayerOthers_Nihility(info);
             }
         }
 
@@ -156,8 +187,8 @@ public static class CustomRoleManager
         //ターゲットの処理
         var targetRole = attemptTarget.GetRoleClass();
         targetRole?.OnMurderPlayerAsTarget(info);
-
-        //SubRoels
+        targetRole?.SkillEffects(RoleBase.SkillReleaseType.Kill_Target, info: info);
+        //SubRoles
         Bait.OnMurderPlayerOthers(info);
         Beartrap.OnMurderPlayerOthers(info);
         Avenger.OnMurderPlayerOthers(info);
@@ -586,11 +617,11 @@ public enum CustomRoles
     MimicTeam,//TODO 模仿者团队
     MimicKiller,//TODO 模仿者（杀手）
     MimicAssistant,//TODO 模仿者（助手）
-    Blackmailer,//TODO 勒索者
+    Blackmailer,
     EvilSwapper,
     Disperser,//TODO 分散者
     EvilPianist,//TODO 邪恶的钢琴家
-
+    EvilGrenadier,
     //Crewmate(Vanilla)
     Engineer,
     GuardianAngel,
@@ -616,7 +647,7 @@ public enum CustomRoles
     Veteran,
     Bodyguard,
     Deceiver,
-    Grenadier,
+    NiceGrenadier,
     Medic,
     FortuneTeller,
     Glitch,
@@ -744,7 +775,7 @@ public enum CustomRoles
     Professional,//TODO 专业赌怪
     Luckless,//TODO 倒霉蛋
     FateFavor,//TODO 命运眷顾者
-    Nihility,//TODO 虚无
+    Nihility,
     Diseased,
     IncorruptibleOfficial,//TODO 清廉之官
     VIP,//TODO VIP

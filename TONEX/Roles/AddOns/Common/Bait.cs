@@ -17,6 +17,7 @@ public static class Bait
     public static OptionItem OptionReportDelayMin;
     public static OptionItem OptionReportDelayMax;
     public static OptionItem OptionDelayNotifyForKiller;
+    public static OptionItem OptionCanSeePlayerInVent;
 
     public static void SetupCustomOption()
     {
@@ -27,7 +28,7 @@ public static class Bait
         OptionReportDelayMax = FloatOptionItem.Create(Id + 21, "BaitDelayMax", new(0f, 10f, 1f), 0f, TabGroup.Addons, false).SetParent(CustomRoleSpawnChances[CustomRoles.Bait])
             .SetValueFormat(OptionFormat.Seconds);
         OptionDelayNotifyForKiller = BooleanOptionItem.Create(Id + 22, "BaitDelayNotify", true, TabGroup.Addons, false).SetParent(CustomRoleSpawnChances[CustomRoles.Bait]);
-
+        OptionCanSeePlayerInVent = BooleanOptionItem.Create(Id + 23, "BaitanSeePlayerInVent", true, TabGroup.Addons, false).SetParent(CustomRoleSpawnChances[CustomRoles.Bait]);
     }
     [GameModuleInitializer]
     public static void Init()
@@ -60,7 +61,7 @@ public static class Bait
     public static void OnFixedUpdate(PlayerControl player)
     {
         if (!AmongUsClient.Instance.AmHost) return;
-        if (player.Is(CustomRoles.Bait))
+        if (player.Is(CustomRoles.Bait) && OptionCanSeePlayerInVent.GetBool())
         {
             foreach (var pc in Main.AllAlivePlayerControls)
             {

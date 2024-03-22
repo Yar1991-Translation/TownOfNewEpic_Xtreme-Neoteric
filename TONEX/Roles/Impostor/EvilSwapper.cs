@@ -51,6 +51,15 @@ public sealed class EvilSwapper : RoleBase, IImpostor, IMeetingButton
     {
         SwapLimit = OptionGuessNums.GetInt();
     }
+    public override bool OnCheckReportDeadBody(PlayerControl reporter, GameData.PlayerInfo target)
+    {
+        if (Is(reporter) && target == null && !SwapperCanStartMetting.GetBool())
+        {
+            Logger.Info("因禁止换票师拍灯取消会议", "Jester.OnCheckReportDeadBody");
+            return false;
+        }
+        return true;
+    }
     public override void OverrideNameAsSeer(PlayerControl seen, ref string nameText, bool isForMeeting = false)
     {
         if (Player.IsAlive() && seen.IsAlive() && isForMeeting)
@@ -73,9 +82,12 @@ public sealed class EvilSwapper : RoleBase, IImpostor, IMeetingButton
     }
     public bool OnClickButtonLocal(PlayerControl target)
     {
-        Swap(Player, target, out var reason);
-        if (reason != null)
-        Player.ShowPopUp(Utils.ColorString(UnityEngine.Color.cyan, Translator.GetString("SwapTitle")) + "\n" + reason);
+        if (AmongUsClient.Instance.AmHost)
+        {
+            if (!Swap(PlayerControl.LocalPlayer, target, out var reason, true))
+                PlayerControl.LocalPlayer.ShowPopUp(reason);
+        }
+        else SwapperHelper.SendRPC(target.PlayerId);
         return false;
     }
     public string ButtonName { get; private set; } = "SwapNo";

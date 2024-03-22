@@ -58,7 +58,6 @@ static class CustomRolesHelper
     {
         if (role is
             CustomRoles.EvilGuardian or//TODO 邪恶天使
-    CustomRoles.EvilTimeStops or //TODO 邪恶的时停者
     CustomRoles.MirrorSpirit or//TODO 镜妖
     CustomRoles.Assaulter or//TODO 强袭者
     CustomRoles.MimicTeam or//TODO 模仿者团队
@@ -103,8 +102,6 @@ static class CustomRolesHelper
     CustomRoles.VIP or//TODO VIP
     CustomRoles.Believer or //TODO 信徒
     CustomRoles.Phantom or//TODO 幻影
-    CustomRoles.MeteorArbiter or//TODO 陨星判官,1.2限定
-    CustomRoles.MeteorMurder or//TODO 陨星戮者,1.2限定
     CustomRoles.Revolutionist or//TODO 革命家
      CustomRoles.Sunnyboy or//TODO 革命家
       CustomRoles.Non_Villain or//不演反派

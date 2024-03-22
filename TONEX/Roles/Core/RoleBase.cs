@@ -532,7 +532,7 @@ public abstract class RoleBase : IDisposable
     /// </summary>
     public virtual bool GetPetButtonText(out string text)
     {
-        text = GetString(StringNames.PetAction);
+        text = default;
         return false;
     }
     /// <summary>
@@ -546,7 +546,7 @@ public abstract class RoleBase : IDisposable
     /// <summary>
     /// 更改使用按钮的文本
     /// </summary>
-    public virtual string GetUseButtonText() => GetString(StringNames.UseLabel);
+    public virtual string GetUseButtonText() => default;
     /// <summary>
     /// 更改使用按钮的图标
     /// </summary>
@@ -558,7 +558,7 @@ public abstract class RoleBase : IDisposable
     /// <summary>
     /// 更改管理室地图的文本（？）
     /// </summary>
-    public virtual string GetAdminButtonText() => GetString(StringNames.AdminMapSystem);
+    public virtual string GetAdminButtonText() => default;
     /// <summary>
     /// 更改理室地图的图标（？）
     /// </summary>
@@ -590,6 +590,13 @@ public abstract class RoleBase : IDisposable
     public virtual void OnGameStart()
     { }
 
+    /// <summary>
+    /// 技能影响目标的函数
+    /// </summary>
+    public virtual bool SkillEffects(SkillReleaseType type, PlayerControl user = null, List<PlayerControl> effectTargetList = null,  MurderInfo info = null)
+    {
+        return true;
+    }
     protected static AudioClip GetIntroSound(RoleTypes roleType) =>
         RoleManager.Instance.AllRoles.Where((role) => role.Role == roleType).FirstOrDefault().IntroSound;
 
@@ -610,5 +617,13 @@ public abstract class RoleBase : IDisposable
         SkillDuration,
         SkillCooldown,
         SkillLimit,
+    }
+    public enum SkillReleaseType : int
+    {
+        Kill_Killer,
+        Kill_Target,
+        Vent,
+        ShapeShift,
+        Pet,
     }
 }
