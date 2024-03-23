@@ -530,6 +530,7 @@ public static class Options
             .SetGameMode(CustomGameMode.Standard);
         ImpNum = IntegerOptionItem.Create(1_001_005, "ImpNum", new(0, 15, 1), 2, TabGroup.ImpostorRoles, false)
             .SetGameMode(CustomGameMode.Standard)
+            .SetParent(SetImpNum)
             .SetValueFormat(OptionFormat.Players);
 
         DefaultShapeshiftCooldown = FloatOptionItem.Create(1_002_001, "DefaultShapeshiftCooldown", new(5f, 999f, 5f), 15f, TabGroup.ImpostorRoles, false)
@@ -665,6 +666,8 @@ public static class Options
         Signal.SetupCustomOption();
         Libertarian.SetupCustomOption();
         Diseased.SetupCustomOption();
+        Nihility.SetupCustomOption();
+        Believer.SetupCustomOption();
 
         // 船员专属附加
         TextOptionItem.Create(5_100_002, "MenuTitle.Addon.Crew", TabGroup.Addons)

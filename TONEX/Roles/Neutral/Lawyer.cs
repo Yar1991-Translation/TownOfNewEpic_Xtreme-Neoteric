@@ -78,7 +78,8 @@ public sealed class Lawyer : RoleBase, IAdditionalWinner,INeutralKiller
         OptionTargetKnowsLawyer = BooleanOptionItem.Create(RoleInfo, 14, OptionName.OptionTargetKnowsLawyer, false, false);
         OptionSkillCooldown = FloatOptionItem.Create(RoleInfo, 15, OptionName.ProsecutorsSkillCooldown, new(2.5f, 180f, 2.5f), 30f, false)
             .SetValueFormat(OptionFormat.Seconds);
-        OptionSkillLimit = IntegerOptionItem.Create(RoleInfo, 16, OptionName.ProsecutorsSkillLimit, new(1, 999, 1), 3, false);
+        OptionSkillLimit = IntegerOptionItem.Create(RoleInfo, 16, OptionName.ProsecutorsSkillLimit, new(1, 999, 1), 3, false)
+            .SetValueFormat(OptionFormat.Times);
     }
     public override void Add()
     {

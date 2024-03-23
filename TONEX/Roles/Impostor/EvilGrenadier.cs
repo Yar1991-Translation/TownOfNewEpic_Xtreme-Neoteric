@@ -19,8 +19,7 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
             CustomRoleTypes.Impostor,
             75_1_2_0500,
             SetupOptionItem,
-            "gr|擲雷兵|掷雷|闪光弹",
-            "#3c4a16"
+            "gr|擲雷兵|掷雷|闪光弹"
         );
     public EvilGrenadier(PlayerControl player)
     : base(

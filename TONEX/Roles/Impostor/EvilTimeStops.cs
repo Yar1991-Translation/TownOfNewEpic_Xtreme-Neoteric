@@ -21,8 +21,7 @@ public sealed class EvilTimeStops : RoleBase, IImpostor
             CustomRoleTypes.Impostor,
             75_1_2_0300,
             SetupOptionItem,
-            "shi|时停",
-            "#f6f657"
+            "shi|时停"
         );
     public EvilTimeStops(PlayerControl player)
     : base(

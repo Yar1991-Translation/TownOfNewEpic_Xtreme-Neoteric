@@ -282,6 +282,8 @@ public class Main : BasePlugin
                 {CustomRoles.Libertarian,"#33CC99" },
                 {CustomRoles.Spiders, "#ff1919"},
                 {CustomRoles.Diseased,"#c0c0c0" },
+                {CustomRoles.Nihility,"#444444" },
+                {CustomRoles.Believer,"#007169" },
             };
             var type = typeof(RoleBase);
             var roleClassArray =
