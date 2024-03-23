@@ -55,10 +55,17 @@ public sealed class Whoops : RoleBase, INeutral
     public override bool CheckVoteAsVoter(PlayerControl votedFor)
     {
         if (votedFor == null || (votedFor.GetCountTypes() == CountTypes.Jackal || !CanRecruit)) return true;
-        if (votedFor.CanUseKillButton())
-            votedFor.RpcSetCustomRole(CustomRoles.Sidekick);
+        if (!votedFor.Is(CustomRoles.Believer))
+        {
+            if (votedFor.CanUseKillButton())
+                votedFor.RpcSetCustomRole(CustomRoles.Sidekick);
+            else
+                votedFor.RpcSetCustomRole(CustomRoles.Whoops);
+        }
         else
-            votedFor.RpcSetCustomRole(CustomRoles.Whoops);
+        {
+
+        }
         Utils.SendMessage(Translator.GetString("WhoopsRecruitTrue"), votedFor.PlayerId);
         return false;
     }

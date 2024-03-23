@@ -97,10 +97,8 @@ static class CustomRolesHelper
      CustomRoles.Professional or//TODO 专业赌怪
     CustomRoles.Luckless or//TODO 倒霉蛋
     CustomRoles.FateFavor or//TODO 命运眷顾者
-    CustomRoles.Nihility or//TODO 虚无
     CustomRoles.IncorruptibleOfficial or//TODO 清廉之官
     CustomRoles.VIP or//TODO VIP
-    CustomRoles.Believer or //TODO 信徒
     CustomRoles.Phantom or//TODO 幻影
     CustomRoles.Revolutionist or//TODO 革命家
      CustomRoles.Sunnyboy or//TODO 革命家

@@ -215,6 +215,7 @@ Libertarian: "广播员"
 Spiders: "蜘蛛"
 Diseased: "患者"
 Nihility: "虚无"
+Believer: "信徒"
 
 ## 附加职业作为前缀时 / Prefixes for Add-ons
 Prefix.Neptune: "海王"
@@ -511,6 +512,7 @@ LibertarianInfo: "注意啦！死人啦！"
 SpidersInfo: "被缠住了吧"
 DiseasedInfo: "我有病，会传染"
 NihilityInfo: "不独入寝可成梦，事事皆虚空"
+BelieverInfo: "以信仰之名！"
 
 ## 其它 / Other Blurbs
 GMInfo: "开局死的冤魂隔岸观火"
@@ -689,6 +691,7 @@ SignalInfoLong: "通讯兵在会议结束后会返回开始前的所在地"
 SpidersInfoLong: "蜘蛛在击杀后会给尸体缠上蛛丝，报告该尸体的玩家会受到大幅度的移速减少"
 DiseasedInfoLong: "患者的凶手的击杀冷却时间会翻倍。"
 NihilityInfoLong: "任何有关击杀按键的非击杀交互对虚无无效，同时虚无不会拥有任何其他附加"
+BelieverInfoLong: "信徒不可被招募，无法成为恋人"
 
 ## 其它 / Other Descriptions
 GMInfoLong: "看我干啥，我只是个开局就死的冤魂，静静地吃瓜而已。"

@@ -15,7 +15,7 @@ public sealed class SharpShooter : RoleBase, INeutralKiller
            CustomRoles.SharpShooter,
            () => RoleTypes.Impostor,
            CustomRoleTypes.Neutral,
-          94_1_2_0100,
+           94_1_2_0100,
            SetupOptionItem,
            "ss|神射|神社",
            "#000855",
@@ -43,7 +43,7 @@ public sealed class SharpShooter : RoleBase, INeutralKiller
     private static void SetupOptionItem()
     {
         OptionKillDistance = IntegerOptionItem.Create(RoleInfo, 16, OptionName.SharpShooterKillDistance, new(1, 15, 1), 1, false)
-            .SetValueFormat(OptionFormat.Times);
+            .SetValueFormat(OptionFormat.Multiplier);
     }
     public override void ApplyGameOptions(IGameOptions opt)
     {

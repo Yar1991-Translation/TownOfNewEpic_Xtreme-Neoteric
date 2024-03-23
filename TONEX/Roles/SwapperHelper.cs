@@ -176,7 +176,7 @@ public static class SwapperHelper
     private static bool MsgToPlayer(string msg, out byte id, out string error)
     {
         id = byte.MaxValue;
-        
+
 
         if (msg.StartsWith("/")) msg = msg.Replace("/", string.Empty);
 
@@ -216,7 +216,7 @@ public static class SwapperHelper
             return false;
         }
 
-        
+
 
         error = string.Empty;
         return true;
