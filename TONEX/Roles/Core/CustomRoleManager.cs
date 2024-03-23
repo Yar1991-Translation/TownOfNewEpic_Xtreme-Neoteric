@@ -67,6 +67,10 @@ public static class CustomRoleManager
         {
             if (!attemptKiller.CanUseSkill()) return false;
             // 其他职业类对击杀事件的事先检查
+            if (!killer.IsKiller)
+            {
+                Nihility.OnCheckMurderPlayerOthers_Nihility(info);
+            }
             if (killer.IsKiller)
             {
                 foreach (var onCheckMurderPlayer in OnCheckMurderPlayerOthers_Before)
@@ -131,10 +135,7 @@ public static class CustomRoleManager
                     }
                 }
             }
-            if (!info.DoKill)
-            {
-                Nihility.OnCheckMurderPlayerOthers_Nihility(info);
-            }
+
         }
 
         //キル可能だった場合のみMurderPlayerに進む
@@ -779,7 +780,8 @@ public enum CustomRoles
     Diseased,
     IncorruptibleOfficial,//TODO 清廉之官
     VIP,//TODO VIP
-    Believer,//TODO 信徒
+    Believer,
+    PublicOpinionShaper,
 
 }
 public enum CustomRoleTypes

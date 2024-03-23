@@ -687,6 +687,7 @@ public static class Options
         TicketsStealer.SetupCustomOption();
         Mimic.SetupCustomOption();
         Spiders.SetupCustomOption();
+        PublicOpinionShaper.SetupCustomOption();
 
         #endregion
 

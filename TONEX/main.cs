@@ -284,6 +284,7 @@ public class Main : BasePlugin
                 {CustomRoles.Diseased,"#c0c0c0" },
                 {CustomRoles.Nihility,"#444444" },
                 {CustomRoles.Believer,"#007169" },
+                {CustomRoles.PublicOpinionShaper, "#ff1919"},
             };
             var type = typeof(RoleBase);
             var roleClassArray =
