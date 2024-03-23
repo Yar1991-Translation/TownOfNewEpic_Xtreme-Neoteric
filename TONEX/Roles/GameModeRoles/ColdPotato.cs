@@ -15,7 +15,7 @@ public sealed class ColdPotato : RoleBase, IKiller
             typeof(ColdPotato),
             player => new ColdPotato(player),
             CustomRoles.ColdPotato,
-            () => RoleTypes.Impostor,
+            () => RoleTypes.Shapeshifter,
             CustomRoleTypes.Neutral,
             94_1_0_0100,
             null,
@@ -30,9 +30,8 @@ public sealed class ColdPotato : RoleBase, IKiller
     : base(
         RoleInfo,
         player,
-        () => HasTask.False,
-        true
-    )
+        () => HasTask.False
+        )
     {
         CustomRoleManager.MarkOthers.Add(MarkOthers);
         LastTime = -1;

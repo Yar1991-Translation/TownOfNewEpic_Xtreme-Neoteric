@@ -368,6 +368,9 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
         RoleCommands.Add(CustomRoles.Libertarian, new() { "li", "广播", "自主主义者" });
         RoleCommands.Add(CustomRoles.Spiders, new() { "sd", "蜘蛛"});
         RoleCommands.Add(CustomRoles.Diseased, new() { "dis", "患者", "病人" });
+        RoleCommands.Add(CustomRoles.Nihility, new() { "nihi", "虚无" });
+        RoleCommands.Add(CustomRoles.Believer, new() { "bel", "信徒" });
+        RoleCommands.Add(CustomRoles.PublicOpinionShaper, new() { "pos", "舆论缔造者" });
     }
     public static void SendRolesInfo(string input, byte playerId)
     {

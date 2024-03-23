@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TONEX.Roles.AddOns.Impostor;
 using TONEX.Roles.Core;
 using UnityEngine;
 using static TONEX.Options;
@@ -40,14 +41,13 @@ public class AddOnsAssignData
         if (role is CustomRoles.Tiebreaker && pc.Is(CustomRoles.Dictator)) return false;
         if (role is CustomRoles.YouTuber && (!pc.GetCustomRole().IsCrewmate() || pc.Is(CustomRoles.Madmate) || pc.Is(CustomRoles.Sheriff))) return false;
         if (role is CustomRoles.Egoist && (pc.GetCustomRole().IsNeutral() || pc.Is(CustomRoles.Madmate))) return false;
-        if (role is CustomRoles.TicketsStealer or CustomRoles.Mimic && !pc.GetCustomRole().IsImpostor()) return false;
-        if (role is CustomRoles.TicketsStealer && (pc.Is(CustomRoles.Bomber) || pc.Is(CustomRoles.BoobyTrap) || pc.Is(CustomRoles.Capitalist))) return false;
+        if ((role is CustomRoles.TicketsStealer or CustomRoles.Mimic or CustomRoles.Spiders or CustomRoles.PublicOpinionShaper) && !pc.GetCustomRole().IsImpostor()) return false;
+        if (role is (CustomRoles.TicketsStealer or CustomRoles.Spiders or CustomRoles.PublicOpinionShaper) && (pc.Is(CustomRoles.Bomber) || pc.Is(CustomRoles.BoobyTrap) || pc.Is(CustomRoles.Capitalist))) return false;
         if (role is CustomRoles.Mimic && pc.Is(CustomRoles.Mafia)) return false;
         if (role is CustomRoles.Schizophrenic && ((!pc.GetCustomRole().IsImpostor() && !pc.GetCustomRole().IsCrewmate()) || pc.Is(CustomRoles.Madmate))) return false;
         if (role is CustomRoles.Seer && pc.Is(CustomRoles.Mortician)) return false;
         if (role is CustomRoles.Reach && !pc.CanUseKillButton()) return false;
         if (role is CustomRoles.Flashman && pc.Is(CustomRoles.EvilInvisibler)) return false;
-        if (role is CustomRoles.Spiders && (pc.Is(CustomRoles.Bomber) || pc.Is(CustomRoles.BoobyTrap) || pc.Is(CustomRoles.Capitalist))) return false;
         return true;
     }
     static readonly IEnumerable<CustomRoles> ValidRoles = CustomRolesHelper.AllRoles.Where(role => !InvalidRoles.Contains(role));

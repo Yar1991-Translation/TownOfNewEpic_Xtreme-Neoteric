@@ -365,11 +365,14 @@ class ReportDeadBodyPatch
         //对于仅仅是报告尸体的处理
         if (target != null)
         {
-            if (__instance.Is(CustomRoles.Oblivious) && Utils.GetPlayerById(target.PlayerId).Is(CustomRoles.Bait)) return false;
-            if (target.Object.GetRealKiller().Is(CustomRoles.Spiders))
+            if (__instance.Is(CustomRoles.Oblivious) && !Utils.GetPlayerById(target.PlayerId).Is(CustomRoles.Bait)) return false;
+            if (target.Object.GetRealKiller().Is(CustomRoles.PublicOpinionShaper))
             {
-                Main.AllPlayerSpeed[__instance.PlayerId] = Spiders.OptionSpeed.GetFloat();
-                __instance.MarkDirtySettings();
+                if(!(Utils.IsActive(SystemTypes.Comms) || Utils.IsActive(SystemTypes.Electrical) || Utils.IsActive(SystemTypes.Reactor) || Utils.IsActive(SystemTypes.LifeSupp) || Utils.IsActive(SystemTypes.MushroomMixupSabotage)))
+                {
+                    __instance.Notify("NobodyNoticed");
+                    return false;
+                }
             }
         }
 
@@ -410,6 +413,12 @@ class ReportDeadBodyPatch
         Utils.SyncAllSettings();
         foreach (var pc in Main.AllAlivePlayerControls)
             Signal.AddPosi(pc);
+        if (target != null)
+            if (target.Object.GetRealKiller().Is(CustomRoles.Spiders))
+            {
+                Main.AllPlayerSpeed[__instance.PlayerId] = Spiders.OptionSpeed.GetFloat();
+                __instance.MarkDirtySettings();
+            }
         return true;
     }
     public static async void ChangeLocalNameAndRevert(string name, int time)
