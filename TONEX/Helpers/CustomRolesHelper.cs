@@ -57,7 +57,7 @@ static class CustomRolesHelper
     public static bool IsTODO(this CustomRoles role)
     {
         if (role is
-            CustomRoles.EvilGuardian or//TODO 邪恶天使
+            CustomRoles.EvilGuardian or//TORELEASE 邪恶天使-1.5
     CustomRoles.MirrorSpirit or//TODO 镜妖
     CustomRoles.Assaulter or//TODO 强袭者
     CustomRoles.MimicTeam or//TODO 模仿者团队
@@ -80,7 +80,7 @@ static class CustomRolesHelper
     CustomRoles.PVPboss or//TODO PVP大佬
    CustomRoles.Admirer or//TODO 暗恋者
     CustomRoles.Akujo or //TODO 魅魔
-
+    CustomRoles.Revolutionist or//TODO 革命家
    CustomRoles.Changger or//TODO 连环交换师
     CustomRoles.Amnesiac or//TODO 失忆者
     CustomRoles.Yandere or//TODO 病娇
@@ -88,16 +88,16 @@ static class CustomRolesHelper
 
     CustomRoles.Challenger or//TODO 挑战者
 
-    CustomRoles.NightWolf or//TORELRASE 月下狼人
-    CustomRoles.Moonshadow or//TODO 月影 or1.4限定
+    CustomRoles.NightWolf or//TORELRASE 月下狼人-1.4
+    CustomRoles.Moonshadow or//TODO 月影 1.4限定
      CustomRoles.Professional or//TODO 专业赌怪
     CustomRoles.Luckless or//TODO 倒霉蛋
     CustomRoles.FateFavor or//TODO 命运眷顾者
     CustomRoles.IncorruptibleOfficial or//TODO 清廉之官
     CustomRoles.VIP or//TODO VIP
-    CustomRoles.Phantom or//TODO 幻影
+    CustomRoles.Phantom or//TODO 幻影-1.5
       CustomRoles.Non_Villain or//不演反派
-    CustomRoles.InjusticeSpirit//TODO 冤魂
+    CustomRoles.InjusticeSpirit//TODO 冤魂-1.5
     
             )
             return true;
