@@ -2,10 +2,11 @@
 using Hazel;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
+using TONEX.Roles.Neutral;
 using UnityEngine;
 
 namespace TONEX.Roles.Crewmate;
-public sealed class Vigilante : RoleBase, IKiller
+public sealed class Vigilante : RoleBase, IKiller, ISchrodingerCatOwner
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
@@ -28,6 +29,7 @@ public sealed class Vigilante : RoleBase, IKiller
         () => HasTask.False
     )
     { }
+    public SchrodingerCat.TeamType SchrodingerCatChangeTo => SchrodingerCat.TeamType.Crew;
 
     private bool IsKilled;
     public override void Add()

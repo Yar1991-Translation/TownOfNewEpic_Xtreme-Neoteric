@@ -76,11 +76,7 @@ static class CustomRolesHelper
     CustomRoles.Sloth or//TODO 树懒
     CustomRoles.Bees or//TODO 蜜蜂
     CustomRoles.CopyCat or//TODO 效颦者
-    CustomRoles.Innocent or//TODO 冤罪师
     CustomRoles.Konan or//TODO 柯南
-    CustomRoles.Stalker or //TODO 潜藏者
-    CustomRoles.Collector or
-    CustomRoles.Provocateur or//TODO 自爆卡车,
     CustomRoles.PVPboss or//TODO PVP大佬
    CustomRoles.Admirer or//TODO 暗恋者
     CustomRoles.Akujo or //TODO 魅魔
@@ -100,8 +96,6 @@ static class CustomRolesHelper
     CustomRoles.IncorruptibleOfficial or//TODO 清廉之官
     CustomRoles.VIP or//TODO VIP
     CustomRoles.Phantom or//TODO 幻影
-    CustomRoles.Revolutionist or//TODO 革命家
-     CustomRoles.Sunnyboy or//TODO 革命家
       CustomRoles.Non_Villain or//不演反派
     CustomRoles.InjusticeSpirit//TODO 冤魂
     

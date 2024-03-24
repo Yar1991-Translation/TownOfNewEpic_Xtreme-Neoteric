@@ -5,6 +5,7 @@ using System.Linq;
 using TONEX.MoreGameModes;
 using TONEX.Roles.Core;
 using TONEX.Roles.Crewmate;
+using TONEX.Roles.Neutral;
 
 namespace TONEX.Modules;
 
@@ -13,6 +14,8 @@ internal static class CustomRoleSelector
     public static Dictionary<PlayerControl, CustomRoles> RoleResult;
     public static IReadOnlyList<CustomRoles> AllRoles => RoleResult.Values.ToList();
 
+    private static void SelectHiddenImpRoles()
+    { }
     public static void SelectCustomRoles()
     {
         // 开始职业抽取
@@ -112,7 +115,7 @@ internal static class CustomRoleSelector
             }
             if (readyRoleNum >= playerCount) goto EndOfAssign;
 
-            /*if (sp < 3 && !rolesToAssign.Contains(CustomRoles.Sunnyboy) && readyNeutralNum < optNeutralNum)
+            if (sp < 3 && !rolesToAssign.Contains(CustomRoles.Sunnyboy) && readyNeutralNum < optNeutralNum)
             {
                 var shouldExecute = true;
                 if (NeutralRateList.Count > 0)
@@ -137,7 +140,7 @@ internal static class CustomRoleSelector
                 }
                 sp = UnityEngine.Random.Range(0, 100);
             }
-            if (readyRoleNum >= playerCount) goto EndOfAssign;*/
+            if (readyRoleNum >= playerCount) goto EndOfAssign;
         }
 #endregion
         // 抽取优先职业（内鬼）
@@ -185,6 +188,7 @@ internal static class CustomRoleSelector
             
             NKOnList.Remove(select);
             if (select is CustomRoles.Vagator && !Options.UsePets.GetBool()) continue;
+            if (select is CustomRoles.Plaguebearer && Plaguebearer.BecomeGodOfPlaguesStart.GetBool()) select = CustomRoles.GodOfPlagues;
             rolesToAssign.Add(select);
             readyRoleNum++;
             readyNKNum += select.GetAssignCount();
@@ -198,8 +202,10 @@ internal static class CustomRoleSelector
             while (NKRateList.Count > 0 && optNKNum > 0)
             {
                 var select = NKRateList[rd.Next(0, NKRateList.Count)];
-                if (select is CustomRoles.Vagator && !Options.UsePets.GetBool()) continue;
+                
                 NKRateList.Remove(select);
+                if (select is CustomRoles.Vagator && !Options.UsePets.GetBool()) continue;
+                if (select is CustomRoles.Plaguebearer && Plaguebearer.BecomeGodOfPlaguesStart.GetBool()) select = CustomRoles.GodOfPlagues;
                 rolesToAssign.Add(select);
                 readyRoleNum++;
                 readyNKNum += select.GetAssignCount();

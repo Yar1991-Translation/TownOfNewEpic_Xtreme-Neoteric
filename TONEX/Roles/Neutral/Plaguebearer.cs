@@ -25,7 +25,9 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
             "pl|瘟疫",
             "#fffcbe",
             true,
-            true
+            true,
+            countType:CountTypes.GodOfPlagues
+            
         );
     public Plaguebearer(PlayerControl player)
     : base(
@@ -41,11 +43,13 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
 
     static OptionItem OptionKillCooldown;
    public static OptionItem OptionGodOfPlaguesKillCooldown;
+    public static OptionItem BecomeGodOfPlaguesStart;
     static OptionItem OptionCanVent;
     enum OptionName
     {
         PlaguebearerKillCooldown,
-        GodOfPlaguesKillCooldown
+        GodOfPlaguesKillCooldown,
+        BecomeGodOfPlaguesStart
     }
 
     List<byte> PlaguePlayers;
@@ -59,9 +63,11 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
         OptionGodOfPlaguesKillCooldown = FloatOptionItem.Create(RoleInfo, 12, OptionName.GodOfPlaguesKillCooldown, new(2.5f, 180f, 2.5f), 15f, false)
     .SetValueFormat(OptionFormat.Seconds);
         OptionCanVent = BooleanOptionItem.Create(RoleInfo, 11, GeneralOption.CanVent, true, false);
+        BecomeGodOfPlaguesStart = BooleanOptionItem.Create(RoleInfo, 13, OptionName.BecomeGodOfPlaguesStart, true, false);
     }
     public override void Add() => PlaguePlayers = new();
     public bool IsKiller => false;
+    public bool IsNK => true;
     public float CalculateKillCooldown()
     {
         if (!CanUseKillButton()) return 255f;

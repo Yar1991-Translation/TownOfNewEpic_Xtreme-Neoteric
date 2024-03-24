@@ -33,7 +33,7 @@ public static class Nihility
     {
 
         var (killer, target) = info.AttemptTuple;
-        if ( target.Is(CustomRoles.Nihility))
+        if (!killer.IsNeutralEvil() && target.Is(CustomRoles.Nihility))
         {
 
                 killer.Notify(Translator.GetString("Nihility"));
