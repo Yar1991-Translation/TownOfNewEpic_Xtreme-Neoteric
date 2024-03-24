@@ -26,8 +26,10 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
             true,
             CanKill,
             countType: CountTypes.Martyr,
-            introSound: () => GetIntroSound(RoleTypes.Crewmate),
-            ctop: true
+            introSound: () => GetIntroSound(RoleTypes.Crewmate)
+#if RELEASE
+            ,ctop: true
+#endif
         );
     public Martyr(PlayerControl player)
     : base(
@@ -50,7 +52,7 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
     }
 
     public static PlayerControl TargetId;
-    public static bool CanKill = false;
+    public static bool CanKill = OptionCanGetKillButton.GetBool();
     public bool HasProtect;
     public bool IsNK { get; private set; } = CanKill;
     public bool IsNE { get; private set; } = CanKill;
@@ -105,8 +107,8 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
         if (info.IsSuicide) return true;
         if (target.PlayerId == TargetId.PlayerId)
         {
-             foreach (var pc in Main.AllPlayerControls.Where(x => x.PlayerId != target.PlayerId && player.Contains(x)))
-             {
+            foreach (var pc in Main.AllPlayerControls.Where(x => x.PlayerId != target.PlayerId && player.Contains(x)))
+            {
                 if (pc.IsAlive())
                 {
                     if ((pc.GetRoleClass() as Martyr).HasProtect)
@@ -123,7 +125,6 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
                         CanKill = true;
                         pc.ResetKillCooldown();
                         pc.SetKillCooldownV2();
-                        pc.RpcSetCustomRole(CustomRoles.Martyr);
                     }
                 }
                 else
@@ -137,9 +138,9 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
 
             }
         }
-                return true;
+        return true;
     }
-     
+
     public override string GetMark(PlayerControl seer, PlayerControl seen, bool _ = false)
     {
         //seenが省略の場合seer

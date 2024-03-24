@@ -175,7 +175,7 @@ public sealed class Jackal : RoleBase, INeutralKiller
     public bool OnCheckMurderAsKiller(MurderInfo info)
     {
         var (killer, target) = info.AttemptTuple;
-        if (SidekickLimit < 1 || (OptionItemCanSidekick.GetBool() && !CanBeSidekick(target))) return true;
+        if (SidekickLimit < 1 || !OptionItemCanSidekick.GetBool() || !CanBeSidekick(target)) return true;
         if (target.GetCountTypes() == CountTypes.Jackal)
         {
             Player.Notify(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Jackal), GetString("SmartYou")));
