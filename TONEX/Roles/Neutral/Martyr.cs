@@ -52,7 +52,7 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
     }
 
     public static PlayerControl TargetId;
-    public static bool CanKill = OptionCanGetKillButton.GetBool();
+    public static bool CanKill = false;
     public bool HasProtect;
     public bool IsNK { get; private set; } = CanKill;
     public bool IsNE { get; private set; } = CanKill;

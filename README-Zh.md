@@ -42,7 +42,7 @@
 [Clash Of Gods](https://github.com/CognifyDev/ClashOfGods)<br>
 [Town Of Crew:Sea Of Shark](https://github.com/yiTOC/TOCS)<br>
 [QQ频道](https://pd.qq.com/s/gm7xdfhw8)的**玩家**<br>
-**感谢这些模组以及他们优秀的想法，是他们早就了我们**<br>
+**感谢这些模组以及他们优秀的想法，是他们造就了我们**<br>
 **更要感谢长久以来支持我们的玩家们。是您们给予了我们继续这个项目的动力！**
 
   </br></br>
@@ -65,7 +65,7 @@
 > 
 > - 开发者：[Yumenopai](https://github.com/Yumenopai)
 > - 许多职业想法
-> - 提供职业: AntiAdminer, CursedWolf, Workaholic, Greedier, DarkHide
+> - 提供职业: 监管者, 呪狼, 工作狂, 贪婪者, 潜藏者
 > - 参考: 修改游戏公告
 >### :star: [Town Of Host : The Other Roles](https://github.com/music-discussion/TownOfHost-TheOtherRoles) :
 >
