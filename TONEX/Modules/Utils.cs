@@ -813,10 +813,10 @@ public static class Utils
         foreach (CustomRoles role in CustomRolesHelper.AllStandardRoles)
         {
             headCount++;
-            if (role.IsImpostor() && headCount == 0) sb.Append("\n\n● " + GetString("TabGroup.ImpostorRoles"));
-            else if (role.IsCrewmate() && headCount == 1) sb1.Append("\n\n● " + GetString("TabGroup.CrewmateRoles"));
-            else if (role.IsNeutral() && headCount == 2) sb2.Append("\n\n● " + GetString("TabGroup.NeutralRoles"));
-            else if (role.IsAddon() && headCount == 3) sb3.Append("\n\n● " + GetString("TabGroup.Addons"));
+            if (role.IsImpostor() && headCount == 0) sb.Append("\n\n● " + ColorString(GetRoleTeamColor(role), GetString("TabGroup.ImpostorRoles")));
+            else if (role.IsCrewmate() && headCount == 1) sb1.Append("\n\n● " + ColorString(GetRoleTeamColor(role), GetString("TabGroup.CrewmateRoles")));
+            else if (role.IsNeutral() && headCount == 2) sb2.Append("\n\n● " + ColorString(GetRoleTeamColor(role), GetString("TabGroup.NeutralRoles")));
+            else if (role.IsAddon() && headCount == 3) sb3.Append("\n\n● " + ColorString(GetRoleTeamColor(role), GetString("TabGroup.Addons")));
             else headCount--;
 
             if (role.IsEnable())
@@ -824,16 +824,16 @@ public static class Utils
                 switch (role.GetCustomRoleTypes())
                 {
                     case CustomRoleTypes.Impostor:
-                        sb.AppendFormat("\n{0}:{1}x{2}", GetRoleName(role), $"{Utils.GetRoleDisplaySpawnMode(role, false)}", role.GetCount());
+                        sb.AppendFormat("\n{0}:{1}x{2}", ColorString(GetRoleColor(role),GetRoleName(role)), $"{Utils.GetRoleDisplaySpawnMode(role, false)}", role.GetCount());
                         break;
                     case CustomRoleTypes.Crewmate:
-                        sb1.AppendFormat("\n{0}:{1}x{2}", GetRoleName(role), $"{Utils.GetRoleDisplaySpawnMode(role, false)}", role.GetCount());
+                        sb1.AppendFormat("\n{0}:{1}x{2}", ColorString(GetRoleColor(role), GetRoleName(role)), $"{Utils.GetRoleDisplaySpawnMode(role, false)}", role.GetCount());
                         break;
                     case CustomRoleTypes.Neutral:
-                        sb2.AppendFormat("\n{0}:{1}x{2}", GetRoleName(role), $"{Utils.GetRoleDisplaySpawnMode(role, false)}", role.GetCount());
+                        sb2.AppendFormat("\n{0}:{1}x{2}", ColorString(GetRoleColor(role), GetRoleName(role)), $"{Utils.GetRoleDisplaySpawnMode(role, false)}", role.GetCount());
                         break;
                     case CustomRoleTypes.Addon:
-                        sb3.AppendFormat("\n{0}:{1}x{2}", GetRoleName(role), $"{Utils.GetRoleDisplaySpawnMode(role, false)}", role.GetCount());
+                        sb3.AppendFormat("\n{0}:{1}x{2}", ColorString(GetRoleColor(role), GetRoleName(role)), $"{Utils.GetRoleDisplaySpawnMode(role, false)}", role.GetCount());
                         break;
                 }
             }

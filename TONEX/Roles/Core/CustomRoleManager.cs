@@ -689,17 +689,17 @@ public enum CustomRoles
     Terrorist,
     Executioner,
     Jackal,
-    Innocent, //TODO 冤罪师
+    Innocent,
     Pelican,
     Revolutionist, //TODO 革命家
     Hater,
     Konan, //TODO 柯南
     Demon,
-    Stalker, //TODO 潜藏者
+    Stalker, 
     Workaholic,
     Collector, //TODO 集票者
-    Provocateur, //TODO 自爆卡车
-    Sunnyboy, //TODO 阳光开朗大男孩
+    Provocateur,
+    Sunnyboy, 
     BloodKnight,
     Follower,
     Succubus,

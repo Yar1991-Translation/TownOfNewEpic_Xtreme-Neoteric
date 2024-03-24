@@ -39,7 +39,27 @@ public sealed class NiceGrenadier : RoleBase
         NiceGrenadierCanAffectNeutral,
         NiceGrenadierSkillRange,
     }
-
+    public static bool IsBlinding(PlayerControl target)
+    {
+        foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.Is(CustomRoles.NiceGrenadier)))
+        {
+            if (pc.GetRoleClass() is not NiceGrenadier roleClass) continue;
+            if (roleClass.BlindingStartTime != -1)
+            {
+                if ((target.IsImp() || target.Is(CustomRoles.Madmate))
+                    || target.IsNeutral() && OptionCanAffectNeutral.GetBool())
+                {
+                    return true;
+                }
+            }
+            else if (roleClass.MadBlindingStartTime != -1)
+            {
+                if (!target.IsImp() && !target.Is(CustomRoles.Madmate))
+                    return true;
+            }
+        }
+        return false;
+    }
     private long BlindingStartTime;
     private long MadBlindingStartTime;
     public long UsePetCooldown;
@@ -82,13 +102,16 @@ public sealed class NiceGrenadier : RoleBase
     {
         if (Player.Is(CustomRoles.Madmate))
         {
+            MadBlindingStartTime = Utils.GetTimeStamp();
             foreach (var pc in Main.AllAlivePlayerControls.Where(x => !x.IsImp() && !x.Is(CustomRoles.Madmate)))
             {
+
                 OnBlinding(pc);
             }
         }
         else
         {
+            BlindingStartTime = Utils.GetTimeStamp();
             foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.IsImp() || (x.IsNeutral() && OptionCanAffectNeutral.GetBool())))
             {
                 OnBlinding(pc);
@@ -125,13 +148,16 @@ public sealed class NiceGrenadier : RoleBase
         UsePetCooldown = Utils.GetTimeStamp();
         if (Player.Is(CustomRoles.Madmate))
         {
+            MadBlindingStartTime = Utils.GetTimeStamp();
             foreach (var pc in Main.AllAlivePlayerControls.Where(x => !x.IsImp() && !x.Is(CustomRoles.Madmate)))
             {
+
                 OnBlinding(pc);
             }
         }
         else
         {
+            BlindingStartTime = Utils.GetTimeStamp();
             foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.IsImp() || (x.IsNeutral() && OptionCanAffectNeutral.GetBool())))
             {
                 OnBlinding(pc);
@@ -146,6 +172,20 @@ public sealed class NiceGrenadier : RoleBase
     {
         if (!AmongUsClient.Instance.AmHost) return;
         var now = Utils.GetTimeStamp();
+        if (BlindingStartTime != -1 && BlindingStartTime + (long)OptionSkillDuration.GetFloat() < now)
+        {
+            BlindingStartTime = -1;
+            Player.RpcProtectedMurderPlayer();
+            Player.Notify(GetString("NiceGrenadierSkillStop"));
+            Utils.MarkEveryoneDirtySettings();
+        }
+        if (MadBlindingStartTime != -1 && MadBlindingStartTime + (long)OptionSkillDuration.GetFloat() < now)
+        {
+            MadBlindingStartTime = -1;
+            Player.RpcProtectedMurderPlayer();
+            Player.Notify(GetString("NiceGrenadierSkillStop"));
+            Utils.MarkEveryoneDirtySettings();
+        }
         if (UsePetCooldown + (long)OptionSkillCooldown.GetFloat() < now && UsePetCooldown != -1 && Options.UsePets.GetBool())
         {
             UsePetCooldown = -1;

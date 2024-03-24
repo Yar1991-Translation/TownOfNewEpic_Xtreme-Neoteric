@@ -168,6 +168,7 @@ class GameEndChecker
                         if (additionalWinner.CheckWin(ref winnerRole, ref ct))
                         {
                             CustomWinnerHolder.WinnerIds.Add(pc.PlayerId);
+                            if (pc.GetCustomRole() is not CustomRoles.SchrodingerCat)
                             CustomWinnerHolder.AdditionalWinnerRoles.Add(winnerRole);
                         }
                     }

@@ -4,6 +4,7 @@ using System.Linq;
 using TONEX.Modules.SoundInterface;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
+using TONEX.Roles.Crewmate;
 using UnityEngine;
 using static TONEX.Translator;
 
@@ -30,7 +31,6 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
 
     static OptionItem OptionSkillCooldown;
     static OptionItem OptionSkillDuration;
-    static OptionItem OptionCanAffectNeutral;
     static OptionItem OptionSkillRange;
     enum OptionName
     {
@@ -39,6 +39,7 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
         NiceGrenadierSkillRange,
     }
 
+    private long BlindingStartTime;
     public long UsePetCooldown;
     private static void SetupOptionItem()
     {
@@ -51,6 +52,7 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
     }
     public override void Add()
     {
+        BlindingStartTime = -1;
         if (Options.UsePets.GetBool()) UsePetCooldown = Utils.GetTimeStamp();
     }
     public override void OnGameStart()
@@ -92,6 +94,19 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
             pc.Notify("<size=100><color=#ffffff>●</color></size>", OptionSkillDuration.GetInt());
         }
     }
+    public static bool IsBlinding(PlayerControl target)
+    {
+        foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.Is(CustomRoles.EvilGrenadier)))
+        {
+            if (pc.GetRoleClass() is not EvilGrenadier roleClass) continue;
+            if (roleClass.BlindingStartTime != -1)
+            {
+                if (!target.IsImp() && !target.Is(CustomRoles.Madmate))
+                    return true;
+            }
+        }
+        return false;
+    }
     public override void OnUsePet()
     {
         if (!Options.UsePets.GetBool()) return;
@@ -115,6 +130,13 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
     {
         if (!AmongUsClient.Instance.AmHost) return;
         var now = Utils.GetTimeStamp();
+        if (BlindingStartTime != -1 && BlindingStartTime + (long)OptionSkillDuration.GetFloat() < now)
+        {
+            BlindingStartTime = -1;
+            Player.RpcProtectedMurderPlayer();
+            Player.Notify(GetString("NiceGrenadierSkillStop"));
+            Utils.MarkEveryoneDirtySettings();
+        }
         if (UsePetCooldown + (long)OptionSkillCooldown.GetFloat() < now && UsePetCooldown != -1 && Options.UsePets.GetBool())
         {
             UsePetCooldown = -1;
@@ -131,5 +153,9 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
         AURoleOptions.ShapeshifterLeaveSkin = false;
         AURoleOptions.ShapeshifterCooldown = OptionSkillDuration.GetFloat();
         AURoleOptions.ShapeshifterDuration = 1f;
+    }
+    public override void OnStartMeeting()
+    {
+        BlindingStartTime = -1;
     }
 }

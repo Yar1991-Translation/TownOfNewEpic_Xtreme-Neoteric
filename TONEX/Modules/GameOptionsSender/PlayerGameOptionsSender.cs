@@ -10,6 +10,7 @@ using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
 using TONEX.Roles.Crewmate;
+using TONEX.Roles.Impostor;
 using TONEX.Roles.Neutral;
 using Mathf = UnityEngine.Mathf;
 
@@ -142,11 +143,12 @@ public class PlayerGameOptionsSender : GameOptionsSender
         // 为患者的凶手
         if (Main.AllPlayerControls.Any(x => x.Is(CustomRoles.Diseased) && !x.IsAlive() && x.GetRealKiller()?.PlayerId == player.PlayerId && !x.Is(CustomRoles.Hangman)))
         {
-            opt.SetVision(false);
+            
             float KILL = (player.GetRoleClass() as IKiller)?.CalculateKillCooldown() ?? Options.DefaultKillCooldown;
             opt.SetFloat(FloatOptionNames.KillCooldown, KILL * Diseased.OptionVistion.GetFloat());
             player.ResetKillCooldown();
             player.SyncSettings();
+            
             Utils.NotifyRoles(player);
         }
 
@@ -168,6 +170,19 @@ public class PlayerGameOptionsSender : GameOptionsSender
             Utils.NotifyRoles(player);
         }*/
         // 投掷傻瓜蛋啦！！！！！
+        
+        if (NiceGrenadier.IsBlinding(player))
+        {
+            opt.SetVision(false);
+            opt.SetFloat(FloatOptionNames.CrewLightMod, 0.1f);
+            opt.SetFloat(FloatOptionNames.ImpostorLightMod,0.1f);
+        }
+        if (EvilGrenadier.IsBlinding(player))
+        {
+            opt.SetVision(false);
+            opt.SetFloat(FloatOptionNames.CrewLightMod, 0.1f);
+            opt.SetFloat(FloatOptionNames.ImpostorLightMod, 0.1f);
+        }
 
         AURoleOptions.EngineerCooldown = Mathf.Max(0.01f, AURoleOptions.EngineerCooldown);
 
