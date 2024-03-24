@@ -62,10 +62,6 @@ public sealed class Whoops : RoleBase, INeutral
             else
                 votedFor.RpcSetCustomRole(CustomRoles.Whoops);
         }
-        else
-        {
-
-        }
         Utils.SendMessage(Translator.GetString("WhoopsRecruitTrue"), votedFor.PlayerId);
         return false;
     }

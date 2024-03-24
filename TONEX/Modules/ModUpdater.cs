@@ -25,10 +25,7 @@ public class ModUpdater
     private static IReadOnlyList<string> URLs => new List<string>
     {
 #if DEBUG
-        "file:///D:/Desktop/TONEX/info.json",
-        "file:///C:/Users/YJNSH/Desktop/info.json",
-        "file:///%userprofile%/Desktop/info.json",
-        "file:///D:/Desktop/info.json",
+        $"{Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "info.json")}",
 #else
         "https://raw.githubusercontent.com/XtremeWave/TownOfNewEpic_Xtreme/TONEX/info.json",
         "https://raw.githubusercontent.com/XtremeWave/TownOfNewEpic_Xtreme/_develop_v1.1/info.json",
