@@ -98,9 +98,11 @@ public sealed class MeteorMurder : RoleBase, INeutralKiller
         SendRPC();
         return true;
     }
-    
-    public override string GetProgressText(bool comms = false)
+
+    public override string GetSuffix(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false)
     {
+        seen ??= seer;
+        if (!GameStates.IsInTask || isForMeeting || !Is(seer) || !Is(seen)) return "";
         Color color = Utils.GetRoleColor(CustomRoles.MeteorMurder);
         if (LOVE >= 10 && LOVE<20)
             color = Color.red;
