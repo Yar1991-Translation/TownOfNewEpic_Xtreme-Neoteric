@@ -68,7 +68,7 @@ public enum CustomRPC
     SetSuccubusCharmLimit,
     //控制狂
     SyncControlFreakList,
-
+    //预言家
     SetProphetList,
     //迷你船员
     MiniAge,
@@ -86,6 +86,8 @@ public enum CustomRPC
     SetHunterList,
     //玩家
     SetDemonHealth,
+    //患者
+    SetDiseasedList,
 }
 public enum Sounds
 {
@@ -368,6 +370,9 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.Swap:
                 SwapperHelper.ReceiveRPC(reader, __instance);
+                break;
+            case CustomRPC.SetDiseasedList:
+                Diseased.ReceiveRPC(reader);
                 break;
         }
     }
