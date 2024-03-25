@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using AmongUs.QuickChat;
-using Assets.CoreScripts;
+/*using Assets.CoreScripts;
 using Beebyte.Obfuscator;
 using Hazel;
 using InnerNet;
@@ -75,4 +75,4 @@ public static class SetRolePatch
         }
         return;
     }
-}
+}*/

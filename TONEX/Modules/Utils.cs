@@ -796,7 +796,7 @@ public static class Utils
         }
     }
 
-    public static void ShowActiveRoles(byte PlayerId = byte.MaxValue)
+    public static void ShowActiveRoles(byte PlayerId = byte.MaxValue ,bool onlycountexists = false)
     {
         if (Options.HideGameSettings.GetBool() && PlayerId != byte.MaxValue)
         {
@@ -818,9 +818,10 @@ public static class Utils
             else if (role.IsNeutral() && headCount == 2) sb2.Append("\n\n● " + ColorString(GetRoleTeamColor(role), GetString("TabGroup.NeutralRoles")));
             else if (role.IsAddon() && headCount == 3) sb3.Append("\n\n● " + ColorString(GetRoleTeamColor(role), GetString("TabGroup.Addons")));
             else headCount--;
-
+            
             if (role.IsEnable())
             {
+                if (onlycountexists && !role.IsExistCountDeath()) continue;
                 switch (role.GetCustomRoleTypes())
                 {
                     case CustomRoleTypes.Impostor:

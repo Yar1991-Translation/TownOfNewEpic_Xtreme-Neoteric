@@ -1,6 +1,7 @@
 ﻿using AmongUs.GameOptions;
 using HarmonyLib;
 using Hazel;
+using Il2CppSystem.Runtime.Remoting.Messaging;
 using InnerNet;
 using System;
 using System.Collections.Generic;
@@ -36,11 +37,11 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
                 SetRoles(mc.Args, mc.Player.PlayerId);
                 return (MsgRecallMode.Block, null);
             }),
-            new(["revive"], CommandAccess.Debugger, mc =>
+            new(["rev"], CommandAccess.Debugger, mc =>
             {
                 var id = Convert.ToByte(mc.Args);
                 var player = Utils.GetPlayerById(id);
-                player.RpcSetRole(RoleTypes.Impostor);
+                player.RpcSetRole(RoleTypes.CrewmateGhost);
                 
                 return (MsgRecallMode.Block, null);
             }),
@@ -372,13 +373,14 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
         RoleCommands.Add(CustomRoles.Believer, new() { "bel", "信徒" });
         RoleCommands.Add(CustomRoles.PublicOpinionShaper, new() { "pos", "舆论缔造者" });
     }
-    public static void SendRolesInfo(string input, byte playerId)
+    public static void SendRolesInfo(string input, byte playerId, bool onlycountexists = false)
     {
         if (Options.CurrentGameMode == CustomGameMode.HotPotato)
         {
             Utils.SendMessage(GetString("ModeDescribe.HotPotato"), playerId);
             return;
         }
+        
         if (string.IsNullOrWhiteSpace(input))
         {
             Utils.ShowActiveRoles(playerId);
@@ -391,6 +393,7 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
         }
         else
         {
+
             if (!role.IsAddon())
             Utils.SendMessage(role.GetRoleInfo().Description.FullFormatHelp, playerId);
             else if (role.IsAddon())

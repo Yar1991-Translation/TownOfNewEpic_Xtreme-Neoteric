@@ -141,9 +141,9 @@ public class PlayerGameOptionsSender : GameOptionsSender
         }
 
         // 为患者的凶手
-        if (Main.AllPlayerControls.Any(x => x.Is(CustomRoles.Diseased) && !x.IsAlive() && x.GetRealKiller()?.PlayerId == player.PlayerId && !x.Is(CustomRoles.Hangman)))
+        if (Main.AllPlayerControls.Any(x => x.Is(CustomRoles.Diseased) && !x.IsAlive() && x.GetRealKiller()?.PlayerId == player.PlayerId && !x.Is(CustomRoles.Hangman) && !Diseased.DisList.Contains(player.PlayerId)))
         {
-            
+            Diseased.DisList.Add(player.PlayerId);
             float KILL = (player.GetRoleClass() as IKiller)?.CalculateKillCooldown() ?? Options.DefaultKillCooldown;
             opt.SetFloat(FloatOptionNames.KillCooldown, KILL * Diseased.OptionVistion.GetFloat());
             player.ResetKillCooldown();
