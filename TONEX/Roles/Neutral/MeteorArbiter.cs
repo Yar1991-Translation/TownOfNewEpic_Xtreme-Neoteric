@@ -185,8 +185,10 @@ public sealed class MeteorArbiter : RoleBase, INeutralKiller, IAdditionalWinner
     {
         Tired -= 2;
     }
-    public override string GetProgressText(bool comms = false)
+    public override string GetSuffix(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false)
     {
+        seen ??= seer;
+        if (!GameStates.IsInTask || isForMeeting || !Is(seer) || !Is(seen)) return "";
         Color color = Utils.GetRoleColor(CustomRoles.MeteorArbiter);
         if (Murderer)
             color = Color.red;

@@ -11,7 +11,7 @@ using static UnityEngine.GraphicsBuffer;
 namespace TONEX.Roles.AddOns.Common;
 public static class Mini
 {
-    private static readonly int Id = 828893;
+    private static readonly int Id = 94_1_0_0700;
     private static List<byte> playerIdList = new();
     public static OptionItem OptionAgeTime;
     public static OptionItem OptionNotGrowInMeeting;

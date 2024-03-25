@@ -1099,7 +1099,7 @@ public static class Options
             .SetValueFormat(OptionFormat.Seconds)
             .SetGameMode(CustomGameMode.Standard);
 
-        UsePets = BooleanOptionItem.Create(3_048_002, "CanUsePet", false, TabGroup.GameSettings, false)
+        UsePets = BooleanOptionItem.Create(3_048_002, "CanUsePet", true, TabGroup.GameSettings, false)
 .SetColor(Color.cyan)
 .SetHeader(true);
 

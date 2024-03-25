@@ -52,7 +52,7 @@ public static class CustomRoleManager
 
         appearanceKiller.ResetKillCooldown();
 
-        var succeed = false;
+       
         // 無効なキルをブロックする処理 必ず最初に実行する
         if (!CheckMurderPatch.CheckForInvalidMurdering(info))
         {
@@ -91,7 +91,7 @@ public static class CustomRoleManager
             if (!attemptKiller.GetRoleClass().SkillEffects(RoleBase.SkillReleaseType.Kill_Killer, info: info))
             {
                 Logger.Info($"凶手阻塞了击杀", "CheckMurder");
-                succeed= false;
+                return false;
             }
             if (killer.IsKiller)
             {
@@ -718,12 +718,13 @@ public enum CustomRoles
     Rebels,
     Admirer,//TODO 暗恋者
     Akujo, //TODO 魅魔
+    Yandere,//TODO 病娇
     Puppeteer,
     Changger,//TODO 连环交换师
     Amnesiac,//TODO 失忆者
     Plaguebearer,
     GodOfPlagues,
-    Yandere,//TODO 病娇
+    
     PoliticalStrategists,//TODO 纵横家
 
     Challenger,//TODO 挑战者

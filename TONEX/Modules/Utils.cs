@@ -861,6 +861,8 @@ public static class Utils
             if (opt.Value.Name == "DisableAirshipDevices" && !Options.IsActiveAirship) continue;
             if (opt.Value.Name == "PolusReactorTimeLimit" && !Options.IsActivePolus) continue;
             if (opt.Value.Name == "AirshipReactorTimeLimit" && !Options.IsActiveAirship) continue;
+            if (opt.Value.Name == "FungleReactorTimeLimit" && !Options.IsActiveFungle) continue;
+            if (opt.Value.Name == "FungleMushroomMixupDuration" && !Options.IsActiveFungle) continue;
             if (deep > 0)
             {
                 sb.Append(string.Concat(Enumerable.Repeat("┃", Mathf.Max(deep - 1, 0))));

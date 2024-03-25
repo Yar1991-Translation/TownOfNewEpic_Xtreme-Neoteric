@@ -148,6 +148,7 @@ public static class AudioManager
     public static void GetPostfix(string path)
     {
         int i = 0;
+        if (path == null) return;
         while (!File.Exists(path))
         {
             i++;
