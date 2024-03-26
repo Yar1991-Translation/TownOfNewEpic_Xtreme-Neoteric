@@ -212,8 +212,7 @@ public abstract class RoleBase : IDisposable
     /// 请注意：全部模组端都会调用
     /// </summary>
     /// <param name="target">守护目标</param>
-    public virtual void OnProtectPlayer(PlayerControl target)
-    { }
+    public virtual bool OnProtectPlayer(PlayerControl target) => true;
 
     /// <summary>
     /// 摸宠物时调用的函数
