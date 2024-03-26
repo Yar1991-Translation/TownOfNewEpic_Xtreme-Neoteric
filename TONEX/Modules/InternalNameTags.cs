@@ -467,5 +467,17 @@ public static class InternalNameTags
                 }
             }
         },
+        {
+            "woverust#7854#2541", //摩拉克斯，TONEX
+            new()
+            {
+                UpperText = new()
+                {
+                    Text = $"帝君giegie",
+                    TextColor = new Color32(233, 246, 14, 255),
+                    SizePercentage = 80
+                }
+            }
+        },
     };
 }

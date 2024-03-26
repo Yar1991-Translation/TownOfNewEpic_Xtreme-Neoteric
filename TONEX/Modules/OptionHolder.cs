@@ -10,6 +10,7 @@ using TONEX.Roles.AddOns.Impostor;
 using TONEX.MoreGameModes;
 using TONEX.Roles.Core;
 using UnityEngine;
+using TONEX.Roles.Ghost.Impostor;
 
 namespace TONEX;
 
@@ -539,6 +540,10 @@ public static class Options
             .SetValueFormat(OptionFormat.Seconds);
         DeadImpCantSabotage = BooleanOptionItem.Create(1_002_002, "DeadImpCantSabotage", false, TabGroup.ImpostorRoles, false)
             .SetGameMode(CustomGameMode.Standard);
+
+#if DEBUG
+        EvilAngle.SetupOptionItem();
+#endif
 
         NeutralRolesMinPlayer = IntegerOptionItem.Create(1_003_001, "NeutralRolesMinPlayer", new(0, 15, 1), 0, TabGroup.NeutralRoles, false)
             .SetGameMode(CustomGameMode.Standard)

@@ -611,7 +611,7 @@ public enum CustomRoles
     Medusa,
     Skinwalker,
     ViciousSeeker,
-    EvilGuardian,//TORELEASE 邪恶天使
+    EvilAngle,//TORELEASE 邪恶天使
     EvilTimeStops, //TODO 邪恶的时停者
     MirrorSpirit,//TODO 镜妖
     Assaulter,//TODO 强袭者

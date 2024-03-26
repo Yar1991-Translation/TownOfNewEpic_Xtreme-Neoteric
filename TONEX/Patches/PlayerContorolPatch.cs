@@ -808,9 +808,16 @@ class PlayerControlProtectPlayerPatch
 {
     public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
     {
-        var player = __instance;      
-         if (!target.IsEaten()) player.GetRoleClass()?.OnProtectPlayer(target);
- 
+        var player = __instance;
+        if (!target.IsEaten())
+        {
+            if (!(player.GetRoleClass()?.OnProtectPlayer(target) ?? false))
+            {
+                Logger.Info($"凶手阻塞了击杀", "CheckMurder");
+                return;
+            }
+        }
+
 
         Logger.Info($"{__instance.GetNameWithRole()} => {target.GetNameWithRole()}", "ProtectPlayer");
     }
@@ -841,14 +848,14 @@ class PlayerControlSetRolePatch
                 var self = seer.PlayerId == target.PlayerId;
                 var seerIsKiller = seer.GetRoleClass() is IKiller;
 
-                if ((self && targetIsKiller && !target.Is(CustomRoles.EvilGuardian)) || (!seerIsKiller && target.Is(CustomRoleTypes.Impostor) && !target.Is(CustomRoles.EvilGuardian)))
+                if ((self && targetIsKiller && !target.Is(CustomRoles.EvilAngle)) || (!seerIsKiller && target.Is(CustomRoleTypes.Impostor) && !target.Is(CustomRoles.EvilAngle)))
                 {
                     ghostRoles[seer] = RoleTypes.Impostor;
                 }
-               // else if(target.Is(CustomRoles.EvilGuardian))
-                //{
-                //    ghostRoles[seer] = RoleTypes.GuardianAngel;
-                //}
+                else if(target.Is(CustomRoles.EvilAngle) || target.Is(CustomRoles.Phantom) || target.Is(CustomRoles.InjusticeSpirit))
+                {
+                   ghostRoles[seer] = RoleTypes.GuardianAngel;
+                }
                 else
                 {
                     ghostRoles[seer] = RoleTypes.CrewmateGhost;
