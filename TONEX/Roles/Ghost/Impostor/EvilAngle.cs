@@ -25,11 +25,14 @@ public sealed class EvilAngle : RoleBase, IImpostor
         RoleInfo,
         player
     )
-    { }
+    {
+        Maxi = OptionTryMax.GetInt();
+    }
     static OptionItem EnableEvilAngle;
     static OptionItem OptionProbability;
     static OptionItem OptionKiilCooldown;
-
+    static OptionItem OptionTryMax;
+    int Maxi;
     public static void SetupOptionItem()
     {
         EnableEvilAngle = BooleanOptionItem.Create(94_1_5_0110, "EnableEvilAngle", false, TabGroup.ImpostorRoles, false)
@@ -40,6 +43,9 @@ public sealed class EvilAngle : RoleBase, IImpostor
             .SetParent(EnableEvilAngle);
         OptionKiilCooldown = FloatOptionItem.Create(94_1_5_0112,"KillCooldown", new(0, 100, 5), 40, TabGroup.ImpostorRoles, false)
             .SetValueFormat(OptionFormat.Seconds)
+            .SetParent(EnableEvilAngle);
+        OptionTryMax = IntegerOptionItem.Create(94_1_5_0113, "OptionTryMax", new(0, 100, 5), 40, TabGroup.ImpostorRoles, false)
+            .SetValueFormat(OptionFormat.Times)
             .SetParent(EnableEvilAngle);
     }
     public override bool CanUseAbilityButton() => true;
@@ -55,27 +61,20 @@ public sealed class EvilAngle : RoleBase, IImpostor
     }
     public override bool OnProtectPlayer(PlayerControl target)
     {
-        if (Player.IsAlive()) return false;
+        if (Player.IsAlive() ||Maxi <=0) return false;
+        Maxi --;
         if (IRandom.Instance.Next(0, 100) < OptionProbability.GetInt())
         {
             target.Notify(string.Format(GetString("KillForEvilAngle")), 2f);
             Player.RpcTeleport(target.GetTruePosition());
             RPC.PlaySoundRPC(Player.PlayerId, Sounds.KillSound);
             Player.RpcMurderPlayerV2(target);
-            target.SetDeathReason(CustomDeathReason.Quantization);
+            target.SetRealKiller(Player);
         }
         return false;
     }
     public override void ApplyGameOptions(IGameOptions opt)
     {
         AURoleOptions.GuardianAngelCooldown = OptionKiilCooldown.GetFloat();
-    }
-    public override void OnPlayerDeath(PlayerControl player, CustomDeathReason deathReason, bool isOnMeeting)
-    {
-        if (player.PlayerId == Player.PlayerId)
-        {
-            player.RpcSetRole(RoleTypes.GuardianAngel);
-            Player.RpcProtectedMurderPlayer();
-        }
     }
 }

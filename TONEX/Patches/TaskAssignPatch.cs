@@ -3,6 +3,7 @@ using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using System.Collections.Generic;
 using TONEX.Roles.AddOns.Crewmate;
+using TONEX.Roles.Ghost.Crewmate;
 using TONEX.Roles.Core;
 using TONEX.Roles.Impostor;
 using TONEX.Roles.Neutral;
@@ -85,7 +86,12 @@ class RpcSetTasksPatch
             NumLongTasks = 0;
             NumShortTasks = Jackal.OptionWhoopsTasksCount.GetInt();
         }
-
+        if (pc.Is(CustomRoles.InjusticeSpirit))
+        {
+            hasCommonTasks = false;
+            NumLongTasks = 0;
+            NumShortTasks = InjusticeSpirit.OptionTaskCount.GetInt();
+        }
         //管理员和摆烂人没有任务
         if (pc.Is(CustomRoles.GM) || pc.Is(CustomRoles.LazyGuy))
         {

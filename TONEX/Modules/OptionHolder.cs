@@ -11,6 +11,7 @@ using TONEX.MoreGameModes;
 using TONEX.Roles.Core;
 using UnityEngine;
 using TONEX.Roles.Ghost.Impostor;
+using TONEX.Roles.Ghost.Crewmate;
 
 namespace TONEX;
 
@@ -543,6 +544,7 @@ public static class Options
 
 #if DEBUG
         EvilAngle.SetupOptionItem();
+        InjusticeSpirit.SetupOptionItem();
 #endif
 
         NeutralRolesMinPlayer = IntegerOptionItem.Create(1_003_001, "NeutralRolesMinPlayer", new(0, 15, 1), 0, TabGroup.NeutralRoles, false)
