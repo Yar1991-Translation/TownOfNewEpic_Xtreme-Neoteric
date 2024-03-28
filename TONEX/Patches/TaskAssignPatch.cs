@@ -74,12 +74,7 @@ class RpcSetTasksPatch
         }
 
         //背叛告密的任务覆盖
-        if (pc.Is(CustomRoles.Snitch) && pc.Is(CustomRoles.Madmate))
-        {
-            hasCommonTasks = false;
-            NumLongTasks = 0;
-            NumShortTasks = Options.MadSnitchTasks.GetInt();
-        }
+        Madmate.TaskAssgin(pc, ref hasCommonTasks, ref NumLongTasks, ref NumShortTasks);
         if (pc.Is(CustomRoles.Whoops))
         {
             hasCommonTasks = false;

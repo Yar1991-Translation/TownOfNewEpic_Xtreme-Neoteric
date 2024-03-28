@@ -11,6 +11,7 @@ using TONEX.Roles.Core;
 using static TONEX.Modules.CustomRoleSelector;
 using static TONEX.Translator;
 using TONEX.Roles.AddOns.Common;
+using TONEX.Roles.AddOns.Crewmate;
 
 namespace TONEX;
 
@@ -285,7 +286,7 @@ internal class SelectRolesPatch
             Logger.Info($"7-4", "test");
             if (CustomRoles.Lovers.IsEnable() && CustomRoles.Hater.IsEnable()) Lovers.AssignLoversRoles();
             else if (CustomRoles.Lovers.IsEnable() && rd.Next(0, 100) < Options.GetRoleChance(CustomRoles.Lovers)) Lovers.AssignLoversRoles();
-            if (CustomRoles.Madmate.IsEnable() && Options.MadmateSpawnMode.GetInt() == 0) AssignMadmateRoles();
+            if (CustomRoles.Madmate.IsEnable() && Madmate.MadmateSpawnMode.GetInt() == 0) Madmate.AssignMadmateRoles();
             AddOnsAssignData.AssignAddOnsFromList();
             Logger.Info($"7-5", "test");
             foreach (var pair in PlayerState.AllPlayerStates)
@@ -392,19 +393,7 @@ internal class SelectRolesPatch
         }
     }
     
-    private static void AssignMadmateRoles()
-    {
-        var allPlayers = Main.AllPlayerControls.Where(x => x.CanBeMadmate()).ToList();
-        var count = Math.Clamp(CustomRoles.Madmate.GetCount(), 0, allPlayers.Count);
-        if (count <= 0) return;
-        for (var i = 0; i < count; i++)
-        {
-            var player = allPlayers[IRandom.Instance.Next(0, allPlayers.Count)];
-            allPlayers.Remove(player);
-            PlayerState.GetByPlayerId(player.PlayerId).SetSubRole(CustomRoles.Madmate);
-            Logger.Info($"注册附加职业：{player?.Data?.PlayerName}（{player.GetCustomRole()}）=> {CustomRoles.Madmate}", "AssignCustomSubRoles");
-        }
-    }
+    
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSetRole))]
     private class RpcSetRoleReplacer
     {
