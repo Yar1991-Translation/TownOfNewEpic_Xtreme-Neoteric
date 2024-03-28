@@ -4,10 +4,10 @@ using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using System.Collections.Generic;
 using TONEX.Roles.AddOns.Crewmate;
 using TONEX.Roles.Ghost.Crewmate;
+using TONEX.Roles.Ghost.Neutral;
 using TONEX.Roles.Core;
 using TONEX.Roles.Impostor;
 using TONEX.Roles.Neutral;
-
 namespace TONEX;
 
 [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.AddTasksFromList))]
@@ -86,6 +86,12 @@ class RpcSetTasksPatch
             hasCommonTasks = false;
             NumLongTasks = 0;
             NumShortTasks = InjusticeSpirit.OptionTaskCount.GetInt();
+        }
+        if (pc.Is(CustomRoles.Phantom))
+        {
+            hasCommonTasks = false;
+            NumLongTasks = 0;
+            NumShortTasks = Phantom.OptionTaskCount.GetInt();
         }
         //管理员和摆烂人没有任务
         if (pc.Is(CustomRoles.GM) || pc.Is(CustomRoles.LazyGuy))

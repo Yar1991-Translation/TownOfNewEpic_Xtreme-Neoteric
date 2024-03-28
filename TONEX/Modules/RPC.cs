@@ -45,6 +45,9 @@ public enum CustomRPC
     //TONEX
     ColorFlash,
     CantDoAnyActPlayer,
+    SetAdmirerLoversPlayers,
+    SetAkujoLoversPlayers,
+    SetCupidLoversPlayers,
 
     //GameMode
     SyncHpNameNotify,

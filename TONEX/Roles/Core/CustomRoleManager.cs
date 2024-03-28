@@ -201,7 +201,7 @@ public static class CustomRoleManager
         }
 
         //サブロール処理ができるまではラバーズをここで処理
-        FixedUpdatePatch.LoversSuicide(attemptTarget.PlayerId);
+        Lovers.LoversSuicide(attemptTarget.PlayerId);
 
         //以降共通処理
         var targetState = PlayerState.GetByPlayerId(attemptTarget.PlayerId);
@@ -718,6 +718,7 @@ public enum CustomRoles
     Rebels,
     Admirer,//TODO 暗恋者
     Akujo, //TODO 魅魔
+    Cupid,//丘比特
     Yandere,//TODO 病娇
     Puppeteer,
     Changger,//TODO 连环交换师
@@ -746,6 +747,9 @@ public enum CustomRoles
     NotAssigned = 500,
     LastImpostor,
     Lovers,
+    AdmirerLovers,
+    AkujoLovers,
+    CupidLovers,
     Neptune,
     Madmate,
     Watcher,

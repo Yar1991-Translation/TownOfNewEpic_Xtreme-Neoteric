@@ -12,6 +12,7 @@ using TONEX.Roles.Core;
 using UnityEngine;
 using TONEX.Roles.Ghost.Impostor;
 using TONEX.Roles.Ghost.Crewmate;
+using TONEX.Roles.Ghost.Neutral;
 
 namespace TONEX;
 
@@ -531,7 +532,9 @@ public static class Options
             .SetHeader(true);
         NeutralWinTogether = BooleanOptionItem.Create(1_003_004, "NeutralWinTogether", false, TabGroup.NeutralRoles, false).SetParent(NeutralRoleWinTogether)
             .SetGameMode(CustomGameMode.Standard);
-
+#if DEBUG
+        Phantom.SetupOptionItem();
+#endif
         AddonsNumLimit = IntegerOptionItem.Create(1_003_005, "AddonsNumLimit", new(0, 99, 1), 1, TabGroup.Addons, false)
             .SetGameMode(CustomGameMode.Standard)
             .SetValueFormat(OptionFormat.Pieces)

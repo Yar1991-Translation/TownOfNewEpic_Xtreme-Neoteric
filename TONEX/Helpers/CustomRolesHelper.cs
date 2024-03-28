@@ -78,12 +78,9 @@ static class CustomRolesHelper
     CustomRoles.CopyCat or//TODO 效颦者
     CustomRoles.Konan or//TODO 柯南
     CustomRoles.PVPboss or//TODO PVP大佬
-   CustomRoles.Admirer or//TODO 暗恋者
-    CustomRoles.Akujo or //TODO 魅魔
     CustomRoles.Revolutionist or//TODO 革命家
    CustomRoles.Changger or//TODO 连环交换师
     CustomRoles.Amnesiac or//TODO 失忆者
-    CustomRoles.Yandere or//TODO 病娇
     CustomRoles.PoliticalStrategists or//TODO 纵横家
 
     CustomRoles.Challenger or//TODO 挑战者
