@@ -348,7 +348,7 @@ class GameEndChecker
                 if (win)
                 {
                     maywinner = maywin; // 确定胜利者
-                    Logger.Info($"胜利阵营{maywinner.Key.ToString()}", "CheckGameEnd");
+                    Logger.Info($"胜利阵营已决定", "CheckGameEnd");
                     break;
                 }
             }

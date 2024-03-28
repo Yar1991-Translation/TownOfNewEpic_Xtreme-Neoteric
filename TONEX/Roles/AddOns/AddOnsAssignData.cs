@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TONEX.Roles.AddOns.Crewmate;
 using TONEX.Roles.AddOns.Impostor;
 using TONEX.Roles.Core;
 using UnityEngine;
@@ -35,7 +36,7 @@ public class AddOnsAssignData
         if (role is CustomRoles.Lighter && (!pc.GetCustomRole().IsCrewmate() || pc.Is(CustomRoles.Bewilder))) return false;
         if (role is CustomRoles.Bewilder && (pc.GetCustomRole().IsImpostor() || pc.Is(CustomRoles.Lighter))) return false;
         if (role is CustomRoles.Neptune && (pc.Is(CustomRoles.Lovers) || pc.Is(CustomRoles.Hater))) return false;
-        if (role is CustomRoles.Madmate && !Utils.CanBeMadmate(pc)) return false;
+        if (role is CustomRoles.Madmate && !Madmate.CanBeMadmate(pc)) return false;
         if (role is CustomRoles.Oblivious && (pc.Is(CustomRoles.MedicalExaminer) || pc.Is(CustomRoles.Cleaner) || pc.Is(CustomRoles.Mortician) || pc.Is(CustomRoles.Medium))) return false;
         if (role is CustomRoles.Fool && pc.Is(CustomRoles.Repairman)) return false;
         if (role is CustomRoles.Tiebreaker && pc.Is(CustomRoles.Dictator)) return false;

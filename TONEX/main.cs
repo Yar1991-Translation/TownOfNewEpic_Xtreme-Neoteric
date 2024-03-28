@@ -39,8 +39,8 @@ public class Main : BasePlugin
     // == 版本相关设定 / Version Config ==
     public const string LowestSupportedVersion = "2024.3.5";
     public static readonly bool IsPublicAvailableOnThisVersion = false;
-    public const string PluginVersion = "1.1.9";
-    public const string PluginShowVersion = "1.2_20240325_Debug_4";
+    public const string PluginVersion = "1.1.10";
+    public const string PluginShowVersion = "1.2_20240329_Debug_6";
     public const int PluginCreation = 1;
     // == 链接相关设定 / Link Config ==
     public static readonly bool ShowWebsiteButton = true;
@@ -252,6 +252,9 @@ public class Main : BasePlugin
                 {CustomRoles.NotAssigned, "#ffffff"},
                 {CustomRoles.LastImpostor, "#ff1919"},
                 {CustomRoles.Lovers, "#ff9ace"},
+                {CustomRoles.AdmirerLovers, "#FFC8EE"},
+                {CustomRoles.AkujoLovers, "#8E4593"},
+                {CustomRoles.CupidLovers, "#F69896"},
                 {CustomRoles.Neptune, "#00a4ff"},
                 {CustomRoles.Madmate, "#ff1919"},
                 {CustomRoles.Watcher, "#800080"},
@@ -382,6 +385,7 @@ public enum CustomWinner
     Jester = CustomRoles.Jester,
     Terrorist = CustomRoles.Terrorist,
     Lovers = CustomRoles.Lovers,
+
     Executioner = CustomRoles.Executioner,
     Arsonist = CustomRoles.Arsonist,
     Revolutionist = CustomRoles.Revolutionist,
@@ -415,6 +419,9 @@ public enum CustomWinner
     MeteorArbiter = CustomRoles.MeteorArbiter,
     MeteorMurder = CustomRoles.MeteorMurder,
     SharpShooter = CustomRoles.SharpShooter,
+    AdmirerLovers = CustomRoles.AdmirerLovers,
+    AkujoLovers = CustomRoles.AkujoLovers,
+    CupidLovers = CustomRoles.CupidLovers,
 }
 public enum SuffixModes
 {

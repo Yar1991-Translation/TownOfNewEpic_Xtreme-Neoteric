@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TONEX.Attributes;
+using TONEX.Roles.AddOns.Crewmate;
 using TONEX.Roles.Core;
 using TONEX.Roles.Neutral;
 
@@ -93,7 +94,7 @@ public class PlayerState
 
         if (role == CustomRoles.Madmate)
         {
-            CountType = Options.MadmateCountMode.GetInt() switch
+            CountType = Madmate.MadmateCountMode.GetInt() switch
             {
                 0 => CountTypes.OutOfGame,
                 1 => CountTypes.Impostor,

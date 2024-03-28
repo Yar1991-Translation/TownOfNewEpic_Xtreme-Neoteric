@@ -4,41 +4,41 @@ using TONEX.Roles.Core;
 using MS.Internal.Xml.XPath;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
 
-namespace TONEX.Roles.Ghost.Crewmate;
-public sealed class InjusticeSpirit : RoleBase
+namespace TONEX.Roles.Ghost.Neutral;
+public sealed class Phantom : RoleBase
 {
 
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
-            typeof(InjusticeSpirit),
-            player => new InjusticeSpirit(player),
-            CustomRoles.InjusticeSpirit,
+            typeof(Phantom),
+            player => new Phantom(player),
+            CustomRoles.Phantom,
             () => RoleTypes.GuardianAngel,
             CustomRoleTypes.Crewmate,
-            75_1_5_0200,
+            75_1_5_0300,
             null,
             "ijs|冤枉",
-            "#B6B87B",
+            "#65167d",
             ctop: true
         );
-    public InjusticeSpirit(PlayerControl player)
+    public Phantom(PlayerControl player)
     : base(
         RoleInfo,
         player
     )
     {
     }
-    static OptionItem EnableInjusticeSpirit;
+    static OptionItem EnablePhantom;
     public static OptionItem OptionTaskCount;
     int Maxi;
     public static void SetupOptionItem()
     {
-        EnableInjusticeSpirit = BooleanOptionItem.Create(75_1_5_0210, "EnableInjusticeSpirit", false, TabGroup.CrewmateRoles, false)
+        EnablePhantom = BooleanOptionItem.Create(75_1_5_0310, "EnablePhantom", false, TabGroup.NeutralRoles, false)
             .SetHeader(true)
             .SetGameMode(CustomGameMode.Standard);
-        OptionTaskCount = IntegerOptionItem.Create(75_1_5_0211, "OptionTaskCount", new(0, 100, 1), 10, TabGroup.CrewmateRoles, false)
+        OptionTaskCount = IntegerOptionItem.Create(75_1_5_0311, "OptionTaskCount", new(0, 100, 1), 10, TabGroup.NeutralRoles, false)
             .SetValueFormat(OptionFormat.Pieces)
-            .SetParent(EnableInjusticeSpirit);
+            .SetParent(EnablePhantom);
     }
     public override bool OnCompleteTask(out bool cancel)
     {
