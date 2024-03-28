@@ -5,17 +5,15 @@ using System.Linq;
 using TONEX.Attributes;
 using System;
 using TONEX.Roles.Core;
-using UnityEngine;
 using static TONEX.Options;
 using static TONEX.Utils;
 using System.Text;
 using InnerNet;
-using static UnityEngine.ParticleSystem.PlaybackState;
 
 namespace TONEX.Roles.AddOns.Common;
 public static class Lovers
 {
-    private static readonly int Id = 94_1_0_0700;
+    private static readonly int Id = 75_1_2_1400;
     private static List<byte> playerIdList = new();
 
     public static OptionItem LoverKnowRoles;
@@ -25,10 +23,10 @@ public static class Lovers
     public static bool isLoversDead = true;
     public static void SetupCustomOption()
     {
-        SetupRoleOptions(80100, TabGroup.Addons, CustomRoles.Lovers, assignCountRule: new(2, 2, 2));
-        LoverKnowRoles = BooleanOptionItem.Create(80100 + 4, "LoverKnowRoles", true, TabGroup.Addons, false).SetParent(Options.CustomRoleSpawnChances[CustomRoles.Lovers])
+        SetupRoleOptions(Id, TabGroup.Addons, CustomRoles.Lovers, assignCountRule: new(2, 2, 2));
+        LoverKnowRoles = BooleanOptionItem.Create(Id + 4, "LoverKnowRoles", true, TabGroup.Addons, false).SetParent(Options.CustomRoleSpawnChances[CustomRoles.Lovers])
             .SetGameMode(CustomGameMode.Standard);
-        LoverSuicide = BooleanOptionItem.Create(80100 + 3, "LoverSuicide", true, TabGroup.Addons, false).SetParent(Options.CustomRoleSpawnChances[CustomRoles.Lovers])
+        LoverSuicide = BooleanOptionItem.Create(Id + 3, "LoverSuicide", true, TabGroup.Addons, false).SetParent(Options.CustomRoleSpawnChances[CustomRoles.Lovers])
             .SetGameMode(CustomGameMode.Standard);
     }
     [GameModuleInitializer]

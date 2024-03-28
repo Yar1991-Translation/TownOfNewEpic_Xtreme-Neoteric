@@ -116,11 +116,7 @@ public static class Options
 
     public static OptionItem DeadImpCantSabotage;
     public static OptionItem ImpKnowAlliesRole;
-    public static OptionItem ImpKnowWhosMadmate;
-    public static OptionItem MadmateKnowWhosImp;
-    public static OptionItem MadmateKnowWhosMadmate;
-    public static OptionItem ImpCanKillMadmate;
-    public static OptionItem MadmateCanKillImp;
+   
     public static OptionItem SetImpNum;
     public static OptionItem ImpNum;
 
@@ -135,15 +131,7 @@ public static class Options
 
 
 
-    public static OptionItem MadmateSpawnMode;
-    public static OptionItem MadmateCountMode;
-    public static OptionItem SheriffCanBeMadmate;
-    public static OptionItem MayorCanBeMadmate;
-    public static OptionItem NGuesserCanBeMadmate;
-    public static OptionItem SnitchCanBeMadmate;
-    public static OptionItem JudgeCanBeMadmate;
-    public static OptionItem NSwapperCanBeMadmate;
-    public static OptionItem MadSnitchTasks;
+    
 
     //// 游戏设置 ////
 
@@ -418,18 +406,7 @@ public static class Options
 
     /* 选项 */
 
-    public static readonly string[] madmateSpawnMode =
-    {
-        "MadmateSpawnMode.Assign",
-        "MadmateSpawnMode.FirstKill",
-        "MadmateSpawnMode.SelfVote",
-    };
-    public static readonly string[] madmateCountMode =
-    {
-        "MadmateCountMode.None",
-        "MadmateCountMode.Imp",
-        "MadmateCountMode.Crew",
-    };
+   
     public static readonly string[] suffixModes =
     {
         "SuffixMode.None",
@@ -513,18 +490,7 @@ public static class Options
         ImpKnowAlliesRole = BooleanOptionItem.Create(1_000_001, "ImpKnowAlliesRole", true, TabGroup.ImpostorRoles, false)
             .SetGameMode(CustomGameMode.Standard)
            .SetHeader(true);
-        ImpKnowWhosMadmate = BooleanOptionItem.Create(1_000_002, "ImpKnowWhosMadmate", false, TabGroup.ImpostorRoles, false)
-            .SetGameMode(CustomGameMode.Standard);
-        ImpCanKillMadmate = BooleanOptionItem.Create(1_000_003, "ImpCanKillMadmate", true, TabGroup.ImpostorRoles, false)
-            .SetGameMode(CustomGameMode.Standard);
-
-        MadmateKnowWhosMadmate = BooleanOptionItem.Create(1_001_001, "MadmateKnowWhosMadmate", false, TabGroup.ImpostorRoles, false)
-            .SetHeader(true)
-            .SetGameMode(CustomGameMode.Standard);
-        MadmateKnowWhosImp = BooleanOptionItem.Create(1_001_002, "MadmateKnowWhosImp", true, TabGroup.ImpostorRoles, false)
-            .SetGameMode(CustomGameMode.Standard);
-        MadmateCanKillImp = BooleanOptionItem.Create(1_001_003, "MadmateCanKillImp", true, TabGroup.ImpostorRoles, false)
-            .SetGameMode(CustomGameMode.Standard);
+        Madmate.SetupImpTotalOption();
 
         SetImpNum = BooleanOptionItem.Create(1_001_004, "SetImpNum", false, TabGroup.ImpostorRoles, false)
             .SetHeader(true)
@@ -675,7 +641,7 @@ public static class Options
 
         YouTuber.SetupCustomOption();
         Workhorse.SetupCustomOption();
-        SetupMadmateRoleOptionsToggle(80200);
+        Madmate.SetupMadmateRoleOptionsToggle(75_1_2_1500);
 
         // 内鬼专属附加
         TextOptionItem.Create(5_100_003, "MenuTitle.Addon.Imp", TabGroup.Addons)
@@ -1171,29 +1137,7 @@ public static class Options
         CustomRoleSpawnChances.Add(role, spawnOption);
         CustomRoleCounts.Add(role, countOption);
     }
-    private static void SetupMadmateRoleOptionsToggle(int id, CustomGameMode customGameMode = CustomGameMode.Standard)
-    {
-        var role = CustomRoles.Madmate;
-        var spawnOption = StringOptionItem.Create(id, role.ToString(), RoleSpwanToggle, 0, TabGroup.Addons, false).SetColor(Utils.GetRoleColor(role))
-                .SetHeader(true)
-                .SetGameMode(customGameMode) as StringOptionItem;
-
-        var countOption = IntegerOptionItem.Create(id + 1, "Maximum", new(1, 15, 1), 1, TabGroup.Addons, false).SetParent(spawnOption)
-            .SetGameMode(customGameMode);
-
-        MadmateSpawnMode = StringOptionItem.Create(id + 10, "MadmateSpawnMode", madmateSpawnMode, 0, TabGroup.Addons, false).SetParent(spawnOption);
-        MadmateCountMode = StringOptionItem.Create(id + 11, "MadmateCountMode", madmateCountMode, 0, TabGroup.Addons, false).SetParent(spawnOption);
-        SheriffCanBeMadmate = BooleanOptionItem.Create(id + 12, "SheriffCanBeMadmate", false, TabGroup.Addons, false).SetParent(spawnOption);
-        MayorCanBeMadmate = BooleanOptionItem.Create(id + 13, "MayorCanBeMadmate", false, TabGroup.Addons, false).SetParent(spawnOption);
-        NGuesserCanBeMadmate = BooleanOptionItem.Create(id + 14, "NGuesserCanBeMadmate", false, TabGroup.Addons, false).SetParent(spawnOption);
-        SnitchCanBeMadmate = BooleanOptionItem.Create(id + 15, "SnitchCanBeMadmate", false, TabGroup.Addons, false).SetParent(spawnOption);
-        MadSnitchTasks = IntegerOptionItem.Create(id + 16, "MadSnitchTasks", new(1, 99, 1), 3, TabGroup.Addons, false).SetParent(SnitchCanBeMadmate)
-            .SetValueFormat(OptionFormat.Pieces);
-        JudgeCanBeMadmate = BooleanOptionItem.Create(id + 17, "JudgeCanBeMadmate", false, TabGroup.Addons, false).SetParent(spawnOption);
-        NSwapperCanBeMadmate = BooleanOptionItem.Create(id + 18, "NSwapperCanBeMadmate", false, TabGroup.Addons, false).SetParent(spawnOption);
-        CustomRoleSpawnChances.Add(role, spawnOption);
-        CustomRoleCounts.Add(role, countOption);
-    }
+    
     public class OverrideTasksData
     {
         public static Dictionary<CustomRoles, OverrideTasksData> AllData = new();

@@ -1,5 +1,6 @@
 using Hazel;
 using TONEX.Roles.AddOns.Common;
+using TONEX.Roles.AddOns.Crewmate;
 using TONEX.Roles.Core;
 using TONEX.Roles.Crewmate;
 using TONEX.Roles.GameModeRoles;
@@ -33,12 +34,7 @@ public static class NameColorManager
     {
         color = "";
 
-        // 内鬼叛徒互认
-        if (seer.Is(CustomRoleTypes.Impostor) && target.Is(CustomRoleTypes.Impostor)) color = (target.Is(CustomRoles.Egoist) && Egoist.OptionImpEgoVisibalToAllies.GetBool() && seer != target) ? Utils.GetRoleColorCode(CustomRoles.Egoist) : Utils.GetRoleColorCode(CustomRoles.Impostor);
-        if (seer.Is(CustomRoles.Madmate) && target.Is(CustomRoleTypes.Impostor) && Options.MadmateKnowWhosImp.GetBool()) color = Main.roleColors[CustomRoles.Impostor];
-        if (seer.Is(CustomRoleTypes.Impostor) && target.Is(CustomRoles.Madmate) && Options.ImpKnowWhosMadmate.GetBool()) color = Main.roleColors[CustomRoles.Madmate];
-        if (seer.Is(CustomRoles.Madmate) && target.Is(CustomRoles.Madmate) && Options.MadmateKnowWhosMadmate.GetBool()) color = Main.roleColors[CustomRoles.Madmate];
-        if (seer.Is(CustomRoles.Gangster) && target.Is(CustomRoles.Madmate)) color = Main.roleColors[CustomRoles.Madmate];
+        Madmate.KnowTargetRoleColor(seer, target, ref color);
 
         //魅惑者小弟互认
         if (seer.Is(CustomRoles.Charmed) && target.Is(CustomRoles.Succubus)) color = Main.roleColors[CustomRoles.Succubus];

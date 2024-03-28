@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TONEX.Modules;
 using TONEX.Roles.AddOns.Common;
+using TONEX.Roles.AddOns.Crewmate;
 using TONEX.Roles.Core;
 using TONEX.Roles.Crewmate;
 using UnityEngine;
@@ -38,25 +39,7 @@ public static class MeetingHudPatch
 
             if (voter != null)
             {
-                //主动叛变模式
-                if (Options.MadmateSpawnMode.GetInt() == 2 && srcPlayerId == suspectPlayerId)
-                {
-                    if (Main.AllPlayerControls.Count(p => p.Is(CustomRoles.Madmate)) < CustomRoles.Madmate.GetCount() && voter.CanBeMadmate())
-                    {
-                        voter.RpcSetCustomRole(CustomRoles.Madmate);
-                        Logger.Info($"注册附加职业：{voter.GetNameWithRole()} => {CustomRoles.Madmate}", "AssignCustomSubRoles");
-                        voter.ShowPopUp(GetString("MadmateSelfVoteModeSuccessfulMutiny"));
-                        Utils.SendMessage(GetString("MadmateSelfVoteModeSuccessfulMutiny"), voter.PlayerId);
-                    }
-                    else
-                    {
-                        voter.ShowPopUp(GetString("MadmateSelfVoteModeMutinyFailed"));
-                        Utils.SendMessage(GetString("MadmateSelfVoteModeMutinyFailed"), voter.PlayerId);
-                    }
-                    __instance.RpcClearVote(voter.GetClientId());
-                    Logger.Info($"{voter.GetNameWithRole()} 的投票被清除", nameof(CastVotePatch));
-                    return false;
-                }
+                if (!Madmate.CheckVoteAsVoter(srcPlayerId, suspectPlayerId, voter, ref __instance)) return false;
                 if (voter.GetRoleClass()?.CheckVoteAsVoter(voted) == false)
                 {
                     __instance.RpcClearVote(voter.GetClientId());

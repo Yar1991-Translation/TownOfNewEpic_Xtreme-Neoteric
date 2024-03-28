@@ -377,9 +377,7 @@ public static class Utils
                     || Lovers.CanKnowOthers(seer, seen)
 
                     || (seer.Is(CustomRoleTypes.Impostor) && seen.Is(CustomRoleTypes.Impostor) && Options.ImpKnowAlliesRole.GetBool())
-                    || (seer.Is(CustomRoles.Madmate) && seen.Is(CustomRoleTypes.Impostor) && Options.MadmateKnowWhosImp.GetBool())
-                    || (seer.Is(CustomRoleTypes.Impostor) && seen.Is(CustomRoles.Madmate) && Options.ImpKnowWhosMadmate.GetBool())
-                    || (seer.Is(CustomRoles.Madmate) && seen.Is(CustomRoles.Madmate) && Options.MadmateKnowWhosMadmate.GetBool())
+                    || Madmate.CanKnowOthers(seer, seen)
 
                     || (seer.Is(CustomRoles.Charmed) && seen.Is(CustomRoles.Charmed) && Succubus.OptionTargetKnowOtherTarget.GetBool())
 
@@ -625,20 +623,6 @@ public static class Utils
                     break;
             }
         return hasTasks;
-    }
-    public static bool CanBeMadmate(this PlayerControl pc)
-    {
-        return pc != null && (pc.GetRoleClass()?.CanBeMadmate ?? false) && !pc.Is(CustomRoles.Madmate)
-        && !(
-            (pc.Is(CustomRoles.Sheriff) && !Options.SheriffCanBeMadmate.GetBool()) ||
-            (pc.Is(CustomRoles.Mayor) && !Options.MayorCanBeMadmate.GetBool()) ||
-            (pc.Is(CustomRoles.NiceGuesser) && !Options.NGuesserCanBeMadmate.GetBool()) ||
-            (pc.Is(CustomRoles.Snitch) && !Options.SnitchCanBeMadmate.GetBool()) ||
-            (pc.Is(CustomRoles.Judge) && !Options.JudgeCanBeMadmate.GetBool()) ||
-            (pc.Is(CustomRoles.NiceSwapper) && !Options.NSwapperCanBeMadmate.GetBool()) ||
-            pc.Is(CustomRoles.LazyGuy) ||
-            pc.Is(CustomRoles.Egoist)
-            );
     }
     private static string GetProgressText(PlayerControl seer, PlayerControl seen = null)
     {
