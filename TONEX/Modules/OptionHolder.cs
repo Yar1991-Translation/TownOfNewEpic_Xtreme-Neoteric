@@ -133,8 +133,7 @@ public static class Options
 
     public static OptionItem AddonsNumLimit;
 
-    public static OptionItem LoverKnowRoles;
-    public static OptionItem LoverSuicide;
+
 
     public static OptionItem MadmateSpawnMode;
     public static OptionItem MadmateCountMode;
@@ -644,14 +643,7 @@ public static class Options
             .SetGameMode(CustomGameMode.Standard)
             .SetColor(Utils.GetCustomRoleTypeColor(CustomRoleTypes.Addon));
 
-        #region Options of Lover
-        SetupRoleOptions(80100, TabGroup.Addons, CustomRoles.Lovers, assignCountRule: new(2, 2, 2));
-        LoverKnowRoles = BooleanOptionItem.Create(80100 + 4, "LoverKnowRoles", true, TabGroup.Addons, false).SetParent(Options.CustomRoleSpawnChances[CustomRoles.Lovers])
-            .SetGameMode(CustomGameMode.Standard);
-        LoverSuicide = BooleanOptionItem.Create(80100 + 3, "LoverSuicide", true, TabGroup.Addons, false).SetParent(Options.CustomRoleSpawnChances[CustomRoles.Lovers])
-            .SetGameMode(CustomGameMode.Standard);
-        #endregion
-
+        Lovers.SetupCustomOption();
         Neptune.SetupCustomOption();
         Watcher.SetupCustomOption();
         Lighter.SetupCustomOption();

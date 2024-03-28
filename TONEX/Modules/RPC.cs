@@ -262,10 +262,7 @@ internal class RPCHandlerPatch
                 NameColorManager.ReceiveRPC(reader);
                 break;
             case CustomRPC.SetLoversPlayers:
-                Main.LoversPlayers.Clear();
-                int count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                    Main.LoversPlayers.Add(Utils.GetPlayerById(reader.ReadByte()));
+                Lovers.ReceiveRPC(reader);
                 break;
             case CustomRPC.SetRealKiller:
                 byte targetId = reader.ReadByte();
@@ -575,17 +572,7 @@ internal static class RPC
         HudManager.Instance.SetHudActive(true);
         if (PlayerControl.LocalPlayer.PlayerId == targetId) RemoveDisableDevicesPatch.UpdateDisableDevices();
     }
-    public static void SyncLoversPlayers()
-    {
-        if (!AmongUsClient.Instance.AmHost) return;
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetLoversPlayers, SendOption.Reliable, -1);
-        writer.Write(Main.LoversPlayers.Count);
-        foreach (var lp in Main.LoversPlayers)
-        {
-            writer.Write(lp.PlayerId);
-        }
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-    }
+    
     public static void SendRpcLogger(uint targetNetId, byte callId, int targetClientId = -1)
     {
         if (!DebugModeManager.AmDebugger) return;

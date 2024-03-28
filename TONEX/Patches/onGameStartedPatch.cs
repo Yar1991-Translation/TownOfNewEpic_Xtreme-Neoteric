@@ -10,6 +10,7 @@ using TONEX.Roles.AddOns;
 using TONEX.Roles.Core;
 using static TONEX.Modules.CustomRoleSelector;
 using static TONEX.Translator;
+using TONEX.Roles.AddOns.Common;
 
 namespace TONEX;
 
@@ -282,8 +283,8 @@ internal class SelectRolesPatch
                 Logger.Info($"7-3.5", "test");
             }
             Logger.Info($"7-4", "test");
-            if (CustomRoles.Lovers.IsEnable() && CustomRoles.Hater.IsEnable()) AssignLoversRoles();
-            else if (CustomRoles.Lovers.IsEnable() && rd.Next(0, 100) < Options.GetRoleChance(CustomRoles.Lovers)) AssignLoversRoles();
+            if (CustomRoles.Lovers.IsEnable() && CustomRoles.Hater.IsEnable()) Lovers.AssignLoversRoles();
+            else if (CustomRoles.Lovers.IsEnable() && rd.Next(0, 100) < Options.GetRoleChance(CustomRoles.Lovers)) Lovers.AssignLoversRoles();
             if (CustomRoles.Madmate.IsEnable() && Options.MadmateSpawnMode.GetInt() == 0) AssignMadmateRoles();
             AddOnsAssignData.AssignAddOnsFromList();
             Logger.Info($"7-5", "test");
@@ -390,33 +391,7 @@ internal class SelectRolesPatch
             }
         }
     }
-    private static void AssignLoversRoles(int RawCount = -1)
-    {
-        //Loversを初期化
-        Main.LoversPlayers.Clear();
-        Main.isLoversDead = false;
-        var allPlayers = new List<PlayerControl>();
-        foreach (var pc in Main.AllPlayerControls)
-        {
-            if (pc.Is(CustomRoles.GM) || (PlayerState.GetByPlayerId(pc.PlayerId).SubRoles.Count >= Options.AddonsNumLimit.GetInt())
-                || pc.Is(CustomRoles.LazyGuy) || pc.Is(CustomRoles.Neptune) || pc.Is(CustomRoles.God) || pc.Is(CustomRoles.Hater) || pc.Is(CustomRoles.Believer)) continue;
-            allPlayers.Add(pc);
-        }
-        var loversRole = CustomRoles.Lovers;
-        var rd = IRandom.Instance;
-        var count = Math.Clamp(RawCount, 0, allPlayers.Count);
-        if (RawCount == -1) count = Math.Clamp(loversRole.GetCount(), 0, allPlayers.Count);
-        if (count <= 0) return;
-        for (var i = 0; i < count; i++)
-        {
-            var player = allPlayers[rd.Next(0, allPlayers.Count)];
-            Main.LoversPlayers.Add(player);
-            allPlayers.Remove(player);
-            PlayerState.GetByPlayerId(player.PlayerId).SetSubRole(loversRole);
-            Logger.Info($"注册附加职业：{player?.Data?.PlayerName}（{player.GetCustomRole()}）=> {loversRole}", "AssignCustomSubRoles");
-        }
-        RPC.SyncLoversPlayers();
-    }
+    
     private static void AssignMadmateRoles()
     {
         var allPlayers = Main.AllPlayerControls.Where(x => x.CanBeMadmate()).ToList();

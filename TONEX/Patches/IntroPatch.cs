@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using TONEX.Roles.Core.Interfaces;
 using TONEX.Modules.SoundInterface;
+using TONEX.Roles.AddOns.Common;
 
 namespace TONEX;
 
@@ -51,8 +52,7 @@ class IntroCutscenePatch
             }
             foreach (var subRole in PlayerState.GetByPlayerId(PlayerControl.LocalPlayer.PlayerId).SubRoles)
                 __instance.RoleBlurbText.text += "\n" + Utils.ColorString(Utils.GetRoleColor(subRole), GetString($"{subRole}Info"));
-            if (!PlayerControl.LocalPlayer.Is(CustomRoles.Lovers) && !PlayerControl.LocalPlayer.Is(CustomRoles.Neptune) && CustomRoles.Neptune.IsExist() && !PlayerControl.LocalPlayer.Is(CustomRoles.Mini))
-                __instance.RoleBlurbText.text += "\n" + Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), GetString($"{CustomRoles.Lovers}Info"));
+                Neptune.Intro(ref __instance);
             __instance.RoleText.text += Utils.GetSubRolesText(PlayerControl.LocalPlayer.PlayerId, false, true);
             }
 
