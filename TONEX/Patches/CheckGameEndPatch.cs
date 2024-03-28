@@ -3,6 +3,7 @@ using HarmonyLib;
 using Hazel;
 using System.Collections.Generic;
 using System.Linq;
+using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces;
 using TONEX.Roles.Crewmate;
@@ -195,13 +196,7 @@ class GameEndChecker
                     }
                 }
 
-                // 恋人胜利
-                if (Main.AllPlayerControls.Any(p => CustomWinnerHolder.WinnerIds.Contains(p.PlayerId) && p.Is(CustomRoles.Lovers)))
-                {
-                    CustomWinnerHolder.AdditionalWinnerRoles.Add(CustomRoles.Lovers);
-                    Main.AllPlayerControls.Where(p => p.Is(CustomRoles.Lovers))
-                        .Do(p => CustomWinnerHolder.WinnerIds.Add(p.PlayerId));
-                }
+                Lovers.CheckWin();
             }
             ShipStatus.Instance.enabled = false;
             StartEndGame(reason);

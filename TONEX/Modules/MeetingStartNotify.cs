@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.Core;
 using static TONEX.Translator;
 
@@ -31,8 +32,7 @@ public static class MeetingStartNotify
                 sb.Clear().Append(txt.RemoveHtmlTags());
                 foreach (var subRole in PlayerState.AllPlayerStates[pc.PlayerId].SubRoles)
                     sb.Append($"\n\n" + GetString($"{subRole}") + Utils.GetRoleDisplaySpawnMode(subRole) + GetString($"{subRole}InfoLong"));
-                if (CustomRoles.Neptune.IsExist() && (role is not CustomRoles.GM and not CustomRoles.Neptune))
-                    sb.Append($"\n\n" + GetString($"Lovers") + Utils.GetRoleDisplaySpawnMode(CustomRoles.Lovers) + GetString($"LoversInfoLong"));
+                Neptune.MeetingngStartNotifyOthers(ref sb, role);
                 AddMsg(sb.ToString(), pc.PlayerId);
             }
         if (msgToSend.Count >= 1)

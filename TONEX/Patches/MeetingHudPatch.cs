@@ -205,13 +205,9 @@ public static class MeetingHudPatch
                 }
 
                 //海王相关显示
-                if ((seer.Is(CustomRoles.Neptune) || target.Is(CustomRoles.Neptune)) && !seer.Data.IsDead && !isLover)
-                    sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡"));
-                else if (seer == target && CustomRoles.Neptune.IsExist() && !isLover)
-                    sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡"));
-                if (target.Is(CustomRoles.Mini) && seer != target)
-                    sb.Append(Utils.ColorString(Color.yellow, $"({Mini.Age})"));
-                
+                Neptune.MeetingHud(isLover, seer, target, ref sb);
+                Mini.MeetingHud(isLover, seer, target, ref sb);
+
 
                 //会議画面ではインポスター自身の名前にSnitchマークはつけません。
 
@@ -270,12 +266,7 @@ public static class MeetingHudPatch
     }
     public static void CheckForDeathOnExile(CustomDeathReason deathReason, params byte[] playerIds)
     {
-        foreach (var playerId in playerIds)
-        {
-            //Loversの後追い
-            if (CustomRoles.Lovers.IsExistCountDeath() && !Main.isLoversDead && Main.LoversPlayers.Find(lp => lp.PlayerId == playerId) != null)
-                FixedUpdatePatch.LoversSuicide(playerId, true);
-        }
+        Lovers.CheckForDeathOnExile(deathReason, playerIds);
     }
 }
 

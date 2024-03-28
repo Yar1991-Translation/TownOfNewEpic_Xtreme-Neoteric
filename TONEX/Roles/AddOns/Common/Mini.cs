@@ -6,6 +6,8 @@ using TONEX.Modules.SoundInterface;
 using TONEX.Roles.Core;
 using UnityEngine;
 using static TONEX.Options;
+using System.Text;
+using static TONEX.Utils;
 using static UnityEngine.GraphicsBuffer;
 
 namespace TONEX.Roles.AddOns.Common;
@@ -116,5 +118,25 @@ public static class Mini
     {
         if (!playerIdList.Contains(playerId)) return "";
         return Age[playerId] < 18 ? Utils.ColorString(Color.yellow, $"({Age[playerId]})") : "";
+    }
+    public static void TargetMarks(PlayerControl seer, PlayerControl target, ref StringBuilder targetMark)
+    {
+        if (target.Is(CustomRoles.Mini) && seer != target)
+        {
+            targetMark.Append($"<color={GetRoleColorCode(CustomRoles.Judge)}>({Age[target.PlayerId]})</color>");
+        }
+    }
+    public static void MeetingHud(bool isLover, PlayerControl seer, PlayerControl target, ref StringBuilder sb)
+    {
+        if (target.Is(CustomRoles.Mini) && seer != target)
+            sb.Append(ColorString(Color.yellow, $"({Age[target.PlayerId]})"));
+    }
+    public static void Marks(PlayerControl __instance, ref StringBuilder Mark)
+    {
+        if (__instance.Is(CustomRoles.Mini) && __instance != PlayerControl.LocalPlayer)
+        {
+            Mark.Append($"<color={Utils.GetRoleColorCode(CustomRoles.Judge)}>({Age[__instance.PlayerId]})</color>");
+        }
+    
     }
 }

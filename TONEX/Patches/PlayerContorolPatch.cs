@@ -504,7 +504,7 @@ class FixedUpdatePatch
                 FallFromLadder.FixedUpdate(player);
             }
 
-            if (GameStates.IsInGame) LoversSuicide();
+            if (GameStates.IsInGame) Lovers.LoversSuicide();
 
             if (GameStates.IsInGame && player.AmOwner)
                 DisableDevice.FixedUpdate();
@@ -583,28 +583,11 @@ class FixedUpdatePatch
                 Mark.Append(seerRole?.GetMark(seer, target, false));
                 //seerに関わらず発動するMark
                 Mark.Append(CustomRoleManager.GetMarkOthers(seer, target, false));
-                
+
                 //ハートマークを付ける(会議中MOD視点)
-                if (__instance.Is(CustomRoles.Lovers) && PlayerControl.LocalPlayer.Is(CustomRoles.Lovers))
-                {
-                    Mark.Append($"<color={Utils.GetRoleColorCode(CustomRoles.Lovers)}>♡</color>");
-                }
-                else if (__instance.Is(CustomRoles.Lovers) && PlayerControl.LocalPlayer.Data.IsDead)
-                {
-                    Mark.Append($"<color={Utils.GetRoleColorCode(CustomRoles.Lovers)}>♡</color>");
-                }
-                else if ((__instance.Is(CustomRoles.Neptune) || PlayerControl.LocalPlayer.Is(CustomRoles.Neptune)) && CustomRoles.Neptune.IsExist())
-                {
-                    Mark.Append($"<color={Utils.GetRoleColorCode(CustomRoles.Lovers)}>♡</color>");
-                }
-                else if (__instance == PlayerControl.LocalPlayer && CustomRoles.Neptune.IsExist())
-                {
-                    Mark.Append($"<color={Utils.GetRoleColorCode(CustomRoles.Lovers)}>♡</color>");
-                }
-                if (__instance.Is(CustomRoles.Mini) && __instance!= PlayerControl.LocalPlayer)
-                {
-                    Mark.Append($"<color={Utils.GetRoleColorCode(CustomRoles.Judge)}>({Mini.Age})</color>");
-                }
+                Lovers.Marks(__instance, ref Mark);
+                Neptune.Marks(__instance, ref Mark);
+                Mini.Marks(__instance, ref Mark);
                 Suffix.Append(seerRole?.GetLowerText(seer, target));
                 //seerに関わらず発動するLowerText
                 Suffix.Append(CustomRoleManager.GetLowerTextOthers(seer, target));
@@ -646,41 +629,7 @@ class FixedUpdatePatch
         }
     }
     //FIXME: 役職クラス化のタイミングで、このメソッドは移動予定
-    public static void LoversSuicide(byte deathId = 0x7f, bool isExiled = false, bool now = false)
-    {
-        if (Options.LoverSuicide.GetBool() && CustomRoles.Lovers.IsExistCountDeath() && !Main.isLoversDead)
-        {
-            foreach (var loversPlayer in Main.LoversPlayers)
-            {
-                //生きていて死ぬ予定でなければスキップ
-                if (!loversPlayer.Data.IsDead && loversPlayer.PlayerId != deathId) continue;
-
-                Main.isLoversDead = true;
-                foreach (var partnerPlayer in Main.LoversPlayers)
-                {
-                    //本人ならスキップ
-                    if (loversPlayer.PlayerId == partnerPlayer.PlayerId) continue;
-
-                    //残った恋人を全て殺す(2人以上可)
-                    //生きていて死ぬ予定もない場合は心中
-                    if (partnerPlayer.PlayerId != deathId && !partnerPlayer.Data.IsDead)
-                    {
-                        PlayerState.GetByPlayerId(partnerPlayer.PlayerId).DeathReason = CustomDeathReason.FollowingSuicide;
-                        if (isExiled)
-                        {
-                            if (now) partnerPlayer?.RpcExileV2();
-                            MeetingHudPatch.TryAddAfterMeetingDeathPlayers(CustomDeathReason.FollowingSuicide, partnerPlayer.PlayerId);
-                        }
-                        else
-                        {
-                            partnerPlayer.RpcMurderPlayer(partnerPlayer);
-                        }
-                        Utils.NotifyRoles(partnerPlayer);
-                    }
-                }
-            }
-        }
-    }
+    
 }
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Start))]
 class PlayerStartPatch

@@ -6,6 +6,7 @@ using InnerNet;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TONEX.Modules;
+using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.Core;
 using static TONEX.Translator;
 
@@ -146,13 +147,7 @@ class OnPlayerLeftPatch
         //            main.RealNames.Remove(data.Character.PlayerId);
         if (GameStates.IsInGame)
         {
-            if (data.Character.Is(CustomRoles.Lovers) && !data.Character.Data.IsDead)
-                foreach (var lovers in Main.LoversPlayers.ToArray())
-                {
-                    Main.isLoversDead = true;
-                    Main.LoversPlayers.Remove(lovers);
-                    PlayerState.GetByPlayerId(lovers.PlayerId).RemoveSubRole(CustomRoles.Lovers);
-                }
+            Lovers.OnPlayerLeft(data);
             var state = PlayerState.GetByPlayerId(data.Character.PlayerId);
             if (state.DeathReason == CustomDeathReason.etc) //死因が設定されていなかったら
             {

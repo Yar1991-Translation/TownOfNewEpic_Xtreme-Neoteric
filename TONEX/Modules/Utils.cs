@@ -374,7 +374,7 @@ public static class Utils
                     || (seer.AmOwner && Main.GodMode.Value)
                     || (Main.VisibleTasksCount && !seer.IsAlive() && Options.GhostCanSeeOtherRoles.GetBool())
 
-                    || (seer.Is(CustomRoles.Lovers) && seen.Is(CustomRoles.Lovers) && Options.LoverKnowRoles.GetBool())
+                    || Lovers.CanKnowOthers(seer, seen)
 
                     || (seer.Is(CustomRoleTypes.Impostor) && seen.Is(CustomRoleTypes.Impostor) && Options.ImpKnowAlliesRole.GetBool())
                     || (seer.Is(CustomRoles.Madmate) && seen.Is(CustomRoleTypes.Impostor) && Options.MadmateKnowWhosImp.GetBool())
@@ -927,11 +927,7 @@ public static class Utils
             sb.Append($"{ColorString(Color.white, " + ")}{RoleText}");
         }
 
-        if (intro && !SubRoles.Contains(CustomRoles.Lovers) && !SubRoles.Contains(CustomRoles.Neptune) && CustomRoles.Neptune.IsExist())
-        {
-            var RoleText = disableColor ? GetRoleName(CustomRoles.Lovers) : ColorString(GetRoleColor(CustomRoles.Lovers), GetRoleName(CustomRoles.Lovers));
-            sb.Append($"{ColorString(Color.white, " + ")}{RoleText}");
-        }
+        Neptune.GetSubRolesText(intro, disableColor, SubRoles, ref sb);
 
         return sb.ToString();
     }
@@ -1163,27 +1159,13 @@ public static class Utils
                     //seerに関わらず発動するMark
                     TargetMark.Append(CustomRoleManager.GetMarkOthers(seer, target, isForMeeting));
 
-                    //ハートマークを付ける(相手に)
-                    if (seer.Is(CustomRoles.Lovers) && target.Is(CustomRoles.Lovers))
-                    {
-                        TargetMark.Append($"<color={GetRoleColorCode(CustomRoles.Lovers)}>♡</color>");
-                    }
-                    //霊界からラバーズ視認
-                    else if (seer.Data.IsDead && !seer.Is(CustomRoles.Lovers) && target.Is(CustomRoles.Lovers))
-                    {
-                        TargetMark.Append($"<color={GetRoleColorCode(CustomRoles.Lovers)}>♡</color>");
-                    }
-                    if (target.Is(CustomRoles.Neptune) || seer.Is(CustomRoles.Neptune))
-                    {
-                        TargetMark.Append($"<color={GetRoleColorCode(CustomRoles.Lovers)}>♡</color>");
-                    }
-                    if (target.Is(CustomRoles.Mini) && seer != target)
-                    {
-                        TargetMark.Append($"<color={GetRoleColorCode(CustomRoles.Judge)}>({Mini.Age[target.PlayerId]})</color>");
-                    }
+                    Lovers.TargetMarks(seer, target, ref TargetMark);
+                    Neptune.TargetMarks(seer, target, ref TargetMark);
+                    Mini.TargetMarks(seer, target, ref TargetMark);
 
-                        //他人の役職とタスクは幽霊が他人の役職を見れるようになっていてかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
-                        var targetRoleData = GetRoleNameAndProgressTextData(seer, target);
+
+                    //他人の役職とタスクは幽霊が他人の役職を見れるようになっていてかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
+                    var targetRoleData = GetRoleNameAndProgressTextData(seer, target);
                     
                     var TargetRoleText = targetRoleData.enabled ? $"<size={fontSize}>{targetRoleData.text}</size>\r\n" : "";
 
