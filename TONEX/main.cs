@@ -44,7 +44,7 @@ public class Main : BasePlugin
     public const int PluginCreation = 1;
     // == 链接相关设定 / Link Config ==
     public static readonly bool ShowWebsiteButton = true;
-    public static readonly string WebsiteUrl = Translator.IsChineseLanguageUser ? "https://tonex.cc" : "https://tonex.cc/En";
+    public static readonly string WebsiteUrl = Translator.IsChineseLanguageUser ? "https://www.xtreme.net.cn" : "https://www.xtreme.net.cn/En";
     public static readonly bool ShowQQButton = true;
     public static readonly string QQInviteUrl = "http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=4ojpzbUU42giZZeQ-DTaal-tC5RIpL46&authKey=49OYQwsCza2x5eHGdXDHXD1M%2FvYvQcEhJBNL5h8Gq7AxOu5eMfTc6g2edtlsMuCm&noverify=0&group_code=733425569";
     public static readonly bool ShowDiscordButton = true;

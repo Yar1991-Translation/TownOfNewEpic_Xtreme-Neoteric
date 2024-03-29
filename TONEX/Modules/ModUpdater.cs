@@ -36,7 +36,7 @@ public class ModUpdater
         "https://cdn.jsdelivr.net/gh/XtremeWave/TownOfNewEpic_Xtreme/info.json",
          //"https://tonx-1301425958.cos.ap-shanghai.myqcloud.com/info.json",
         "https://tohex.club/Resource/info.json",
-        "https://tonex.cc/Resource/info.json",
+        "https://www.xtreme.net.cn/Resource/info.json",
         "https://gitee.com/TEAM_TONEX/TownOfNewEpic_Xtreme/raw/TONEX/info.json",
         "https://gitee.com/TEAM_TONEX/TownOfNewEpic_Xtreme/raw/_develop_v1.1/info.json",
         "https://gitee.com/TEAM_TONEX/TownOfNewEpic_Xtreme/raw/_develop_v1.2/info.json",
@@ -190,7 +190,7 @@ public class ModUpdater
             {
                 using HttpClient client = new();
                 client.DefaultRequestHeaders.Add("User-Agent", "TONEX Updater");
-                client.DefaultRequestHeaders.Add("Referer", "tonex.cc");
+                client.DefaultRequestHeaders.Add("Referer", "www.xtreme.net.cn");
                 using var response = await client.GetAsync(new Uri(url), HttpCompletionOption.ResponseContentRead);
                 if (!response.IsSuccessStatusCode || response.Content == null)
                 {
