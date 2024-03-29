@@ -187,6 +187,12 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
                 mc.SendToList.Add(mc.Player.PlayerId);
                 return (MsgRecallMode.Block, text);
             }),
+            new(["ank", "activenk","activeneutralkiller"], CommandAccess.All, mc =>
+            {
+                Utils.ShowActiveNKs(mc.Player.PlayerId);
+                mc.SendToList.Add(mc.Player.PlayerId);
+                return (MsgRecallMode.Block, null);
+            }),
             new(["t", "template"], CommandAccess.LocalMod, mc =>
             {
                 if (mc.HasValidArgs) TemplateManager.SendTemplate(mc.Args);

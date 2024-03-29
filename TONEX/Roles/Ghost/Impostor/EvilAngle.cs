@@ -26,13 +26,19 @@ public sealed class EvilAngle : RoleBase, IImpostor
         player
     )
     {
+        SetYet = false;
         Maxi = OptionTryMax.GetInt();
     }
-    static OptionItem EnableEvilAngle;
+    public static bool SetYet;
+    public static PlayerControl SetPlayer;
+    public static OptionItem EnableEvilAngle;
     static OptionItem OptionProbability;
     static OptionItem OptionKiilCooldown;
     static OptionItem OptionTryMax;
     int Maxi;
+
+    public override void OverrideDisplayRoleNameAsSeen(PlayerControl seer, ref bool enabled, ref UnityEngine.Color roleColor, ref string roleText)
+    => enabled |= true;
     public static void SetupOptionItem()
     {
         EnableEvilAngle = BooleanOptionItem.Create(94_1_5_0110, "EnableEvilAngle", false, TabGroup.ImpostorRoles, false)

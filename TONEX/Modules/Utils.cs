@@ -15,6 +15,9 @@ using System.Text.RegularExpressions;
 using TONEX.Modules;
 using TONEX.Roles.AddOns.CanNotOpened;
 using TONEX.Roles.AddOns.Common;
+using TONEX.Roles.Ghost.Crewmate;
+using TONEX.Roles.Ghost.Impostor;
+using TONEX.Roles.Ghost.Neutral;
 using TONEX.Roles.AddOns.Crewmate;
 using TONEX.Roles.AddOns.Impostor;
 using TONEX.Roles.Core;
@@ -836,6 +839,33 @@ public static class Utils
         SendMessage(sb2.ToString(), PlayerId);
         SendMessage(sb3.ToString(), PlayerId);
     }
+    public static void ShowActiveNKs(byte PlayerId = byte.MaxValue, bool onlycountexists = false)
+    {
+        if (Options.HideGameSettings.GetBool() && PlayerId != byte.MaxValue)
+        {
+            SendMessage(GetString("Message.HideGameSettings"), PlayerId);
+            return;
+        }
+        var sb = new StringBuilder(GetString("Roles")).Append(':');
+        var sb2 = new StringBuilder(GetString("Roles")).Append(':');
+        foreach (CustomRoles role in CustomRolesHelper.AllStandardRoles)
+        {
+            sb2.Append("\n\n● " + ColorString(GetRoleTeamColor(role), GetString("TabGroup.NeutralRoles")));
+
+            if (role.IsEnable())
+            {
+                if (onlycountexists && !role.IsExistCountDeath()) continue;
+                switch (role.GetCustomRoleTypes())
+                {
+                    case CustomRoleTypes.Neutral:
+                        if (!role.IsNeutralKilling()) break;
+                        sb2.AppendFormat("\n{0}:{1}x{2}", ColorString(GetRoleColor(role), GetRoleName(role)), $"{Utils.GetRoleDisplaySpawnMode(role, false)}", role.GetCount());
+                        break;
+                }
+            }
+        }
+        SendMessage(sb2.ToString(), PlayerId);
+    }
     public static void ShowChildrenSettings(OptionItem option, ref StringBuilder sb, int deep = 0, bool forChat = false)
     {
         foreach (var opt in option.Children.Select((v, i) => new { Value = v, Index = i + 1 }))
@@ -1227,6 +1257,29 @@ public static class Utils
         foreach (var roleClass in CustomRoleManager.AllActiveRoles.Values)
             roleClass.AfterMeetingTasks();
         Signal.AfterMeet();
+
+        if (InjusticeSpirit.SetPlayer != null)
+        {
+            InjusticeSpirit.SetPlayer.RpcSetCustomRole(CustomRoles.InjusticeSpirit);
+            InjusticeSpirit.SetPlayer.Data.IsDead = false;
+            AntiBlackout.SendGameData();
+            InjusticeSpirit.SetPlayer = null;
+        }
+        if (Phantom.SetPlayer != null)
+        {
+            Phantom.SetPlayer.RpcSetCustomRole(CustomRoles.Phantom);
+            Phantom.SetPlayer.Data.IsDead = false;
+            AntiBlackout.SendGameData();
+            Phantom.SetPlayer = null;
+        }
+        if (EvilAngle.SetPlayer != null)
+        {
+            EvilAngle.SetPlayer.RpcSetCustomRole(CustomRoles.EvilAngle);
+            EvilAngle.SetPlayer.Data.IsDead = false;
+            AntiBlackout.SendGameData();
+            EvilAngle.SetPlayer = null;
+        }
+
         if (Options.AirShipVariableElectrical.GetBool())
             AirShipElectricalDoors.Initialize();
         DoorsReset.ResetDoors();
