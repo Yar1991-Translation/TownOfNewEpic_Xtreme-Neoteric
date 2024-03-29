@@ -97,29 +97,33 @@ public sealed class Akujo : RoleBase, INeutralKiller
     {
         var (killer, target) = info.AttemptTuple;
         if (NowSwitchTrigger == SwitchTrigger.TriggerVent)
-        if (CanBeLover(target))
-        {
-            if (ChooseFake && FakeLimit >=1)
+            if (CanBeLover(target))
             {
-                FakeLimit--;
-                PlayerState.GetByPlayerId(target.PlayerId).SetSubRole(CustomRoles.AkujoFakeLovers);
-                SendRPC();
+                if (ChooseFake && FakeLimit >= 1)
+                {
+                    FakeLimit--;
+                    PlayerState.GetByPlayerId(target.PlayerId).SetSubRole(CustomRoles.AkujoFakeLovers);
+                    NameColorManager.Add(Player.PlayerId, target.PlayerId, $"{Utils.GetRoleColorCode(CustomRoles.AkujoFakeLovers)}");
+                    NameColorManager.Add(target.PlayerId, Player.PlayerId, $"{RoleInfo.RoleColor}");
+                    SendRPC();
+                }
+                else if (!ChooseFake && AkujoLimit >= 1)
+                {
+                    AkujoLimit--;
+                    AkujoLoversPlayers.Clear();
+                    isAkujoLoversDead = false;
+                    AkujoLoversPlayers.Add(killer);
+                    AkujoLoversPlayers.Add(target);
+                    PlayerState.GetByPlayerId(target.PlayerId).SetSubRole(CustomRoles.AkujoLovers);
+                    NameColorManager.Add(Player.PlayerId, target.PlayerId, $"{RoleInfo.RoleColor}");
+                    NameColorManager.Add(target.PlayerId, Player.PlayerId, $"{RoleInfo.RoleColor}");
+                    SyncAkujoLoversPlayers();
+                    SendRPC();
+                }
+
+                killer.RpcProtectedMurderPlayer(target);
+                target.RpcProtectedMurderPlayer(killer);
             }
-            else if (!ChooseFake && AkujoLimit>=1)
-            {
-                AkujoLimit--;
-                AkujoLoversPlayers.Clear();
-                isAkujoLoversDead = false;
-                AkujoLoversPlayers.Add(killer);
-                AkujoLoversPlayers.Add(target);
-                PlayerState.GetByPlayerId(target.PlayerId).SetSubRole(CustomRoles.AkujoLovers);
-                SyncAkujoLoversPlayers();
-                SendRPC();
-            }
-            
-            killer.RpcProtectedMurderPlayer(target);
-            target.RpcProtectedMurderPlayer(killer);
-        }
         if (NowSwitchTrigger == SwitchTrigger.TriggerDouble)
         {
             var fake = killer.CheckDoubleTrigger(target, () => {
@@ -204,19 +208,5 @@ public sealed class Akujo : RoleBase, INeutralKiller
             SwitchChooseMode();
         }
         return false;
-    }
-    public override void OverrideNameAsSeen(PlayerControl seer, ref string nameText, bool isForMeeting = false)
-    {
-        if (seer.Is(CustomRoles.AkujoLovers))
-        {
-            nameText += Utils.ColorString(Utils.GetRoleColor(CustomRoles.AkujoLovers), "❤");
-        }
-        if (seer.Is(CustomRoles.AkujoFakeLovers) )
-        {
-            if (seer.IsAlive())
-            nameText += Utils.ColorString(Utils.GetRoleColor(CustomRoles.AkujoLovers), "❤");
-            if (!(seer.IsAlive() || Player.IsAlive()))
-                nameText += Utils.ColorString(Utils.GetRoleColor(CustomRoles.AkujoFakeLovers), "_♡_");
-        }
     }
 }

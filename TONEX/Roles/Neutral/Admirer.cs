@@ -83,6 +83,8 @@ public sealed class Admirer : RoleBase, INeutralKiller
             PlayerState.GetByPlayerId(target.PlayerId).SetSubRole(CustomRoles.AdmirerLovers);
             SyncAdmirerLoversPlayers();
             SendRPC();
+            NameColorManager.Add(Player.PlayerId, target.PlayerId, $"{RoleInfo.RoleColor}");
+            NameColorManager.Add(target.PlayerId, Player.PlayerId, $"{RoleInfo.RoleColor}");
             killer.RpcProtectedMurderPlayer(target);
             target.RpcProtectedMurderPlayer(killer);
         }

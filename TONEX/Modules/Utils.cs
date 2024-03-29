@@ -1122,7 +1122,7 @@ public static class Utils
                 if (seer.Is(CustomRoles.Lovers) || CustomRoles.Neptune.IsExist()) SelfMark.Append(ColorString(GetRoleColor(CustomRoles.Lovers), "♡"));
                 if (seer.Is(CustomRoles.AdmirerLovers)) SelfMark.Append(ColorString(GetRoleColor(CustomRoles.AdmirerLovers), "♡"));
                 if (seer.Is(CustomRoles.AkujoLovers) || (seer.Is(CustomRoles.AkujoFakeLovers) && seer.IsAlive())) SelfMark.Append(ColorString(GetRoleColor(CustomRoles.AkujoLovers), "❤"));
-                if (seer.Is(CustomRoles.AkujoFakeLovers) && !seer.IsAlive()) SelfMark.Append(ColorString(GetRoleColor(CustomRoles.AkujoFakeLovers), "_♡_"));
+                if (seer.Is(CustomRoles.AkujoFakeLovers) && !(seer.IsAlive() || CustomRoles.Akujo.IsExist())) SelfMark.Append(ColorString(GetRoleColor(CustomRoles.AkujoFakeLovers), "_♡_"));
                 if (seer.Is(CustomRoles.CupidLovers)) SelfMark.Append(ColorString(GetRoleColor(CustomRoles.CupidLovers), "♡"));
 
                 //Markとは違い、改行してから追記されます。

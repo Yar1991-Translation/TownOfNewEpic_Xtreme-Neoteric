@@ -11,6 +11,7 @@ using System.Text;
 using InnerNet;
 using static UnityEngine.GraphicsBuffer;
 using TONEX.Roles.AddOns.Common;
+using static UnityEngine.ParticleSystem.PlaybackState;
 
 namespace TONEX.Roles.AddOns.CanNotOpened;
 public static class AkujoFakeLovers
@@ -41,17 +42,21 @@ public static class AkujoFakeLovers
     {
         if (seer.IsAlive())
         {
-            if (seer.Is(CustomRoles.AkujoFakeLovers) && (target.Is(CustomRoles.Akujo) &&  seer == target))
+            if (seer.Is(CustomRoles.AkujoFakeLovers) && (target.Is(CustomRoles.Akujo)))
             {
                 targetMark.Append($"<color={GetRoleColorCode(CustomRoles.AkujoLovers)}>❤</color>");
             }
         }
         if (!seer.IsAlive() || !CustomRoles.Akujo.IsExist())
         {
-            if (seer.Is(CustomRoles.AkujoFakeLovers) && (target.Is(CustomRoles.Akujo) && seer == target))
+            if (seer.Is(CustomRoles.AkujoFakeLovers) && (target.Is(CustomRoles.Akujo) ))
             {
                 targetMark.Append($"<color={GetRoleColorCode(CustomRoles.AkujoFakeLovers)}>_♡_</color>");
             }
+        }
+        if (seer.Is(CustomRoles.Akujo) && target.Is(CustomRoles.AkujoFakeLovers))
+        {
+            targetMark.Append($"<color={GetRoleColorCode(CustomRoles.AkujoFakeLovers)}>_♡_</color>");
         }
     }
     public static bool CanKnowOthers(PlayerControl seer, PlayerControl seen)
@@ -70,31 +75,39 @@ public static class AkujoFakeLovers
     {
         if (seer.IsAlive())
         {
-            if (seer.Is(CustomRoles.AkujoFakeLovers) && (target.Is(CustomRoles.Akujo) && seer == target) && !seer.Data.IsDead && !isLover)
+            if (seer.Is(CustomRoles.AkujoFakeLovers) && (target.Is(CustomRoles.Akujo) ) && !seer.Data.IsDead && !isLover)
                 sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.AkujoLovers), "❤"));
         }
         if (!seer.IsAlive() || !CustomRoles.Akujo.IsExist())
         {
-            if (seer.Is(CustomRoles.AkujoFakeLovers) && (target.Is(CustomRoles.Akujo) && seer == target))
+            if (seer.Is(CustomRoles.AkujoFakeLovers) && (target.Is(CustomRoles.Akujo) ))
                 sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.AkujoFakeLovers), "_♡_"));
         }
-        
+        if (seer.Is(CustomRoles.Akujo) && target.Is(CustomRoles.AkujoFakeLovers))
+        {
+            sb.Append($"<color={GetRoleColorCode(CustomRoles.AkujoFakeLovers)}>_♡_</color>");
+        }
+
     }
     public static void Marks(PlayerControl __instance, ref StringBuilder Mark)
     {
         if (PlayerControl.LocalPlayer.IsAlive())
         {
-            if (PlayerControl.LocalPlayer.Is(CustomRoles.AkujoFakeLovers) && (__instance.Is(CustomRoles.Akujo) && PlayerControl.LocalPlayer == __instance))
+            if (PlayerControl.LocalPlayer.Is(CustomRoles.AkujoFakeLovers) && (__instance.Is(CustomRoles.Akujo) ))
             {
                 Mark.Append($"<color={GetRoleColorCode(CustomRoles.AkujoLovers)}>❤</color>");
             }
         }
         if (!PlayerControl.LocalPlayer.IsAlive() || !CustomRoles.Akujo.IsExist())
         {
-            if (PlayerControl.LocalPlayer.Is(CustomRoles.AkujoFakeLovers) && (__instance.Is(CustomRoles.Akujo) && PlayerControl.LocalPlayer == __instance))
+            if (PlayerControl.LocalPlayer.Is(CustomRoles.AkujoFakeLovers) && (__instance.Is(CustomRoles.Akujo)))
             {
                 Mark.Append($"<color={GetRoleColorCode(CustomRoles.AkujoFakeLovers)}>_♡_</color>");
             }
+        }
+        if (PlayerControl.LocalPlayer.Is(CustomRoles.Akujo) && __instance.Is(CustomRoles.AkujoFakeLovers))
+        {
+            Mark.Append($"<color={GetRoleColorCode(CustomRoles.AkujoFakeLovers)}>_♡_</color>");
         }
     }
 }
