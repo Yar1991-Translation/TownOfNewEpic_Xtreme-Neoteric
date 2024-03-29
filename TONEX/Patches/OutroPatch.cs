@@ -144,6 +144,15 @@ class SetEverythingUpPatch
             case CustomWinner.Lovers:
                 __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Lovers);
                 break;
+            case CustomWinner.AdmirerLovers:
+                __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.AdmirerLovers);
+                break;
+            case CustomWinner.AkujoLovers:
+                __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.AkujoLovers);
+                break;
+            case CustomWinner.CupidLovers:
+                __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.CupidLovers);
+                break;
             //引き分け処理
             case CustomWinner.Draw:
                 __instance.WinText.text = GetString("ForceEnd");

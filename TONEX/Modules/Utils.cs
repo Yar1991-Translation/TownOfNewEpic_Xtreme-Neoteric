@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using TONEX.Modules;
+using TONEX.Roles.AddOns.CanNotOpened;
 using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.AddOns.Crewmate;
 using TONEX.Roles.AddOns.Impostor;
@@ -375,6 +376,9 @@ public static class Utils
                     || (Main.VisibleTasksCount && !seer.IsAlive() && Options.GhostCanSeeOtherRoles.GetBool())
 
                     || Lovers.CanKnowOthers(seer, seen)
+                    || AdmirerLovers.CanKnowOthers(seer, seen)
+                    || AkujoLovers.CanKnowOthers(seer, seen)
+                    || AkujoFakeLovers.CanKnowOthers(seer, seen)
 
                     || (seer.Is(CustomRoleTypes.Impostor) && seen.Is(CustomRoleTypes.Impostor) && Options.ImpKnowAlliesRole.GetBool())
                     || Madmate.CanKnowOthers(seer, seen)
@@ -451,7 +455,7 @@ public static class Utils
         {
             foreach (var subRole in subRolesList)
             {
-                if (subRole <= CustomRoles.NotAssigned || subRole is CustomRoles.LastImpostor or CustomRoles.Madmate or CustomRoles.Charmed or CustomRoles.Lovers or CustomRoles.Wolfmate) continue;
+                if (subRole <= CustomRoles.NotAssigned || subRole is CustomRoles.LastImpostor or CustomRoles.Madmate or CustomRoles.Charmed or CustomRoles.Lovers or CustomRoles.AdmirerLovers or CustomRoles.AkujoLovers or CustomRoles.AkujoFakeLovers or CustomRoles.CupidLovers or CustomRoles.Wolfmate) continue;
                 sb.Append(ColorString(GetRoleColor(subRole), GetString("Prefix." + subRole.ToString())));
             }
         }
@@ -618,6 +622,10 @@ public static class Utils
                 case CustomRoles.Charmed:
                 case CustomRoles.Wolfmate:
                 case CustomRoles.Lovers:
+                case CustomRoles.AdmirerLovers:
+                case CustomRoles.AkujoLovers:
+                case CustomRoles.AkujoFakeLovers:
+                case CustomRoles.CupidLovers:
                     //ラバーズはタスクを勝利用にカウントしない
                     hasTasks &= !ForRecompute;
                     break;
@@ -912,7 +920,7 @@ public static class Utils
         }
 
         Neptune.GetSubRolesText(intro, disableColor, SubRoles, ref sb);
-
+        AkujoFakeLovers.GetSubRolesText(intro, disableColor, SubRoles, ref sb);
         return sb.ToString();
     }
 
@@ -1082,6 +1090,10 @@ public static class Utils
 
                 //ハートマークを付ける(自分に)
                 if (seer.Is(CustomRoles.Lovers) || CustomRoles.Neptune.IsExist()) SelfMark.Append(ColorString(GetRoleColor(CustomRoles.Lovers), "♡"));
+                if (seer.Is(CustomRoles.AdmirerLovers)) SelfMark.Append(ColorString(GetRoleColor(CustomRoles.AdmirerLovers), "♡"));
+                if (seer.Is(CustomRoles.AkujoLovers) || (seer.Is(CustomRoles.AkujoFakeLovers) && seer.IsAlive())) SelfMark.Append(ColorString(GetRoleColor(CustomRoles.AkujoLovers), "❤"));
+                if (seer.Is(CustomRoles.AkujoFakeLovers) && !seer.IsAlive()) SelfMark.Append(ColorString(GetRoleColor(CustomRoles.AkujoFakeLovers), "_♡_"));
+                if (seer.Is(CustomRoles.CupidLovers)) SelfMark.Append(ColorString(GetRoleColor(CustomRoles.CupidLovers), "♡"));
 
                 //Markとは違い、改行してから追記されます。
                 SelfSuffix.Clear();
@@ -1144,6 +1156,9 @@ public static class Utils
                     TargetMark.Append(CustomRoleManager.GetMarkOthers(seer, target, isForMeeting));
 
                     Lovers.TargetMarks(seer, target, ref TargetMark);
+                    AdmirerLovers.TargetMarks(seer, target, ref TargetMark);
+                    AkujoLovers.TargetMarks(seer, target, ref TargetMark);
+                    AkujoFakeLovers.TargetMarks(seer, target, ref TargetMark);
                     Neptune.TargetMarks(seer, target, ref TargetMark);
                     Mini.TargetMarks(seer, target, ref TargetMark);
 

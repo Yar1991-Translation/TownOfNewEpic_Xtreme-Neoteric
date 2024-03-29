@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TONEX.Roles.AddOns.CanNotOpened;
 using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.Core;
 using static TONEX.Translator;
@@ -33,6 +34,7 @@ public static class MeetingStartNotify
                 foreach (var subRole in PlayerState.AllPlayerStates[pc.PlayerId].SubRoles)
                     sb.Append($"\n\n" + GetString($"{subRole}") + Utils.GetRoleDisplaySpawnMode(subRole) + GetString($"{subRole}InfoLong"));
                 Neptune.MeetingngStartNotifyOthers(ref sb, role);
+                AkujoFakeLovers.MeetingngStartNotifyOthers(ref sb, role);
                 AddMsg(sb.ToString(), pc.PlayerId);
             }
         if (msgToSend.Count >= 1)

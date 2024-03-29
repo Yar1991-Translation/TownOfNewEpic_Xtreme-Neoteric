@@ -254,6 +254,7 @@ public class Main : BasePlugin
                 {CustomRoles.Lovers, "#ff9ace"},
                 {CustomRoles.AdmirerLovers, "#FFC8EE"},
                 {CustomRoles.AkujoLovers, "#8E4593"},
+                {CustomRoles.AkujoFakeLovers, "#9C709F"},
                 {CustomRoles.CupidLovers, "#F69896"},
                 {CustomRoles.Neptune, "#00a4ff"},
                 {CustomRoles.Madmate, "#ff1919"},

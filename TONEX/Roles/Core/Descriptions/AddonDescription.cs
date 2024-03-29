@@ -12,7 +12,14 @@ public static class AddonDescription
         {
             subRoles.Add(CustomRoles.Lovers);
         }
-
+        if (player.IsAlive() &&player.Is(CustomRoles.AkujoFakeLovers))
+        {
+            subRoles.Add(CustomRoles.AkujoLovers);
+        }
+        if (!(player.IsAlive() || CustomRoles.Akujo.IsExist())&& player.Is(CustomRoles.AkujoFakeLovers))
+        {
+            subRoles.Add(CustomRoles.AkujoLovers);
+        }
         foreach (var subRole in subRoles)
         {
             if (subRoles.IndexOf(subRole) != 0) builder.AppendFormat("<size={0}>\n", BlankLineSize);

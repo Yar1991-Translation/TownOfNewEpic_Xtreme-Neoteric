@@ -40,6 +40,12 @@ public sealed class Witch : RoleBase, IImpostor
     {
         WitchModeSwitchAction,
     }
+
+    public static List<Witch> Witches = new();
+    public bool IsSpellMode;
+    public List<byte> SpelledPlayer = new();
+    public SwitchTrigger NowSwitchTrigger;
+
     public enum SwitchTrigger
     {
         TriggerKill,
@@ -47,11 +53,7 @@ public sealed class Witch : RoleBase, IImpostor
         TriggerDouble,
     };
 
-    public bool IsSpellMode;
-    public List<byte> SpelledPlayer = new();
-    public SwitchTrigger NowSwitchTrigger;
 
-    public static List<Witch> Witches = new();
     public static void SetupOptionItem()
     {
         OptionModeSwitchAction = StringOptionItem.Create(RoleInfo, 10, OptionName.WitchModeSwitchAction, EnumHelper.GetAllNames<SwitchTrigger>(), 2, false);

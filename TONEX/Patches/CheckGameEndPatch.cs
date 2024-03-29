@@ -3,6 +3,7 @@ using HarmonyLib;
 using Hazel;
 using System.Collections.Generic;
 using System.Linq;
+using TONEX.Roles.AddOns.CanNotOpened;
 using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces;
@@ -197,6 +198,8 @@ class GameEndChecker
                 }
 
                 Lovers.CheckWin();
+                AdmirerLovers.CheckWin();
+                AkujoLovers.CheckWin();
             }
             ShipStatus.Instance.enabled = false;
             StartEndGame(reason);
@@ -352,34 +355,81 @@ class GameEndChecker
                     break;
                 }
             }
-            
+            var playerCount = Main.AllAlivePlayerControls.ToList().Count;
+            var skip = false;
             if (playerTypeCounts.All(pair => pair.Value == 0)) //全灭
             {
                 reason = GameOverReason.ImpostorByKill;
                 CustomWinnerHolder.ResetAndSetWinner(CustomWinner.None);
             }
-            else if (Main.AllAlivePlayerControls.All(p => p.Is(CustomRoles.Lovers))) //恋人胜利
+            CustomRoles[] loverRoles = { CustomRoles.Lovers, CustomRoles.AdmirerLovers, CustomRoles.AkujoLovers, CustomRoles.CupidLovers };
+
+            foreach (var loverRole in loverRoles)// 多种恋人判断胜利
             {
-                reason = GameOverReason.ImpostorByKill;
-                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Lovers);
+                if (Main.AllAlivePlayerControls.Count(p => p.Is(loverRole)) >= playerCount / 2 && !Main.AllAlivePlayerControls.Any(p => playerTypeCounts.ContainsKey(p.GetCountTypes()) && !p.IsCrew() || ForLover(p, loverRole)))
+                {
+                    skip = true;
+                    reason = GameOverReason.ImpostorByKill;
+
+                    CustomWinner customWinner;
+                    switch (loverRole)
+                    {
+                        case CustomRoles.Lovers:
+                            customWinner = CustomWinner.Lovers;
+                            break;
+                        case CustomRoles.AdmirerLovers:
+                            customWinner = CustomWinner.AdmirerLovers;
+                            break;
+                        case CustomRoles.AkujoLovers:
+                            customWinner = CustomWinner.AkujoLovers;
+                            break;
+                        case CustomRoles.CupidLovers:
+                            customWinner = CustomWinner.CupidLovers;
+                            break;
+                        default:
+                            customWinner = CustomWinner.None;
+                            break;
+                    }
+                    Logger.Info($"胜利阵营已决定", "CheckGameEnd");
+                    CustomWinnerHolder.ResetAndSetWinner(customWinner);
+
+                    break; // 结束循环
+                }
             }
-            else if (win)// 确定有胜利阵营，开始根据不同阵营判断
+            if (!skip)
             {
-                reason = GameOverReason.ImpostorByKill;
-                CustomWinnerHolder.ResetAndSetWinner((CustomWinner)maywinner.Key);// 将胜利阵营键值对的键写入并且转化为CustomWinner
-            }
-            else if (playerTypeCounts.Skip(1).All(kv => kv.Value == 0)) //船员胜利
-            {
-                reason = GameOverReason.HumansByVote;
-                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Crewmate);
-            }
-            else
-            {
-                return false; //胜利条件未达成
+                if (win)// 确定有胜利阵营，开始根据不同阵营判断
+                {
+                    reason = GameOverReason.ImpostorByKill;
+                    CustomWinnerHolder.ResetAndSetWinner((CustomWinner)maywinner.Key);// 将胜利阵营键值对的键写入并且转化为CustomWinner
+                }
+                else if (playerTypeCounts.Skip(1).All(kv => kv.Value == 0)) //船员胜利
+                {
+                    reason = GameOverReason.HumansByVote;
+                    CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Crewmate);
+                }
+                else
+                {
+                    return false; //胜利条件未达成
+                }
             }
             return true;
         }
 
+    }
+    static bool ForLover(PlayerControl p,CustomRoles role)
+    {
+        List<CustomRoles> LoverRoles = new()
+        {
+            CustomRoles.Lovers,
+            CustomRoles.AdmirerLovers,
+            CustomRoles.CupidLovers,
+            CustomRoles.AkujoLovers
+            
+        };
+        LoverRoles.Remove(role);
+        if (LoverRoles.Contains(p.GetCustomRole())) return true;
+        return false;
     }
     class HotPotatoGameEndPredicate : GameEndPredicate
     {

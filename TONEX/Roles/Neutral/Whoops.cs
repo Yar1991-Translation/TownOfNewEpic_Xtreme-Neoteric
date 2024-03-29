@@ -55,7 +55,7 @@ public sealed class Whoops : RoleBase, INeutral
     public override bool CheckVoteAsVoter(PlayerControl votedFor)
     {
         if (votedFor == null || (votedFor.GetCountTypes() == CountTypes.Jackal || !CanRecruit)) return true;
-        if (!votedFor.Is(CustomRoles.Believer))
+        if (!votedFor.Is(CustomRoles.Believer) && !votedFor.Is(CustomRoles.Nihility))
         {
             if (votedFor.CanUseKillButton())
                 votedFor.RpcSetCustomRole(CustomRoles.Sidekick);
