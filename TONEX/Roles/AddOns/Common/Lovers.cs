@@ -86,7 +86,8 @@ public static class Lovers
         foreach (var pc in Main.AllPlayerControls)
         {
             if (pc.Is(CustomRoles.GM) || (PlayerState.GetByPlayerId(pc.PlayerId).SubRoles.Count >= Options.AddonsNumLimit.GetInt())
-                || pc.Is(CustomRoles.LazyGuy) || pc.Is(CustomRoles.Neptune) || pc.Is(CustomRoles.God) || pc.Is(CustomRoles.Hater) || pc.Is(CustomRoles.Believer)) continue;
+                || pc.Is(CustomRoles.LazyGuy) || pc.Is(CustomRoles.Neptune) || pc.Is(CustomRoles.God) || pc.Is(CustomRoles.Hater) || pc.Is(CustomRoles.Believer) || pc.Is(CustomRoles.Nihility)
+                || pc.Is(CustomRoles.Admirer) || pc.Is(CustomRoles.Akujo) || pc.Is(CustomRoles.Cupid) || pc.Is(CustomRoles.Yandere)) continue;
             allPlayers.Add(pc);
         }
         var loversRole = CustomRoles.Lovers;

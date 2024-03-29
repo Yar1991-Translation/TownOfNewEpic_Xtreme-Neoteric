@@ -6,6 +6,7 @@ using InnerNet;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TONEX.Modules;
+using TONEX.Roles.AddOns.CanNotOpened;
 using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.Core;
 using static TONEX.Translator;
@@ -148,6 +149,8 @@ class OnPlayerLeftPatch
         if (GameStates.IsInGame)
         {
             Lovers.OnPlayerLeft(data);
+            AdmirerLovers.OnPlayerLeft(data);
+            AkujoLovers.OnPlayerLeft(data);
             var state = PlayerState.GetByPlayerId(data.Character.PlayerId);
             if (state.DeathReason == CustomDeathReason.etc) //死因が設定されていなかったら
             {

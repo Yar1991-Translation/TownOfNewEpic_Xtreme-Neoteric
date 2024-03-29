@@ -5,8 +5,10 @@ using System.Text;
 using TONEX.Modules;
 using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.AddOns.Crewmate;
+using TONEX.Roles.AddOns.CanNotOpened;
 using TONEX.Roles.Core;
 using TONEX.Roles.Crewmate;
+using TONEX.Roles.Neutral;
 using UnityEngine;
 using YamlDotNet.Core;
 using static TONEX.Translator;
@@ -184,9 +186,31 @@ public static class MeetingHudPatch
                                 isLover = true;
                             }
                             break;
+                        case CustomRoles.AdmirerLovers:
+                            if (seer.Is(CustomRoles.AdmirerLovers) || seer.Data.IsDead)
+                            {
+                                sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.AdmirerLovers), "♡"));
+                                isLover = true;
+                            }
+                            break;
+                        case CustomRoles.AkujoLovers:
+                            if (seer.Is(CustomRoles.Akujo) || seer.Data.IsDead || seer == target)
+                            {
+                                sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.AkujoLovers), "❤"));
+                                isLover = true;
+                            }
+                            break;
+                        case CustomRoles.CupidLovers:
+                            if (seer.Is(CustomRoles.CupidLovers) || seer.Is(CustomRoles.Cupid)|| seer.Data.IsDead)
+                            {
+                                sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.CupidLovers), "♡"));
+                                isLover = true;
+                            }
+                            break;
                     }
                 }
 
+                AkujoFakeLovers.MeetingHud(isLover, seer, target, ref sb);
                 //海王相关显示
                 Neptune.MeetingHud(isLover, seer, target, ref sb);
                 Mini.MeetingHud(isLover, seer, target, ref sb);
@@ -250,6 +274,8 @@ public static class MeetingHudPatch
     public static void CheckForDeathOnExile(CustomDeathReason deathReason, params byte[] playerIds)
     {
         Lovers.CheckForDeathOnExile(deathReason, playerIds);
+        AdmirerLovers.CheckForDeathOnExile(deathReason, playerIds);
+        AkujoLovers.CheckForDeathOnExile(deathReason, playerIds);
     }
 }
 

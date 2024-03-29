@@ -284,7 +284,7 @@ internal class SelectRolesPatch
                 Logger.Info($"7-3.5", "test");
             }
             Logger.Info($"7-4", "test");
-            if (CustomRoles.Lovers.IsEnable() && CustomRoles.Hater.IsEnable()) Lovers.AssignLoversRoles();
+            if ((CustomRoles.Lovers.IsEnable() || CustomRoles.Admirer.IsEnable() || CustomRoles.Akujo.IsEnable() || CustomRoles.Cupid.IsEnable()) && CustomRoles.Hater.IsEnable()) Lovers.AssignLoversRoles();
             else if (CustomRoles.Lovers.IsEnable() && rd.Next(0, 100) < Options.GetRoleChance(CustomRoles.Lovers)) Lovers.AssignLoversRoles();
             if (CustomRoles.Madmate.IsEnable() && Madmate.MadmateSpawnMode.GetInt() == 0) Madmate.AssignMadmateRoles();
             AddOnsAssignData.AssignAddOnsFromList();

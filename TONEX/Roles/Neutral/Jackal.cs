@@ -201,7 +201,7 @@ public sealed class Jackal : RoleBase, INeutralKiller
     {
         if (seer.Is(CustomRoles.Jackal) || seer.Is(CustomRoles.Wolfmate) || seer.Is(CustomRoles.Sidekick) || seer.Is(CustomRoles.Wolfmate)) enabled = true;
     }
-    public static bool CanBeSidekick(PlayerControl pc) => pc != null && (!OptionJackalCanSaveSidekick.GetBool() && !pc.GetCustomRole().IsNeutral() || OptionJackalCanSaveSidekick.GetBool()) && !pc.Is(CustomRoles.Believer);
+    public static bool CanBeSidekick(PlayerControl pc) => pc != null && (OptionJackalCanSaveSidekick.GetBool() && !pc.GetCustomRole().IsNeutral() && !pc.Is(CustomRoles.Believer) && !pc.Is(CustomRoles.Nihility));
     public override string GetMark(PlayerControl seer, PlayerControl seen, bool _ = false)
     {
         //seenが省略の場合seer

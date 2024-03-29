@@ -125,7 +125,8 @@ public sealed class Gangster : RoleBase, IImpostor
             pc.Is(CustomRoles.LazyGuy) ||
             pc.Is(CustomRoles.Celebrity) ||
             pc.Is(CustomRoles.Egoist) ||
-            pc.Is(CustomRoles.Believer)
+            pc.Is(CustomRoles.Believer) ||
+            pc.Is(CustomRoles.Nihility)
             );
     }
 }

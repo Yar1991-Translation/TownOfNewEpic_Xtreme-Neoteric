@@ -408,6 +408,12 @@ public static class CustomRoleManager
                 case CustomRoles.Diseased:
                     Diseased.Add(pc.PlayerId);
                     break;
+                case CustomRoles.Believer:
+                    Believer.Add(pc.PlayerId);
+                    break;
+                case CustomRoles.Nihility:
+                    Nihility.Add(pc.PlayerId);
+                    break;
             }
         }
     }
@@ -749,6 +755,7 @@ public enum CustomRoles
     Lovers,
     AdmirerLovers,
     AkujoLovers,
+    AkujoFakeLovers,
     CupidLovers,
     Neptune,
     Madmate,

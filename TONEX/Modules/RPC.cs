@@ -9,6 +9,7 @@ using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces;
 using TONEX.Roles.Crewmate;
 using TONEX.Roles.AddOns.Common;
+using TONEX.Roles.AddOns.CanNotOpened;
 using static TONEX.Translator;
 using TONEX.Roles.Impostor;
 using TONEX.Roles.Neutral;
@@ -266,6 +267,12 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.SetLoversPlayers:
                 Lovers.ReceiveRPC(reader);
+                break;
+            case CustomRPC.SetAdmirerLoversPlayers:
+                AdmirerLovers.ReceiveRPC(reader);
+                break;
+            case CustomRPC.SetAkujoLoversPlayers:
+                AkujoLovers.ReceiveRPC(reader);
                 break;
             case CustomRPC.SetRealKiller:
                 byte targetId = reader.ReadByte();

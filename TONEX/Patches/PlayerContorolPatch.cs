@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TONEX.Modules;
 using TONEX.Modules.SoundInterface;
+using TONEX.Roles.AddOns.CanNotOpened;
 using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.AddOns.Crewmate;
 using TONEX.Roles.AddOns.Impostor;
@@ -504,7 +505,12 @@ class FixedUpdatePatch
                 FallFromLadder.FixedUpdate(player);
             }
 
-            if (GameStates.IsInGame) Lovers.LoversSuicide();
+            if (GameStates.IsInGame)
+            {
+                Lovers.LoversSuicide();
+                AdmirerLovers.AdmirerLoversSuicide();
+                AkujoLovers.AkujoLoversSuicide();
+            }
 
             if (GameStates.IsInGame && player.AmOwner)
                 DisableDevice.FixedUpdate();
@@ -586,6 +592,9 @@ class FixedUpdatePatch
 
                 //ハートマークを付ける(会議中MOD視点)
                 Lovers.Marks(__instance, ref Mark);
+                AdmirerLovers.Marks(__instance, ref Mark);
+                AkujoLovers.Marks(__instance, ref Mark);
+                AkujoFakeLovers.Marks(__instance, ref Mark);
                 Neptune.Marks(__instance, ref Mark);
                 Mini.Marks(__instance, ref Mark);
                 Suffix.Append(seerRole?.GetLowerText(seer, target));
