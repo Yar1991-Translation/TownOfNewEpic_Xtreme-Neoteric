@@ -8,7 +8,7 @@
 
   </br></br>
 
-  <h1>:point_right: <a href="https://tonex.cc">𝑪𝒍𝒊𝒄𝒌 𝑴𝒆</a> :point_left:</h1> 
+  <h1>:point_right: <a href="https://www.xtreme.net.cn">𝑪𝒍𝒊𝒄𝒌 𝑴𝒆</a> :point_left:</h1> 
   <h3>to view the introduction & installation tutorial</h3>  
 
   </br></br>

@@ -7,7 +7,7 @@
 
   </br></br>
 
-  <h1>:point_right: <a href="https://tonex.cc">点此</a> :point_left:</h1> 
+  <h1>:point_right: <a href="https://www.xtreme.net.cn">点此</a> :point_left:</h1> 
   <h3>以查看模组简介 和 安装教程</h3>  
 
   </br></br>
