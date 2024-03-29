@@ -16,6 +16,9 @@ using TONEX.Roles.AddOns.Crewmate;
 using TONEX.Roles.AddOns.Impostor;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
+using TONEX.Roles.Ghost.Crewmate;
+using TONEX.Roles.Ghost.Impostor;
+using TONEX.Roles.Ghost.Neutral;
 using TONEX.Roles.Impostor;
 using TONEX.Roles.Neutral;
 using TONEX.Roles.Vanilla;
@@ -856,7 +859,35 @@ public static class PlayerControlDiePatch
             writer.Write(false);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             CustomRoleManager.AllActiveRoles.Values.Do(role => role.OnPlayerDeath(__instance, PlayerState.GetByPlayerId(__instance.PlayerId).DeathReason, GameStates.IsMeeting));
-           // Libertarian
+            switch (__instance.GetCustomRole().GetCustomRoleTypes())
+            {
+                case CustomRoleTypes.Crewmate:
+                    if (!InjusticeSpirit.SetYet && InjusticeSpirit.EnableInjusticeSpirit.GetBool())
+                    {
+                        InjusticeSpirit.SetYet = true;
+                        __instance.Notify(GetString("Surprise"));
+                        InjusticeSpirit.SetPlayer = __instance;
+                    }
+                    break;
+                case CustomRoleTypes.Neutral:
+                    if (!Phantom.SetYet && Phantom.EnablePhantom.GetBool())
+                    {
+                        Phantom.SetYet = true;
+                        __instance.Notify(GetString("Surprise"));
+                        Phantom.SetPlayer = __instance;
+                    }
+                    break;
+                case CustomRoleTypes.Impostor:
+                    if (!EvilAngle.SetYet && EvilAngle.EnableEvilAngle.GetBool())
+                    {
+                        EvilAngle.SetYet = true;
+                        __instance.Notify(GetString("Surprise"));
+                        EvilAngle.SetPlayer = __instance;
+                    }
+                    break;
+            }
+
+            // Libertarian
             foreach (var player in Libertarian.playerIdList)
             {
                 var li = Utils.GetPlayerById(player);

@@ -74,6 +74,7 @@ public class MessageControl
                 if (!string.IsNullOrEmpty(msg)) 
                     foreach ( var pid in SendToList)
                        Utils.SendMessage(msg, pid);
+                SendToList.Clear();
                 IsCommand = true;
                 return;
             }

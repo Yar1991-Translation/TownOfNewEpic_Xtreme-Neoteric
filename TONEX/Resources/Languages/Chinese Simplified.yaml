@@ -185,6 +185,7 @@ SharpShooter: "神射手"
 Admirer: "暗恋者"
 Akujo: "魅魔"
 Cupid: "丘比特"
+Phantom: "幻影"
 
 ## 附加职业 / Add-ons
 LastImpostor: "绝境者"
@@ -303,6 +304,7 @@ WinnerRoleText.GodOfPlagues: "准备好上网课了吗！"
 WinnerRoleText.MeteorArbiter: "如果我们还是朋友，那就别回来了"
 WinnerRoleText.MeteorMurder: "终是星陨天坠，时间线来到终点"
 WinnerRoleText.SharpShooter: "一箭射进您的心（物理意义上的）"
+WinnerRoleText.Phantom: "全都是假象！"
 
 ## 胜利界面职业名 / Role Name for End Screen
 WinnerRoleText.InEnd.Impostor: "伪装者阵营"
@@ -311,7 +313,7 @@ WinnerRoleText.InEnd.Jester: "小丑"
 WinnerRoleText.InEnd.Terrorist: "恐怖分子"
 WinnerRoleText.InEnd.Lovers: "恋人"
 WinnerRoleText.InEnd.AdmirerLovers: "暗恋恋人"
-WinnerRoleText.InEnd.AkujoLovers: "魅魔阵营"
+WinnerRoleText.InEnd.AkujoLovers: "魅魔与ta的真爱"
 WinnerRoleText.InEnd.CupidLovers: "丘比特团队"
 WinnerRoleText.InEnd.Executioner: "处刑者"
 WinnerRoleText.InEnd.Arsonist: "纵火犯"
@@ -348,6 +350,7 @@ WinnerRoleText.InEnd.GodOfPlague: "月下狼人"
 WinnerRoleText.InEnd.MeteorArbiter: "陨星判官"
 WinnerRoleText.InEnd.MeteorMurder: "陨星戮者"
 WinnerRoleText.InEnd.SharpShooter: "神射手"
+WinnerRoleText.InEnd.Phantom: "幻影"
 
 # 以下是职业简介（显示在开局以及任务栏的文本）/ Shows at Impostor/Crewmate Screen
 
@@ -501,6 +504,7 @@ SharpShooterInfo: "一箭射中你的眉心！（物理意义上的）"
 AdmirerInfo: "一切不以谈恋爱为目的的暗恋都是狗屁！"
 AkujoInfo: "让我们做些'快乐'的事吧"
 CupidInfo: "爱情之箭！"
+PhantomInfo: "冤屈化作动力！"
 
 ## 附加职业 / Add-ons Blurbs
 LoversInfo: "最重要的是，记得照顾好您的另一半"
@@ -602,7 +606,7 @@ ViciousSeekerInfoLong: "每轮会议过后或恶猎手成功击杀他人时（�
 EvilSwapperInfoLong: "邪恶的换票师可以在会议时交换两名玩家的票选\n换票指令为：/sw [玩家编号]\n您可以在玩家名字前看到该玩家的编号，或者使用/id指令查看所有玩家的编号。\n邪恶的换票师不能交换自己的票选"
 EvilGrenadierInfoLong: "邪恶的掷弹兵可以通过使用变形（或者摸宠物）使用闪光弹，闪光弹会导致范围内非内鬼阵营玩家失去视野。闪光弹生效以及失效时全体内鬼会看到提示。"
 EvilTimeStopsInfoLong: "邪恶的时停者使用变形（或者摸宠物）发动时停时，除了内鬼阵营玩家之外的所有人都无法进行任何行动。时停生效以及失效时全体内鬼会看到提示"
-EvilAngleInfoLong: "邪恶天使使用保护键时有概率击杀目标，但次数有限"
+EvilAngleInfoLong: "狼死这么早？虚~~~啊（bushi）\n邪恶天使使用保护键时有概率击杀目标，但次数有限"
 
 ## 船员阵营 / Crewmates Descriptions
 LuckeyInfoLong: "幸运儿被击杀时，有概率抵挡这次死亡，具体概率根据房主设定。抵挡生效时凶手会看到幸运儿的身上出现护盾破碎的效果，但幸运儿自己什么都不会知道。"
@@ -645,7 +649,8 @@ NiceSwapperInfoLong: "正义的换票师可以在会议时交换两名玩家的�
 SpecterSlayerInfoLong: "借魂杀手可以在报告时从尸体上汲取力量，获得一次击杀能力，该效果可以累计"
 HunterInfoLong: "猎人可以在场上标记多个目标，如果猎人死亡，则猎人标记的目标一同死亡，在目标名称前会有「+」表示。\n根据设置，可以使猎人在会议后清空目标，还可以限制在会议前选择目标的次数"
 DeputyInfoLong: "捕快可以使用击杀键给一个人手铐，使他在开会前失去所有能力。"
-InjusticeSpiritInfoLong: "冤魂在完成任务后可以向所有人暴露内鬼"
+InjusticeSpiritInfoLong: "你还有用，别退！！！\n冤魂在完成任务后可以向所有人暴露所有内鬼"
+
 ## 中立阵营 / Neutrals Descriptions
 ArsonistInfoLong: "纵火犯可以通过对玩家点击击杀按钮并跟随其数秒来完成涂油，开始涂油以及涂油成功时会显示护盾破碎的动画作为提示（仅自己可见）。当所有存活玩家都被纵火犯涂油后，纵火犯可以通过跳通风管来点火，并单独获得胜利。\n玩家名显示「△」表示涂油中\n玩家名显示「▲」表示已涂油。"
 JesterInfoLong: "小丑被票出则小丑单独游戏胜利。游戏结束时若小丑仍存活则小丑输掉游戏。请注意：小丑、处刑人、冤罪师可以共享胜利。"
@@ -691,6 +696,7 @@ SharpShooterInfoLong: "在神射手进行击杀时，如果击杀成功，则增
 AdmirerInfoLong: "暗恋者可以使用击杀按钮向一名玩家表白，如果这名玩家可以被表白则会组成恋人。暗恋者需要和恋人共同胜利"
 AkujoInfoLong: "魅魔可以通过击杀按钮选定玩家成为真爱与备胎，备胎视角中魅魔是真爱，魅魔需要和真爱共同胜利"
 CupidInfoLong: "丘比特可以通过击杀按钮选定两名玩家成为恋人，根据设定可以通过管道或者摸宠物为他们发放护盾，如果护盾被击破则丘比特代替死亡。如果选定的恋人死亡丘比特也会死亡，丘比特需要跟随选定的恋人胜利"
+PhantomInfoLong: "白给你这么好的职业了（bushi）\n没关系，完成任务还能偷家！"
 
 
 ## 附加职业 / Add-ons Descriptions
@@ -1296,7 +1302,7 @@ DieTime: "延迟死亡时间"
 KillProbability: "击杀成功概率"
 EnableEvilAngle: "启用<color=#ff1919>邪恶天使</color>"
 EnableInjusticeSpirit: "启用<color=#B6B87B>冤魂</color>"
-EnablePhabtom: "启用<color=#65167D>幻影</color>"
+EnablePhantom: "启用<color=#65167D>幻影</color>"
 OptionTaskCount: "任务数量"
 OptionTryMax: "尝试击杀上限"
 RecruitModeSwitchAction: "招募模式"
@@ -1344,7 +1350,9 @@ GodOfPlaguesKillCooldown: "万疫之神击杀冷却时间"
 BecomeGodOfPlaguesStart: "游戏开始时直接成为万疫之神"
 ScoutRadius: "侦察范围"
 SharpShooterKillDistance: "增加的击杀距离"
+
 AkujoModeSwitchAction: "魅魔选择模式"
+AkujoFakeLimited: "备胎选择上限"
 
 # 随机出生点 / Random Spawn Locations
 Junction: "三岔路"
@@ -1663,6 +1671,7 @@ Tired: "疲劳值"
 BlackmailSucceed: "勒索目标{0}成功！"
 HasBlackmailed: "您已经勒索目标{0}了！"
 NobodyNoticed: "大家暂时还不在意"
+FakeLimit: "备胎剩余"
 
 # 信息 / Messages
 Message.SetToSeconds: "信息发送冷却时间为【{0}】秒"

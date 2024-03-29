@@ -27,9 +27,12 @@ public sealed class Phantom : RoleBase
         player
     )
     {
+        SetYet = false;
     }
-    static OptionItem EnablePhantom;
+    public static PlayerControl SetPlayer;
+    public static OptionItem EnablePhantom;
     public static OptionItem OptionTaskCount;
+
     int Maxi;
     public static void SetupOptionItem()
     {
@@ -39,12 +42,21 @@ public sealed class Phantom : RoleBase
         OptionTaskCount = IntegerOptionItem.Create(75_1_5_0311, "OptionTaskCount", new(0, 100, 1), 10, TabGroup.NeutralRoles, false)
             .SetValueFormat(OptionFormat.Pieces)
             .SetParent(EnablePhantom);
+        
     }
     public override bool OnCompleteTask(out bool cancel)
     {
+        Win();
         cancel = false;
         return false;
     }
+    public void Win()
+    {
+        CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Phantom);
+        CustomWinnerHolder.WinnerIds.Add(Player.PlayerId);
+    }
+    public override void OverrideDisplayRoleNameAsSeen(PlayerControl seer, ref bool enabled, ref UnityEngine.Color roleColor, ref string roleText)
+    => enabled |= true;
     public override bool CanUseAbilityButton() => false;
     public override bool OnProtectPlayer(PlayerControl target)
     {
@@ -54,5 +66,5 @@ public sealed class Phantom : RoleBase
     {
         AURoleOptions.GuardianAngelCooldown =255f;
     }
-
+    public static bool SetYet;
 }
