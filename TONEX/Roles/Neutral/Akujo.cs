@@ -97,6 +97,7 @@ public sealed class Akujo : RoleBase, INeutralKiller
     {
         var (killer, target) = info.AttemptTuple;
         if (NowSwitchTrigger == SwitchTrigger.TriggerVent)
+        {
             if (CanBeLover(target))
             {
                 if (ChooseFake && FakeLimit >= 1)
@@ -124,10 +125,39 @@ public sealed class Akujo : RoleBase, INeutralKiller
                 killer.RpcProtectedMurderPlayer(target);
                 target.RpcProtectedMurderPlayer(killer);
             }
+            else if (target.Is(CustomRoles.AkujoLovers))
+            {
+                if (ChooseFake)
+                {
+                    Player.Notify(GetString("AkujoSix"));
+                }
+                else
+                {
+                    Player.Notify(GetString("AkujoSixSix"));
+                }
+            }
+            else if (target.Is(CustomRoles.AkujoFakeLovers))
+            {
+                if (ChooseFake)
+                {
+                    Player.Notify(GetString("AkujoSixTwo"));
+                }
+                else
+                {
+                    Player.Notify(GetString("AkujoSixSixTwo"));
+                }
+            }
+            else 
+            {
+                
+                    Player.Notify(GetString("AkujoCant"));
+                
+            }
+        }
         if (NowSwitchTrigger == SwitchTrigger.TriggerDouble)
         {
             var fake = killer.CheckDoubleTrigger(target, () => {
-                if (!ChooseFake && AkujoLimit >= 1)
+                if (!ChooseFake && AkujoLimit >= 1 && CanBeLover(target))
                 {
                     AkujoLimit--;
                     AkujoLoversPlayers.Clear();
@@ -139,12 +169,43 @@ public sealed class Akujo : RoleBase, INeutralKiller
                     SendRPC();
                 };
             });
-            if (fake)
+            if (fake && CanBeLover(target))
             {
                 FakeLimit--;
                 PlayerState.GetByPlayerId(target.PlayerId).SetSubRole(CustomRoles.AkujoFakeLovers);
                 SendRPC();
 
+            }
+            if (!CanBeLover(target))
+            {
+                if (target.Is(CustomRoles.AkujoLovers))
+                {
+                    if (ChooseFake)
+                    {
+                        Player.Notify(GetString("AkujoSix"));
+                    }
+                    else
+                    {
+                        Player.Notify(GetString("AkujoSixSix"));
+                    }
+                }
+                else if (target.Is(CustomRoles.AkujoFakeLovers))
+                {
+                    if (ChooseFake)
+                    {
+                        Player.Notify(GetString("AkujoSixTwo"));
+                    }
+                    else
+                    {
+                        Player.Notify(GetString("AkujoSixSixTwo"));
+                    }
+                }
+                else
+                {
+
+                    Player.Notify(GetString("AkujoCant"));
+
+                }
             }
         }
 
@@ -164,9 +225,10 @@ public sealed class Akujo : RoleBase, INeutralKiller
         || pc.Is(CustomRoles.Cupid)
         || pc.Is(CustomRoles.Yandere)
         || pc.Is(CustomRoles.Admirer)
-        || pc.Is(CustomRoles.AdmirerLovers)));
+        || pc.Is(CustomRoles.AdmirerLovers)
+        || Yandere.Targets.Contains(pc)));
 
-    public override string GetProgressText(bool comms = false) => Utils.ColorString(CanUseKillButton() ? RoleInfo.RoleColor : Color.gray, $"({GetString("FakeLimit")+FakeLimit})");
+    public override string GetProgressText(bool comms = false) => Utils.ColorString(CanUseKillButton() ? RoleInfo.RoleColor : Color.gray, OptionModeSwitchAction.GetInt()==1?(ChooseFake ? $"({FakeLimit})": $"({AkujoLimit})"):$"({AkujoLimit})({FakeLimit})");
     public bool OverrideKillButtonSprite(out string buttonName)
     {
         buttonName = ChooseFake ? "ChooseFakeLove" : "ChooseRealLove";

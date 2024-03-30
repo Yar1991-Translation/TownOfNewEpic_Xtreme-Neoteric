@@ -46,6 +46,7 @@ public sealed class Yandere : RoleBase, INeutralKiller
 
     }
     public PlayerControl TargetId;
+    public static List<PlayerControl> Targets = new();
     private static void SetupOptionItem()
     {
         OptionKillCooldown = FloatOptionItem.Create(RoleInfo, 10, GeneralOption.KillCooldown, new(2.5f, 180f, 2.5f), 20f, false)
@@ -58,11 +59,13 @@ public sealed class Yandere : RoleBase, INeutralKiller
         //ターゲット割り当て
         if (!AmongUsClient.Instance.AmHost) return;
         NeedKill = new();
+        Targets = new();
         var playerId = Player.PlayerId;
         var pcList = Main.AllAlivePlayerControls.Where(x => x.PlayerId != Player.PlayerId && x.IsAlive() && !x.Is(CustomRoles.Lovers)).ToList();
         var SelectedTarget = pcList[IRandom.Instance.Next(0, pcList.Count)];
         TargetId = SelectedTarget;
-        NameColorManager.Add(Player.PlayerId, SelectedTarget.PlayerId, "#788514");
+        Targets.Add(SelectedTarget);
+        NameColorManager.Add(Player.PlayerId, SelectedTarget.PlayerId, "#ff25e4");
         SendRPC();
     }
     private void SendRPC()
