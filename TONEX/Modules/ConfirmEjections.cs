@@ -72,7 +72,7 @@ public static class ConfirmEjections
             if (impNum == 0) text += GetString("NoImpRemain") + comma;
             else text += string.Format(GetString("ImpRemain"), impNum) + comma;
             if (Options.ShowNKRemainOnEject.GetBool() && neutralNum > 0)
-                text += string.Format(GetString("NeutralRemain"), neutralNum);
+                text += string.Format(GetString("NeutralEvilRemain"), neutralNum);
         }
 
     EndOfSession:
@@ -101,7 +101,8 @@ public static class ConfirmEjections
 
         string text = string.Empty;
         int impNum = Main.AllAlivePlayerControls.Count(p => p.Is(CustomRoleTypes.Impostor) || p.Is(CustomRoles.Madmate));
-        int neutralNum = Main.AllAlivePlayerControls.Count(p => p.Is(CustomRoleTypes.Neutral) || p.Is(CustomRoles.Charmed) || p.Is(CustomRoles.Wolfmate));
+        int neutralNum = Main.AllAlivePlayerControls.Count(p => p.IsNeutralEvil());
+        int neutralkillNum = Main.AllAlivePlayerControls.Count(p => p.IsNeutralKiller() || p.Is(CustomRoles.Charmed) ||p.Is(CustomRoles.Wolfmate));
 
         if (CustomRoles.Bard.IsExist()) // 吟游诗人创作
         {
@@ -117,8 +118,14 @@ public static class ConfirmEjections
             string comma = neutralNum > 0 ? "，" : "";
             if (impNum == 0) text += GetString("NoImpRemain") + comma;
             else text += string.Format(GetString("ImpRemain"), impNum) + comma;
-            if (Options.ShowNKRemainOnEject.GetBool() && neutralNum > 0)
-                text += string.Format(GetString("NeutralRemain"), neutralNum);
+            if (Options.ShowNERemainOnEject.GetBool() && neutralNum > 0)
+                text += string.Format(GetString("NeutralEvilRemain"), neutralNum);
+            else if (Options.ShowNERemainOnEject.GetBool() && neutralNum == 0)
+                text += GetString("NoNeutralEvilRemain");
+            if (Options.ShowNKRemainOnEject.GetBool() && neutralkillNum > 0)
+                text += string.Format(GetString("NeutralKillerRemain"), neutralkillNum);
+            else if (Options.ShowNKRemainOnEject.GetBool() && neutralkillNum == 0)
+                text += GetString("NoNeutralKillerRemain");
         }
 
     EndOfSession:
