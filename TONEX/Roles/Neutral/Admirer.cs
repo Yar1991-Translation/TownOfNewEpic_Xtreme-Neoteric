@@ -88,6 +88,18 @@ public sealed class Admirer : RoleBase, INeutralKiller
             killer.RpcProtectedMurderPlayer(target);
             target.RpcProtectedMurderPlayer(killer);
         }
+        else if (CanBeLover(target))
+        {
+            if (AdmirerLoversPlayers.Contains(target))
+            Player.Notify(GetString("AkujoSixSix"));
+            else
+                Player.Notify(GetString("AkujoSixSix"));
+        }
+        else if (AdmirerLimit <= 0)
+        {
+            if (AdmirerLoversPlayers.Contains(target))
+                Player.Notify(GetString("AdmirerCant"));
+        }
         return false;
     }
     public static bool CanBeLover(PlayerControl pc) => pc != null && (
@@ -104,7 +116,8 @@ public sealed class Admirer : RoleBase, INeutralKiller
         || pc.Is(CustomRoles.Cupid) 
         || pc.Is(CustomRoles.Yandere)
         || pc.Is(CustomRoles.Admirer)
-        || pc.Is(CustomRoles.AdmirerLovers)));
+        || pc.Is(CustomRoles.AdmirerLovers)
+        || Yandere.Targets.Contains(pc)));
 
     public override string GetProgressText(bool comms = false) => Utils.ColorString(CanUseKillButton() ? RoleInfo.RoleColor : Color.gray, $"({AdmirerLimit})");
     public bool OverrideKillButtonSprite(out string buttonName)
