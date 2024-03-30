@@ -9,6 +9,7 @@ using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces;
 using TONEX.Roles.Crewmate;
 using TONEX.Roles.Neutral;
+using UnityEngine.Bindings;
 using static TONEX.Translator;
 
 namespace TONEX;
@@ -335,7 +336,12 @@ class GameEndChecker
                 {
                     playerTypeCounts[playerType]++;
                     if (Player.Is(CustomRoles.Yandere))// 病娇独立判断
+                    {
                         playerTypeCounts[playerType]++;
+                        var targetType = (Player.GetRoleClass() as Yandere).TargetId.GetCountTypes();
+                        if (playerTypeCounts.ContainsKey(targetType))
+                            playerTypeCounts[targetType]--;
+                    }
                     if (Player.Is(CustomRoles.Schizophrenic))// 双重人格独立判断
                         playerTypeCounts[playerType]++;
                 }
