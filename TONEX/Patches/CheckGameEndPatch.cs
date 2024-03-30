@@ -137,6 +137,11 @@ class GameEndChecker
                         .Where(pc => pc.Is(CustomRoles.SharpShooter))
                         .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
                     break;
+                case CustomWinner.Yandere:
+                    Main.AllPlayerControls
+                        .Where(pc => pc.Is(CustomRoles.Yandere))
+                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    break;
             }
             if (CustomWinnerHolder.WinnerTeam is not CustomWinner.Draw and not CustomWinner.None and not CustomWinner.Error)
             {
@@ -329,6 +334,8 @@ class GameEndChecker
                 if (playerTypeCounts.ContainsKey(playerType))
                 {
                     playerTypeCounts[playerType]++;
+                    if (Player.Is(CustomRoles.Yandere))// 病娇独立判断
+                        playerTypeCounts[playerType]++;
                     if (Player.Is(CustomRoles.Schizophrenic))// 双重人格独立判断
                         playerTypeCounts[playerType]++;
                 }

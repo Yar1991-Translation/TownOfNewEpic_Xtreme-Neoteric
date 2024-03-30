@@ -234,4 +234,5 @@ public enum CountTypes
     MeteorArbiter= CustomWinner.MeteorArbiter,
     MeteorMurder= CustomWinner.MeteorMurder,
     SharpShooter= CustomWinner.SharpShooter,
+    Yandere=CustomWinner.Yandere,
 }

@@ -180,7 +180,18 @@ static class ExtendedPlayerControl
         }
         sender.SendMessage();
     }
-   
+    public static void CheckDistanceAndDoActions(Vector2 center, Action<PlayerControl> action, PlayerControl centerPc = null, float radius = 0.3f)
+    {
+        foreach (var pc in Main.AllAlivePlayerControls)
+        {
+            if (centerPc != null && pc == centerPc) continue;
+            var posi = pc.GetTruePosition();
+
+            var dis = Vector2.Distance(center, posi);
+            if (dis > radius) continue;
+            action(pc);
+        }
+    }
     public static void RpcSetNamePrivate(this PlayerControl player, string name, bool DontShowOnModdedClient = false, PlayerControl seer = null, bool force = false)
     {
         //player: 名前の変更対象

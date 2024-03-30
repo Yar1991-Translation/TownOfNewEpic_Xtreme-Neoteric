@@ -26,7 +26,8 @@ public sealed class Rebels : RoleBase, IOverrideWinner, INeutral
         RoleInfo,
         player
     )
-    { }
+    { 
+    }
 
     static OptionItem OptionSkillCooldown;
     static OptionItem OptionSkillDuration;
