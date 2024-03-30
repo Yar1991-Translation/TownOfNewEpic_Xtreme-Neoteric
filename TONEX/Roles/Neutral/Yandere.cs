@@ -82,7 +82,7 @@ public sealed class Yandere : RoleBase, INeutralKiller
         //seenが省略の場合seer
         seen ??= seer;
 
-        return TargetId.PlayerId == seen.PlayerId ? Utils.ColorString(RoleInfo.RoleColor, "❥") : "";
+        return TargetId.PlayerId == seen.PlayerId ? Utils.ColorString(RoleInfo.RoleColor, "♡") : "";
     }
     public override string GetSuffix(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false)
     {

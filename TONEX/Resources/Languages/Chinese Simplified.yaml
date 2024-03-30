@@ -186,6 +186,7 @@ Admirer: "暗恋者"
 Akujo: "魅魔"
 Cupid: "丘比特"
 Phantom: "幻影"
+Yandere: "病娇"
 
 ## 附加职业 / Add-ons
 LastImpostor: "绝境者"
@@ -305,6 +306,7 @@ WinnerRoleText.MeteorArbiter: "如果我们还是朋友，那就别回来了"
 WinnerRoleText.MeteorMurder: "终是星陨天坠，时间线来到终点"
 WinnerRoleText.SharpShooter: "一箭射进您的心（物理意义上的）"
 WinnerRoleText.Phantom: "全都是假象！"
+WinnerRoleText.Yandere: "你永远是我的宝宝"
 
 ## 胜利界面职业名 / Role Name for End Screen
 WinnerRoleText.InEnd.Impostor: "伪装者阵营"
@@ -351,6 +353,7 @@ WinnerRoleText.InEnd.MeteorArbiter: "陨星判官"
 WinnerRoleText.InEnd.MeteorMurder: "陨星戮者"
 WinnerRoleText.InEnd.SharpShooter: "神射手"
 WinnerRoleText.InEnd.Phantom: "幻影"
+WinnerRoleText.InEnd.Yandere: "病娇"
 
 # 以下是职业简介（显示在开局以及任务栏的文本）/ Shows at Impostor/Crewmate Screen
 
@@ -505,6 +508,7 @@ AdmirerInfo: "一切不以谈恋爱为目的的暗恋都是狗屁！"
 AkujoInfo: "让我们做些'快乐'的事吧"
 CupidInfo: "爱情之箭！"
 PhantomInfo: "冤屈化作动力！"
+YandereInfo: "❤我爱你"
 
 ## 附加职业 / Add-ons Blurbs
 LoversInfo: "最重要的是，记得照顾好您的另一半"
@@ -697,6 +701,7 @@ AdmirerInfoLong: "暗恋者可以使用击杀按钮向一名玩家表白，如�
 AkujoInfoLong: "魅魔可以通过击杀按钮选定玩家成为真爱与备胎，备胎视角中魅魔是真爱，魅魔需要和真爱共同胜利"
 CupidInfoLong: "丘比特可以通过击杀按钮选定两名玩家成为恋人，根据设定可以通过管道或者摸宠物为他们发放护盾，如果护盾被击破则丘比特代替死亡。如果选定的恋人死亡丘比特也会死亡，丘比特需要跟随选定的恋人胜利"
 PhantomInfoLong: "白给你这么好的职业了（bushi）\n没关系，完成任务还能偷家！"
+YandereInfoLong: "病娇开局会有一个目标，可以看到对方名字旁有「♡」标志。如果有人靠近病娇的目标太近，病娇就会拥有指向他的箭头并且可以击杀他。\n病娇只能击杀碰过目标的人，仅剩病娇阵营与船员阵营且病娇阵营人数大于船员人数，病娇和目标获得胜利（目标算作病娇阵营的人数，但是不会被判定为坏人）"
 
 
 ## 附加职业 / Add-ons Descriptions
