@@ -44,7 +44,7 @@ public class MessageControl
         //IsCommand = Player.GetRoleClass()?.OnPlayerSendMessage(player, Message, out recallMode) ?? false;
         if (IsCommand && !AmongUsClient.Instance.AmHost) ForceSend = true;
         CustomRoleManager.ReceiveMessage.Do(a => a.Invoke(this));
-        
+
         RecallMode = recallMode;
         if (IsCommand || !AmongUsClient.Instance.AmHost) return;
 
@@ -71,9 +71,9 @@ public class MessageControl
                 Logger.Info($"Command: /{keyword}, Args: {Args}", "ChatControl");
 
                 (RecallMode, string msg) = command.Command(this);
-                if (!string.IsNullOrEmpty(msg)) 
-                    foreach ( var pid in SendToList)
-                       Utils.SendMessage(msg, pid);
+                if (!string.IsNullOrEmpty(msg))
+                    foreach (var pid in SendToList)
+                        Utils.SendMessage(msg, pid);
                 SendToList = new();
                 IsCommand = true;
                 return;
@@ -87,7 +87,7 @@ public class MessageControl
         var mc = new MessageControl(player, message);
         if (!AmongUsClient.Instance.AmHost) return mc;
         History ??= new();
-        if (!message.EndsWith(「.*」) ?? true)) History.Add(mc);
+        if (!message.EndsWith('\0') && !(player?.Data?.PlayerName?.EndsWith('\0') ?? true)) History.Add(mc);
         if (History?.Count > 50) History.RemoveAt(0);
         return mc;
     }

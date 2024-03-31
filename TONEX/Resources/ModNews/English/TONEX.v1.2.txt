@@ -32,7 +32,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Fixed the bug of Martry can not win
 (Fixed By Slok)
 - Fixed the bug of there was no confirmation prompt when ejecting the host
-(Fixed By Slok, 技术指导：咔皮呆)
+(Fixed By Slok, Technical Support：Karped)
 - Fixed the bug of the Evil Swapper's target and skill usage were behaving abnormally
 (Fixed By Slok)
 - Fixed the bug of players were sometimes kicked out of the modded server due to untrusted RPC
@@ -89,7 +89,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Idea&Made By 清风)
 - Gusser：Sending /id will now also provide the role list
 (Idea&Made By Slok)
-- 女巫：Vent Switch Mode=>Vent/Pet Switch Mode
+- Witch：Vent Switch Mode=>Vent/Pet Switch Mode
 (Idea&Made By Slok)
 - Terrorst：Clarified "Can Win By Suicide"
 (Idea&Made By Slok)
@@ -126,7 +126,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Nice Grenadier：Vision impaired by flash grenade
 (Decided By Slok)
 
-## 新增职业
+## New Roles
 Impostors：
 - Impostor Role：Evil Grenadier
 (Source Of The Idea：Town Of Us, Made By Slok)

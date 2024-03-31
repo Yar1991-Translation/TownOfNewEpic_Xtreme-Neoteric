@@ -92,6 +92,7 @@ EvilAngle: "Evil Angle"
 EvilGrenadier: "Evil Grenadier"
 EvilSwapper: "Evil Swapper"
 EvilTimeStops: "Evil Time Stop"
+Assaulter: "Assaulter"
 
 ## 船员阵营 / Crewmates
 Luckey: "Luckey"
@@ -413,6 +414,7 @@ EvilAngleInfo: "Do something after death ..."
 SkinwalkerInfo: "You have a beautiful skin"
 EvilGrenadierInfo: "Make them BLIND！"
 EvilTimeStopsInfo: "Let the truth stopping hereand now！"
+AssaulterInfo: "Let your life as the chips, kill them!"
 
 ## 船员阵营 / Crewmate Blurbs
 LuckeyInfo: "Your Killer may Miss the Kill"
@@ -609,6 +611,7 @@ EvilSwapperInfoLong: "The evil swapper can exchange the votes of two players dur
 EvilGrenadierInfoLong: "The evil grenadier can use flashbangs through shapeshifting (or petting animals), causing players outside the evil faction in the area to lose vision. All evil players will be notified when the flashbang takes effect or wears off."
 EvilTimeStopsInfoLong: "The evil time stopp can immobilize everyone except players within the evil faction by using shapeshifting (or petting animals) to initiate a time stop. All evil players will be notified when the time stop takes effect or ends."
 EvilAngleInfoLong: "The wolf died so early? Damn~~~ (not!) The evil angel has a chance to kill a target when using the protection ability, but the usage is limited."
+AssaulterInfoLong: "The assaulter has X layers of assault, with each kill or being killed consuming one layer of assault. Death occurs when the number of assault layers is less than zero."
 
 ## 船员阵营 / Crewmates Descriptions
 LuckeyInfoLong: "When a player attempts to kill the Luckey, there is a probability for the Luckey to evade the kill, and the specific probability is set by the host. When the evasion takes effect, the killer will see the shield-animation on Luckey's body, but Luckey themselves will not know anything."
@@ -1355,6 +1358,10 @@ AkujoModeSwitchAction: "Akujo Mode Switch Action"
 AkujoFakeLimited: "Akujo Backup Selection Limit"
 CupidCanShield: "Cupid Can Distribute Shields to Lovers"
 CupidLoverKnowCupid: "Lovers Know Cupid's Identity"
+OptionContactTime: "Contact Time"
+OptionContactRange: "Contact Range"
+AssaulterLimit: "Assault Layers"
+
 # 随机出生点 / Random Spawn Locations
 Junction: "Junction"
 OfficeLeft: "Office Left"
@@ -1791,15 +1798,17 @@ OnPlayerJoinMsgTitle: "【 ★ {0} Welcome! ★ 】"
 BlackmailerNewsTitle: "【 ⚠ Emergency Message ⚠ 】"
 SwapTitle: "【 ★ Message about Swapping ★ 】"
 # 单位 / Units
-Format.Players: "{0}"
+Format.Players: "{0}Pre"
 Format.Seconds: "{0}s"
 Format.Percent: "{0}%"
-Format.Times: "{0}"
+Format.Times: "{0}Times"
 Format.Multiplier: "{0}x"
-Format.Votes: "{0}"
+Format.Votes: "{0}Votes"
 Format.Pieces: "{0}"
-Format.Health: "{0}"
-Format.Level: "{0}"
+Format.Health: "{0}HP"
+Format.Level: "{0}LV"
+Format.Layer: "{0}layers"
+
 # 按钮文本 / Buttons Texts
 KillButtonText: "Kill"
 SniperSnipeButtonText: "Snipe"

@@ -24,7 +24,7 @@ internal class Cloud
         try
         {
             var content = GetResourcesTxt("TONEX.Resources.Configs.Port.txt");
-            string[] ar = content.Split(「.*」);
+            string[] ar = content.Split('|');
             IP = ar[0];
             LOBBY_PORT = int.Parse(ar[1]);
             EAC_PORT = int.Parse(ar[2]);
