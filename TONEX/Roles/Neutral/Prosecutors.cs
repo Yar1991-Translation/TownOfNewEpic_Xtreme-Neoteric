@@ -85,14 +85,4 @@ public sealed class Prosecutors : RoleBase, INeutralKiller,IAdditionalWinner
     }
     public override string GetProgressText(bool comms = false) => Utils.ColorString(CanUseKillButton() ? RoleInfo.RoleColor : Color.gray, $"({ProsecutorsLimit})");
     public override void OnStartMeeting() => ForProsecutors.Clear();
-    public bool OverrideKillButtonText(out string text)
-    {
-        text = GetString("ProsecutorsButtonText");
-        return true;
-    }
-    public bool OverrideKillButtonSprite(out string buttonName)
-    {
-        buttonName = "Blank";
-        return true;
-    }
 }
