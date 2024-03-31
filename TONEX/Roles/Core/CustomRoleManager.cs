@@ -740,7 +740,7 @@ public enum CustomRoles
     Moonshadow,//TODO 月影,1.4限定
     Phantom,
     MeteorArbiter,// 陨星判官,1.2限定
-    MeteorMurder,// 陨星戮者,1.2限定
+    MeteorMurderer,// 陨星戮者,1.2限定
     SharpShooter,
     //GameMode
     HotPotato,

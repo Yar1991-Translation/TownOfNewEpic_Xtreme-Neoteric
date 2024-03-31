@@ -41,7 +41,7 @@ public static class Base62
         var resultBuilder = new StringBuilder(stack.Count);
         if (isNegative)
         {
-            resultBuilder.Append('-');
+            resultBuilder.Append(「.*」);
         }
         // 最後に入れたものから順に追加
         foreach (var c in stack)
@@ -58,7 +58,7 @@ public static class Base62
     /// <exception cref="ArgumentException"/>
     public static int ToInt(string base62)
     {
-        var isNegative = base62.StartsWith('-');
+        var isNegative = base62.StartsWith(「.*」);
         if (isNegative)
         {
             base62 = base62[1..];

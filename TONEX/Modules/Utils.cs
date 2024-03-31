@@ -1010,6 +1010,7 @@ public static class Utils
             + $"\n  ○ /l {GetString("Command.lastresult")}"
             + $"\n  ○ /win {GetString("Command.winner")}"
             + $"\n  ○ /eje {GetString("Command.GetLatestEje")}"
+            + $"\n  ○ /ank {GetString("Command.ActiveNK")}"
             + "\n\n" + "<color=#12bee4>" + GetString("CommandOtherList")
             + $"\n  ○ /color {GetString("Command.color")}"
             + $"\n  ○ /rn {GetString("Command.rename")}"

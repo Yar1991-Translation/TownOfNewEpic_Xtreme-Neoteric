@@ -15,24 +15,24 @@ using System.Linq;
 
 namespace TONEX.Roles.Neutral;
 
-public sealed class MeteorMurder : RoleBase, INeutralKiller
+public sealed class MeteorMurderer : RoleBase, INeutralKiller
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
-            typeof(MeteorMurder),
-            player => new MeteorMurder(player),
-            CustomRoles.MeteorMurder,
+            typeof(MeteorMurderer),
+            player => new MeteorMurderer(player),
+            CustomRoles.MeteorMurderer,
             () => RoleTypes.Impostor,
             CustomRoleTypes.Neutral,
             75_1_2_0200,
             null,
-            "Frisk|MeteorMurder|SFBF!Frisk",
+            "Frisk|MeteorMurderer|SFBF!Frisk",
              "#ff0000",
             true,
             true,
-            countType: CountTypes.MeteorMurder
+            countType: CountTypes.MeteorMurderer
         );
-    public MeteorMurder(PlayerControl player)
+    public MeteorMurderer(PlayerControl player)
     : base(
         RoleInfo,
         player,
@@ -103,7 +103,7 @@ public sealed class MeteorMurder : RoleBase, INeutralKiller
     {
         seen ??= seer;
         if (!GameStates.IsInTask || isForMeeting || !Is(seer) || !Is(seen)) return "";
-        Color color = Utils.GetRoleColor(CustomRoles.MeteorMurder);
+        Color color = Utils.GetRoleColor(CustomRoles.MeteorMurderer);
         if (LOVE >= 10 && LOVE<20)
             color = Color.red;
         if (LOVE == 20)

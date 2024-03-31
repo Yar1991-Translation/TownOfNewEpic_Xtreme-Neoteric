@@ -418,7 +418,7 @@ public enum CustomWinner
     GodOfPlagues = CustomRoles.GodOfPlagues,
     Puppeteer = CustomRoles.Puppeteer,
     MeteorArbiter = CustomRoles.MeteorArbiter,
-    MeteorMurder = CustomRoles.MeteorMurder,
+    MeteorMurderer = CustomRoles.MeteorMurderer,
     SharpShooter = CustomRoles.SharpShooter,
     AdmirerLovers = CustomRoles.AdmirerLovers,
     AkujoLovers = CustomRoles.AkujoLovers,
