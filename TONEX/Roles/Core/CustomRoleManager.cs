@@ -620,7 +620,7 @@ public enum CustomRoles
     EvilAngle,
     EvilTimeStops,
     MirrorSpirit,//TODO 镜妖
-    Assaulter,//TODO 强袭者
+    Assaulter,
     MimicTeam,//TODO 模仿者团队
     MimicKiller,//TODO 模仿者（杀手）
     MimicAssistant,//TODO 模仿者（助手）

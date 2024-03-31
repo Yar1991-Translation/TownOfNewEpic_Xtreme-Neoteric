@@ -58,7 +58,6 @@ static class CustomRolesHelper
     {
         if (role is
     CustomRoles.MirrorSpirit or//TODO 镜妖
-    CustomRoles.Assaulter or//TODO 强袭者
     CustomRoles.MimicTeam or//TODO 模仿者团队
     CustomRoles.MimicKiller or//TODO 模仿者（杀手）
     CustomRoles.MimicAssistant or//TODO 模仿者（助手）

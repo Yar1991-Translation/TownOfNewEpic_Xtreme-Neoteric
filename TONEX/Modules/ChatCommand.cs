@@ -484,7 +484,7 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
         foreach (var role in roles)
         {
             if (role.ChatCommand is null) continue;
-            var coms = role.ChatCommand.Split(「.*」);
+            var coms = role.ChatCommand.Split('|');
             RoleCommands[role.RoleName] = new();
             coms.DoIf(c => c.Trim() != "", RoleCommands[role.RoleName].Add);
         }
@@ -500,7 +500,7 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
         foreach (CustomRoles role in Enum.GetValues(typeof(CustomRoles)))
         {
             if (!includeVanilla && role.IsVanilla()) continue;
-            if (input == GetString(Enum.GetName(typeof(CustomRoles), role)).TrimStart(「.*」).ToLower().Trim().Replace(" ", string.Empty).RemoveHtmlTags() //匹配到翻译文件中的职业原名
+            if (input == GetString(Enum.GetName(typeof(CustomRoles), role)).TrimStart('*').ToLower().Trim().Replace(" ", string.Empty).RemoveHtmlTags() //匹配到翻译文件中的职业原名
                 || (RoleCommands.TryGetValue(role, out var com) && com.Any(c => input == c.Trim().ToLower())) //匹配到职业缩写
                 )
             {

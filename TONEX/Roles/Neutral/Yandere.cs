@@ -40,10 +40,13 @@ public sealed class Yandere : RoleBase, INeutralKiller
     {
     }
     private static OptionItem OptionKillCooldown;
+    private static OptionItem OptionContactTime;
+    private static OptionItem OptionContactRange;
     public bool IsNK { get; private set; } = true;
     enum OptionName
     {
-
+        OptionContactTime,
+        OptionContactRange
     }
     public PlayerControl TargetId;
     public static List<PlayerControl> Targets = new();
@@ -51,17 +54,25 @@ public sealed class Yandere : RoleBase, INeutralKiller
     {
         OptionKillCooldown = FloatOptionItem.Create(RoleInfo, 10, GeneralOption.KillCooldown, new(2.5f, 180f, 2.5f), 20f, false)
             .SetValueFormat(OptionFormat.Seconds);
+        OptionContactTime = FloatOptionItem.Create(RoleInfo, 11, OptionName.OptionContactTime, new(0, 20, 1), 3, false)
+            .SetValueFormat(OptionFormat.Seconds);
+        OptionContactRange = FloatOptionItem.Create(RoleInfo, 12, OptionName.OptionContactRange, new(0.5f, 5f, 0.25f), 2.5f, false)
+           .SetValueFormat(OptionFormat.Seconds);
 
     }
       List<byte> NeedKill;
+    private static Dictionary<byte, float> Infos;
     public override void Add()
     {
         //ターゲット割り当て
         if (!AmongUsClient.Instance.AmHost) return;
         NeedKill = new();
         Targets = new();
+        Infos = new();
+        foreach (var pc in Main.AllPlayerControls)
+            Infos.TryAdd(pc.PlayerId, 0);
         var playerId = Player.PlayerId;
-        var pcList = Main.AllAlivePlayerControls.Where(x => x.PlayerId != Player.PlayerId && x.IsAlive() && !x.Is(CustomRoles.Lovers)).ToList();
+        var pcList = Main.AllAlivePlayerControls.Where(x => x.PlayerId != Player.PlayerId && x.IsAlive() && !CanBeLover(x)).ToList();
         var SelectedTarget = pcList[IRandom.Instance.Next(0, pcList.Count)];
         TargetId = SelectedTarget;
         Targets.Add(SelectedTarget);
@@ -71,15 +82,50 @@ public sealed class Yandere : RoleBase, INeutralKiller
     private void SendRPC()
     {
         var sender = CreateSender();
-        sender.Writer.Write(TargetId);
-        NeedKill.Do(sender.Writer.Write);
+        sender.Writer.Write(TargetId.PlayerId);
+        sender.Writer.Write(NeedKill.Count);
+        foreach (var pc in NeedKill)
+            sender.Writer.Write(pc);
+        sender.Writer.Write(Infos.Count);
+        foreach (var pc in Infos)
+        {
+            sender.Writer.Write(pc.Key);
+            sender.Writer.Write(pc.Value);
+        }
     }
     public override void ReceiveRPC(MessageReader reader)
     {
+        TargetId = Utils.GetPlayerById(reader.ReadByte());
         NeedKill = new();
-        for (int i = 0; i < reader.ReadInt32(); i++)
+        
+        var nkc = reader.ReadInt32();
+        for (int i = 0; i <nkc; i++)
             NeedKill.Add(reader.ReadByte());
+
+        Infos = new();
+        var ic = reader.ReadInt32();
+        for (int i = 0; i < ic; i++)
+        {
+            var id = reader.ReadByte();
+            var rate = reader.ReadSingle();
+            Infos.TryAdd(id, rate);
+        }
     }
+    public static bool CanBeLover(PlayerControl pc) => pc != null && (
+    !(pc.Is(CustomRoles.LazyGuy)
+    || pc.Is(CustomRoles.Neptune)
+    || pc.Is(CustomRoles.God)
+    || pc.Is(CustomRoles.Hater)
+    || pc.Is(CustomRoles.Believer)
+    || pc.Is(CustomRoles.Nihility)
+    || pc.Is(CustomRoles.Lovers)
+    || pc.Is(CustomRoles.CupidLovers)
+    || pc.Is(CustomRoles.CupidLovers)
+    || pc.Is(CustomRoles.Cupid)
+    || pc.Is(CustomRoles.Cupid)
+    || pc.Is(CustomRoles.Yandere)
+    || pc.Is(CustomRoles.Admirer)
+    || pc.Is(CustomRoles.AdmirerLovers)));
     public override string GetMark(PlayerControl seer, PlayerControl seen, bool _ = false)
     {
         //seenが省略の場合seer
@@ -101,14 +147,32 @@ public sealed class Yandere : RoleBase, INeutralKiller
     public override void OnFixedUpdate(PlayerControl player)
     {
         if (!AmongUsClient.Instance.AmHost) return;
-      ExtendedPlayerControl. CheckDistanceAndDoActions(TargetId.GetTruePosition(), (pc) =>
+        foreach (var pc in Main.AllAlivePlayerControls)
         {
-            if (!NeedKill.Contains(pc.PlayerId))
+            var posi = pc.GetTruePosition();
+
+            var dis = Vector2.Distance(TargetId.GetTruePosition(), posi);
+            if (dis > OptionContactRange.GetFloat() || NeedKill.Contains(pc.PlayerId)) continue;
+            Infos.TryGetValue(pc.PlayerId, out var oldRate);
+            var newRate = oldRate + Time.fixedDeltaTime / OptionContactTime.GetFloat() * 100;
+            newRate = Math.Clamp(newRate, 0, 100);
+            Infos[pc.PlayerId] = newRate;
+            if ((oldRate < 25 && newRate >= 25) || (oldRate < 50 && newRate >= 50))
             {
-                NeedKill.Add(pc.PlayerId); 
-                TargetArrow.Add(Player.PlayerId,pc.PlayerId);
+                SendRPC();
             }
-        }, TargetId);
+            if (newRate >= 100)
+            {
+                NeedKill.Add(pc.PlayerId);
+                TargetArrow.Add(Player.PlayerId, pc.PlayerId);
+                Infos.Remove(pc.PlayerId);
+                SendRPC();
+            }
+            
+            
+        }
+        
+        
     }
     public override void OnPlayerDeath(PlayerControl player, CustomDeathReason deathReason, bool isOnMeeting)
     {

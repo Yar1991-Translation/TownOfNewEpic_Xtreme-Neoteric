@@ -304,4 +304,5 @@ public enum OptionFormat
     Pieces,
     Health,
     Level,
+    Layer,
 }
