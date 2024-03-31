@@ -513,6 +513,7 @@ class FixedUpdatePatch
                 Lovers.LoversSuicide();
                 AdmirerLovers.AdmirerLoversSuicide();
                 AkujoLovers.AkujoLoversSuicide();
+                CupidLovers.CupidLoversSuicide();
             }
 
             if (GameStates.IsInGame && player.AmOwner)
@@ -598,6 +599,7 @@ class FixedUpdatePatch
                 AdmirerLovers.Marks(__instance, ref Mark);
                 AkujoLovers.Marks(__instance, ref Mark);
                 AkujoFakeLovers.Marks(__instance, ref Mark);
+                CupidLovers.Marks(__instance, ref Mark);
                 Neptune.Marks(__instance, ref Mark);
                 Mini.Marks(__instance, ref Mark);
                 Suffix.Append(seerRole?.GetLowerText(seer, target));

@@ -151,6 +151,7 @@ class OnPlayerLeftPatch
             Lovers.OnPlayerLeft(data);
             AdmirerLovers.OnPlayerLeft(data);
             AkujoLovers.OnPlayerLeft(data);
+            CupidLovers.OnPlayerLeft(data);
             var state = PlayerState.GetByPlayerId(data.Character.PlayerId);
             if (state.DeathReason == CustomDeathReason.etc) //死因が設定されていなかったら
             {

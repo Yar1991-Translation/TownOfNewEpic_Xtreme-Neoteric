@@ -21,14 +21,6 @@ public static class AdmirerLovers
 
     public static List<PlayerControl> AdmirerLoversPlayers = new();
     public static bool isAdmirerLoversDead = true;
-    public static void SetupCustomOption()
-    {
-        SetupRoleOptions(Id, TabGroup.Addons, CustomRoles.AdmirerLovers, assignCountRule: new(2, 2, 2));
-        AdmirerLoverKnowRoles = BooleanOptionItem.Create(Id + 4, "AdmirerLoverKnowRoles", true, TabGroup.Addons, false).SetParent(Options.CustomRoleSpawnChances[CustomRoles.AdmirerLovers])
-            .SetGameMode(CustomGameMode.Standard);
-        AdmirerLoverSuicide = BooleanOptionItem.Create(Id + 3, "AdmirerLoverSuicide", true, TabGroup.Addons, false).SetParent(Options.CustomRoleSpawnChances[CustomRoles.AdmirerLovers])
-            .SetGameMode(CustomGameMode.Standard);
-    }
     [GameModuleInitializer]
     public static void Init()
     {

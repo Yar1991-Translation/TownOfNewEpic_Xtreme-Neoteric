@@ -382,6 +382,7 @@ public static class Utils
                     || AdmirerLovers.CanKnowOthers(seer, seen)
                     || AkujoLovers.CanKnowOthers(seer, seen)
                     || AkujoFakeLovers.CanKnowOthers(seer, seen)
+                    || CupidLovers.CanKnowOthers(seer, seen)
 
                     || (seer.Is(CustomRoleTypes.Impostor) && seen.Is(CustomRoleTypes.Impostor) && Options.ImpKnowAlliesRole.GetBool())
                     || Madmate.CanKnowOthers(seer, seen)
@@ -1189,6 +1190,7 @@ public static class Utils
                     AdmirerLovers.TargetMarks(seer, target, ref TargetMark);
                     AkujoLovers.TargetMarks(seer, target, ref TargetMark);
                     AkujoFakeLovers.TargetMarks(seer, target, ref TargetMark);
+                    CupidLovers.TargetMarks(seer, target, ref TargetMark);
                     Neptune.TargetMarks(seer, target, ref TargetMark);
                     Mini.TargetMarks(seer, target, ref TargetMark);
 

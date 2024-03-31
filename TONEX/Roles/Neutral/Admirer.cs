@@ -23,7 +23,8 @@ public sealed class Admirer : RoleBase, INeutralKiller
             SetupOptionItem,
             "admir",
             "#FFC8EE",
-            true
+            true,
+            assignCountRule: new(1, 1, 1)
         );
     public Admirer(PlayerControl player)
     : base(

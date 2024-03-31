@@ -75,7 +75,7 @@ public static class AkujoFakeLovers
     {
         if (seer.IsAlive())
         {
-            if (seer.Is(CustomRoles.AkujoFakeLovers) && (target.Is(CustomRoles.Akujo) ) && !seer.Data.IsDead && !isLover)
+            if (seer.Is(CustomRoles.AkujoFakeLovers) && (target.Is(CustomRoles.Akujo) ) && !seer.Data.IsDead)
                 sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.AkujoLovers), "❤"));
         }
         if (!seer.IsAlive() || !CustomRoles.Akujo.IsExist())

@@ -206,6 +206,7 @@ class GameEndChecker
                 Lovers.CheckWin();
                 AdmirerLovers.CheckWin();
                 AkujoLovers.CheckWin();
+                CupidLovers.CheckWin();
             }
             ShipStatus.Instance.enabled = false;
             StartEndGame(reason);

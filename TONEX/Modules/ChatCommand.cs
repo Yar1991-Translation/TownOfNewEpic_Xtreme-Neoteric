@@ -381,7 +381,7 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
         RoleCommands.Add(CustomRoles.AdmirerLovers, new() { "alo", "暗恋情人", "暗恋愛人", "暗恋链子" });
         RoleCommands.Add(CustomRoles.AkujoLovers, new() { "aklo", "魅魔情人", "魅魔愛人", "魅魔链子" });
         RoleCommands.Add(CustomRoles.AkujoFakeLovers, new() { "akflo", "魅魔假情人", "魅魔假愛人", "魅魔假链子" });
-        RoleCommands.Add(CustomRoles.CupidLovers, new() { "akflo", "魅魔假情人", "魅魔假愛人", "魅魔假链子" });
+        RoleCommands.Add(CustomRoles.CupidLovers, new() { "culo", "丘比特情人", "丘比特愛人", "丘比特链子" });
     }
     public static void SendRolesInfo(string input, byte playerId, bool onlycountexists = false)
     {

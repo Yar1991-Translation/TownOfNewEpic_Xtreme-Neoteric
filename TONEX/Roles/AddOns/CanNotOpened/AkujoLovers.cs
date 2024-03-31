@@ -21,16 +21,6 @@ public static class AkujoLovers
 
     public static List<PlayerControl> AkujoLoversPlayers = new();
     public static bool isAkujoLoversDead = true;
-
-
-    public static void SetupCustomOption()
-    {
-        SetupRoleOptions(Id, TabGroup.Addons, CustomRoles.AkujoLovers, assignCountRule: new(2, 2, 2));
-        AkujoLoverKnowRoles = BooleanOptionItem.Create(Id + 4, "LoverKnowRoles", true, TabGroup.Addons, false).SetParent(Options.CustomRoleSpawnChances[CustomRoles.AkujoLovers])
-            .SetGameMode(CustomGameMode.Standard);
-        AkujoLoverSuicide = BooleanOptionItem.Create(Id + 3, "LoverSuicide", true, TabGroup.Addons, false).SetParent(Options.CustomRoleSpawnChances[CustomRoles.AkujoLovers])
-            .SetGameMode(CustomGameMode.Standard);
-    }
     [GameModuleInitializer]
     public static void Init()
     {

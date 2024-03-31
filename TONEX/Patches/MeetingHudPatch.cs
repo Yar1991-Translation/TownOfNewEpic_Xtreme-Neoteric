@@ -276,6 +276,7 @@ public static class MeetingHudPatch
         Lovers.CheckForDeathOnExile(deathReason, playerIds);
         AdmirerLovers.CheckForDeathOnExile(deathReason, playerIds);
         AkujoLovers.CheckForDeathOnExile(deathReason, playerIds);
+        CupidLovers.CheckForDeathOnExile(deathReason, playerIds);
     }
 }
 

@@ -228,10 +228,19 @@ public sealed class Witch : RoleBase, IImpostor
     }
     public override bool OnEnterVent(PlayerPhysics physics, int ventId)
     {
+        if (Options.UsePets.GetBool()) return true;
         if (NowSwitchTrigger is SwitchTrigger.TriggerVent)
         {
             SwitchSpellMode(false);
         }
         return true;
+    }
+    public override void OnUsePet()
+    {
+        if (NowSwitchTrigger is SwitchTrigger.TriggerVent)
+        {
+            SwitchSpellMode(false);
+        }
+        return;
     }
 }
