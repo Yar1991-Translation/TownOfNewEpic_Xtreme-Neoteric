@@ -21,7 +21,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 
 ## Summary of Updates
 - Fixed 24 issues
-- Implemented 11 optimizations
+- Implemented 12 optimizations
 - Made changes to 11 elements
 - Added 26 new features (including roles, settings, etc.)
 - Temporarily removed 2 elements
@@ -98,6 +98,8 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Terrorst：Clarified "Can Win By Suicide"
 (Idea&Made By Slok)
 - Optimized the colors for certain settings
+(Idea&Made By Slok)
+- Prompt will be displayed when official audio files are missing
 (Idea&Made By Slok)
 
 ## Changing

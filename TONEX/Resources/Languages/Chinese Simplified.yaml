@@ -1485,6 +1485,9 @@ SoundManagerAlreadyExists: "该音乐名已存在"
 NotAllowedMusic: "音乐名称格式不合规"
 CustomSoundManagerHelp: "您可以在“音频管理”中下载TONEX的游戏音频/音乐或添加自己的音乐，当您添加自己的音乐时，请您先在“音频管理”中添加音乐名、之后请在路径“Among Us/TONEX_Data/Sounds”文件夹内添加相同名称的音频文件（支持的音频格式：wav）。音乐可在“我的音乐”中播放\r\n如果出现框内黑屏的情况，请下滑"
 CustomSoundHelp: "您可以在“音频管理”中下载TONEX的游戏音频或添加自己的音乐，请注意，该文本与音乐播放按钮的边框在游戏中不显示\r\n如果出现框内黑屏的情况，请下滑"
+SoundNotYet: "检测到当前音效文件不完整"
+MusicNotYet: "检测到当前音乐文件不完整"
+AudioNYPro: "如果继续，可能会导致您游戏体验下降，请在「主界面-设置-更多功能-音频管理」下载我们的音频"
 
 # 官方音乐
 SpringRejoicesinParallelUniverses: "异世庆同春 -Slok7565"
@@ -1776,6 +1779,7 @@ AntiBlackOutRequestHostToForceEnd: "您触发了黑屏Bug，正在请求房主�
 AntiBlackOutHostRejectForceEnd: "您触发了黑屏Bug，房主拒绝终止游戏，稍后将为您断开连接"
 
 # 警告 / Warnings
+Warning: "警告"
 Warning.OverrideExiledPlayer: "警告：由于启用了豺狼、鹈鹕、魅惑者等拥有独立阵营的职业，为了避免黑屏错误，将会将驱逐动画显示为跳过（只会影响视觉，不会影响投票结果），您可以通过/eje获取投票结果"
 Warning.InvalidRpc: "【{0}】被踢出，因其试图发送无效的数据，请确保您没有安装 TONEX 以外的模组。"
 Warning.NoModHost: "非TONEX房"

@@ -25,7 +25,7 @@ public static class AudioManager
     public static IReadOnlyDictionary<string, bool> AllFiles => AllSounds.Concat(AllMusic).ToDictionary(x => x.Key.ToString(), x => x.Value, StringComparer.OrdinalIgnoreCase);
     public static IReadOnlyDictionary<string, bool> AllTONEX => AllSounds.Concat(TONEXMusic).ToDictionary(x => x.Key.ToString(), x => x.Value, StringComparer.OrdinalIgnoreCase);
 
-    private static List<string> TONEXOfficialMusicList = new()
+    public static List<string> TONEXOfficialMusicList = new()
     {
         "GongXiFaCaiLiuDeHua",
         "RejoiceThisSEASONRespectThisWORLD",
@@ -44,19 +44,11 @@ public static class AudioManager
     };
     public static List<string> NotUp = new()
     {
-        "RejoiceThisSEASONRespectThisWORLD",
-        "StarFallsWithDomeCrumbles_V4",
-        "TheDomeofTruth",
-        "HopeStillExists_V2",
-        "HeartGuidedbyLight",
-        "GuardianandDream",
-        "AFamiliarPromise",
-        "DeterminationWithJustice",
     };
 
     public static Dictionary<string, bool> TONEXOfficialMusic = new();
     public static Dictionary<string, bool> TONEXSounds = new();
-    private static List<string> TONEXSoundList = new()
+    public static List<string> TONEXSoundList = new()
     {
         "AWP",
         "Bet",
