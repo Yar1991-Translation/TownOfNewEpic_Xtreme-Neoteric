@@ -76,11 +76,11 @@ public sealed class InjusticeSpirit : RoleBase
             .SetParent(EnableInjusticeSpirit);
         OptionEnableTargetArrow = BooleanOptionItem.Create(75_1_5_0212, "SnitchEnableTargetArrow", true, TabGroup.CrewmateRoles, false).SetParent(EnableInjusticeSpirit);
         OptionCanGetColoredArrow = BooleanOptionItem.Create(75_1_5_0213, "SnitchCanGetArrowColor", true, TabGroup.CrewmateRoles, false).SetParent(EnableInjusticeSpirit);
-        OptionCanFindNeutralKiller = BooleanOptionItem.Create(75_1_5_0214, "SnitchCanGetArrowColor", true, TabGroup.CrewmateRoles, false).SetParent(EnableInjusticeSpirit);
-        OptionCanFindNeutralEvil = BooleanOptionItem.Create(75_1_5_0215, "SnitchCanGetArrowColor", true, TabGroup.CrewmateRoles, false).SetParent(EnableInjusticeSpirit);
-        OptionCanFindMadmate = BooleanOptionItem.Create(75_1_5_0216, "SnitchCanGetArrowColor", false, TabGroup.CrewmateRoles, false).SetParent(EnableInjusticeSpirit);
-        OptionCanFindCharmed = BooleanOptionItem.Create(75_1_5_0217, "SnitchCanGetArrowColor", false, TabGroup.CrewmateRoles, false).SetParent(EnableInjusticeSpirit);
-        OptionCanFindWolfmate = BooleanOptionItem.Create(75_1_5_0218, "SnitchCanGetArrowColor", false, TabGroup.CrewmateRoles, false).SetParent(EnableInjusticeSpirit);
+        OptionCanFindNeutralKiller = BooleanOptionItem.Create(75_1_5_0214, "SnitchCanFindNeutralKiller", true, TabGroup.CrewmateRoles, false).SetParent(EnableInjusticeSpirit);
+        OptionCanFindNeutralEvil = BooleanOptionItem.Create(75_1_5_0215, "SnitchCanFindNeutralEvil", true, TabGroup.CrewmateRoles, false).SetParent(EnableInjusticeSpirit);
+        OptionCanFindMadmate = BooleanOptionItem.Create(75_1_5_0216, "SnitchCanFindMadmate", false, TabGroup.CrewmateRoles, false).SetParent(EnableInjusticeSpirit);
+        OptionCanFindCharmed = BooleanOptionItem.Create(75_1_5_0217, "SnitchCanFindCharmed", false, TabGroup.CrewmateRoles, false).SetParent(EnableInjusticeSpirit);
+        OptionCanFindWolfmate = BooleanOptionItem.Create(75_1_5_0218, "SnitchCanFindWolfmate", false, TabGroup.CrewmateRoles, false).SetParent(EnableInjusticeSpirit);
     }
     public override void OverrideDisplayRoleNameAsSeen(PlayerControl seer, ref bool enabled, ref UnityEngine.Color roleColor, ref string roleText)
         => enabled |= true;
