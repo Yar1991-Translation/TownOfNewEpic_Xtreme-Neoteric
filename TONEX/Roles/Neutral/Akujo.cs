@@ -58,7 +58,7 @@ public sealed class Akujo : RoleBase, INeutralKiller
     public static void SetupOptionItem()
     {
         OptionModeSwitchAction = StringOptionItem.Create(RoleInfo, 10, OptionName.AkujoModeSwitchAction, EnumHelper.GetAllNames<SwitchTrigger>(), 1, false);
-        AkujoFakeLimited = IntegerOptionItem.Create(RoleInfo, 11, OptionName.AkujoFakeLimited, new(1,15,1),2, false);
+        AkujoFakeLimited = IntegerOptionItem.Create(RoleInfo, 11, OptionName.AkujoFakeLimited, new(1,15,1),2, false).SetValueFormat(OptionFormat.Players);
         AkujoLoverKnowRoles = BooleanOptionItem.Create(RoleInfo, 12, OptionName.LoverKnowRoles, true, false);
         AkujoLoverSuicide = BooleanOptionItem.Create(RoleInfo, 13, OptionName.LoverSuicide, true, false);
     }
