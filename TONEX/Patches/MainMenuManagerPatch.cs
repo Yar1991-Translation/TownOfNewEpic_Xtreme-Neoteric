@@ -1,6 +1,7 @@
 using HarmonyLib;
 using System;
 using TMPro;
+using System.IO;
 using TONEX.Templates;
 using UnityEngine;
 using static TONEX.Translator;
@@ -119,10 +120,10 @@ public class MainMenuManagerPatch
         if (GithubButton == null) GithubButton = CreatButton("Github", () => Application.OpenURL(Main.GithubRepoUrl));
         GithubButton.gameObject.SetActive(Main.ShowGithubUrl);
         GithubButton.name = "TONEX Github Button";
-
+        PlayButton = __instance.playButton.gameObject;
         if (UpdateButton == null)
         {
-            PlayButton = __instance.playButton.gameObject;
+            
             UpdateButton = Object.Instantiate(PlayButton, PlayButton.transform.parent);
             UpdateButton.name = "TONEX Update Button";
             UpdateButton.transform.localPosition = PlayButton.transform.localPosition - new Vector3(0f, 0f, 3f);
@@ -148,7 +149,54 @@ public class MainMenuManagerPatch
             }));
             UpdateButton.transform.transform.FindChild("FontPlacer").GetChild(0).gameObject.DestroyTranslator();
         }
+        __instance.playButton.gameObject.GetComponent<PassiveButton>().OnClick.AddListener((Action)(() =>
+        {
+            int soundCount = 0;
+            string text = null;
 
+            // 检查所有声音文件是否存在
+            foreach (var sound in AudioManager.TONEXSoundList)
+            {
+                var path = @$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/{sound}.wav";
+                if (!File.Exists(path))
+                {
+                    soundCount++;
+                }
+            }
+
+            // 如果有声音文件缺失，添加相应提示
+            if (soundCount > 0)
+            {
+                text += GetString("SoundNotYet") + "\r\n";
+            }
+
+            int musicCount = 0;
+
+            // 检查所有官方音乐文件是否存在
+            foreach (var music in AudioManager.TONEXOfficialMusicList)
+            {
+                var path = @$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/{music}.wav";
+                if (!File.Exists(path))
+                {
+                    musicCount++;
+                }
+            }
+
+            // 如果有官方音乐文件缺失，添加相应提示
+            if (musicCount > 0)
+            {
+                text += GetString("MusicNotYet") + "\r\n";
+            }
+
+            // 如果有缺失的音频文件，显示警告弹窗
+            if (text != null)
+            {
+                text += GetString("AudioNYPro");
+                CustomPopup.Show(GetString("Warning"), text, new() { (GetString(StringNames.Okay), null) });
+            }// 哇酷哇酷
+
+
+        }));
         Application.targetFrameRate = Main.UnlockFPS.Value ? 165 : 60;
     }
 }

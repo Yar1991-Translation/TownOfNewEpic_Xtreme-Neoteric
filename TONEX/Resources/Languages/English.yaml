@@ -1478,6 +1478,9 @@ SoundManagerAlreadyExists: "This name has already existed"
 NotAllowedMusic: "the name doesn't be allowed"
 CustomSoundManagerHelp: "In the 「Audios Manager」, you can download or add your own music for TONEX game. To add your own music, name it in 「Audios Manager」 and place a WAV file with the same name in the 「Among Us/TONEX_Data/Sounds」 folder (create it if it doesn't exist). Play the music in 」My Audios'. For large audio files, please wait patiently for download to complete. If a black screen appears within the box, please scroll down."
 CustomSoundHelp: "You can download TONEX game audio or add your own music in the 「Audios Manager」. Please note that this text will not be displayed alongside the music playback button in the game.r\nIf a black screen appears within the box, please scroll down."
+SoundNotYet: "The current sound file is detected to be incomplete."
+MusicNotYet: "The current music file is detected to be incomplete."
+AudioNYPro: "Continuing may result in a degraded gaming experience. Please download our audio in 「Main Menu - Settings - More Features - Audio Manager」"
 
 # 官方音乐
 SpringRejoicesinParallelUniverses: "Spring Rejoices in Parallel Universes -Slok7565"
@@ -1768,6 +1771,7 @@ AntiBlackOutLoggerSendInGame: "Because of an unknown error the game will finishe
 AntiBlackOutRequestHostToForceEnd: "You were the reason of the black screen, you are asking the host to stop the game..."
 AntiBlackOutHostRejectForceEnd: "You were the reason of the black screen, and the host is not going to end the game, we will disconnect you soon."
 # 警告 / Warnings
+Warning: "Warning!"
 Warning.OverrideExiledPlayer: "Warning: Due to the activation of roles with independent team such as Jackals, Pelicans, and Succubus, in order to avoid black screen, the eject animation will be displayed as skipped (it will only affect the vision and will not affect the voting results)"
 Warning.InvalidRpc: "Kicked {0} because an invalid RPC was received.\nPlease check that no mods other than TONEX installed."
 Warning.NoModHost: "Mod TONEX not installed on the host"
