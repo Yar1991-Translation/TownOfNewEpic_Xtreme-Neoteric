@@ -530,7 +530,7 @@ public static class GuesserHelper
                 if (EvilGuesser.OptionJustShowExist.GetBool() && PlayerControl.LocalPlayer.Is(CustomRoles.EvilGuesser) && !role.IsExistCountDeath()) continue;
                 if (role.IsTODO()) continue;
                 if (role is CustomRoles.GM or CustomRoles.NotAssigned or CustomRoles.SuperStar or CustomRoles.GuardianAngel or CustomRoles.HotPotato or CustomRoles.ColdPotato) continue;
-                if (role is  CustomRoles.Mini or CustomRoles.InjusticeSpirit or CustomRoles.Phantom or CustomRoles.EvilAngle) continue;
+                if (role ==  CustomRoles.Mini) continue;
                 CreateRole(role);
             }
             void CreateRole(CustomRoles role)

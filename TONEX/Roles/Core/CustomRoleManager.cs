@@ -617,8 +617,8 @@ public enum CustomRoles
     Medusa,
     Skinwalker,
     ViciousSeeker,
-    EvilAngle,
-    EvilTimeStops,
+    EvilAngle,//TORELEASE 邪恶天使
+    EvilTimeStops, //TODO 邪恶的时停者
     MirrorSpirit,//TODO 镜妖
     Assaulter,//TODO 强袭者
     MimicTeam,//TODO 模仿者团队
@@ -684,7 +684,7 @@ public enum CustomRoles
     Bees,//TODO 蜜蜂
     CopyCat,//TODO 效颦者
     Deputy,
-    InjusticeSpirit,
+    InjusticeSpirit,//TODO 冤魂
     Scout,
     //Neutral
     Arsonist,
@@ -722,10 +722,10 @@ public enum CustomRoles
     Prosecutors,
     PVPboss,//TODO PvP大佬
     Rebels,
-    Admirer,
-    Akujo, 
-    Cupid,
-    Yandere,
+    Admirer,//TODO 暗恋者
+    Akujo, //TODO 魅魔
+    Cupid,//丘比特
+    Yandere,//TODO 病娇
     Puppeteer,
     Changger,//TODO 连环交换师
     Amnesiac,//TODO 失忆者
@@ -738,9 +738,9 @@ public enum CustomRoles
     Martyr,//先烈 1.1限定
     NightWolf,
     Moonshadow,//TODO 月影,1.4限定
-    Phantom,
-    MeteorArbiter,// 陨星判官,1.2限定
-    MeteorMurder,// 陨星戮者,1.2限定
+    Phantom,//TODO 幻影
+    MeteorArbiter,//TODO 陨星判官,1.2限定
+    MeteorMurder,//TODO 陨星戮者,1.2限定
     SharpShooter,
     //GameMode
     HotPotato,
