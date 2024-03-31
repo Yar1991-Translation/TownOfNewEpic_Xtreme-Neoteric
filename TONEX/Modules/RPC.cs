@@ -92,6 +92,8 @@ public enum CustomRPC
     SetDemonHealth,
     //患者
     SetDiseasedList,
+    //琥珀
+    SetAmberProtectList
 }
 public enum Sounds
 {
@@ -383,6 +385,9 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.SetDiseasedList:
                 Diseased.ReceiveRPC(reader);
+                break;
+            case CustomRPC.SetAmberProtectList:
+                Amber.ReceiveRPC_SyncList(reader);
                 break;
         }
     }

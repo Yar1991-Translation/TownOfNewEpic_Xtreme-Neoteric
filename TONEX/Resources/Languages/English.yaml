@@ -137,6 +137,7 @@ SpecterSlayer: "Specter Slayer"
 Deputy: "Deputy"
 Scout: "Scout"
 InjusticeSpirit: "Injustice Spirit"
+Amber: "Amber"
 
 ## 中立阵营 / Neutrals
 Jester: "Jester"
@@ -460,6 +461,7 @@ SpecterSlayerInfo: "Turn all enmity and injustice into strength！"
 DeputyInfo: "Catch You！"
 ScoutInfo: "Outrider Amber, reporting！"
 InjusticeSpiritInfo: "The injustice turns into motivation！"
+AmberInfo: "ALL FOR THE AMBER LORD！"
 
 ## 中立阵营 / Neutral Blurbs
 ArsonistInfo: "Douse Everyone and Ignite"
@@ -654,6 +656,7 @@ SpecterSlayerInfoLong: "Specter Slayer Can Get Strength By Repoting deadbodies a
 HunterInfoLong: "Hunters can mark multiple targets, If hunter dead, targets will dead together."
 DeputyInfoLong: "The deputy can handcuff a person using the kill command, rendering them powerless before the meeting."
 InjusticeSpiritInfoLong: "You still have a purpose, don't give up!! After completing tasks, the injustice spirit can expose all the evil players to everyone."
+AmberInfoLong: "Using the kill button, Amber can grant a marker to themselves and another character, which can withstand one instance of damage. Each time the marker is attacked, it gains one layer of amber. Each layer increases the damage avoidance rate."
 
 ## 中立阵营 / Neutrals Descriptions
 ArsonistInfoLong: "The Arsonist can douse by clicking the kill button on the player and following them for a few seconds. When the dousing starts and it's successful, a shield animation will be displayed as a reminder (only visible to themselves). When the Arsonist has doused all surviving players, the Arsonist can vent to start the fire and win alone.\nIf the player name shows 「△」, that means they are being doused;\nif the player name shows 「▲」, it means they have been completely doused."
@@ -1157,6 +1160,7 @@ SnitchCanBeMadmate: "<color=#b8fb4f>Snitch</color> Can Become <color=#ff1919>Mad
 JudgeCanBeMadmate: "<color=#f8d85a>Judge</color> Can Become <color=#ff1919>Madmate</color>"
 MadSnitchTasks: "<color=#b8fb4f>Snitch</color> Tasks"
 MedicCooldown: "Shield Cooldown"
+AmberCooldown: "Mark Cooldown"
 MedicSkillLimit: "Max Number of Shields"
 MedicTargetCanSeeProtect: "Target Can See Protection"
 MedicKnowTargetShieldBroken: "Medic Knows That the Shield is Broken"
@@ -1361,6 +1365,9 @@ CupidLoverKnowCupid: "Lovers Know Cupid's Identity"
 OptionContactTime: "Contact Time"
 OptionContactRange: "Contact Range"
 AssaulterLimit: "Assault Layers"
+AmberMax: "Amber Layer Limit"
+GetMarkStart: "Obtain Markers At The Beginning Of The Game"
+AmberAdd: "Evasion Rate Added Per Amber Layer"
 
 # 随机出生点 / Random Spawn Locations
 Junction: "Junction"
@@ -1473,10 +1480,21 @@ CustomSoundManagerHelp: "In the 「Audios Manager」, you can download or add yo
 CustomSoundHelp: "You can download TONEX game audio or add your own music in the 「Audios Manager」. Please note that this text will not be displayed alongside the music playback button in the game.r\nIf a black screen appears within the box, please scroll down."
 
 # 官方音乐
-SpringRejoicesinParallelUniverses: "Spring Rejoices in Parallel Universes _Slok7565"
-GongXiFaCaiLiuDeHua: "恭喜发财 _Andy Lau"
-StarFallsWithDomeCrumbles_V4: "Star Falls With Heaven Crumbles_V3 -Slok7565(Offline)"
-RejoiceThisSEASONRespectThisWORLD: "Rejoice This SEASON Respect This WORLD -Slok7565(Offline)"
+SpringRejoicesinParallelUniverses: "Spring Rejoices in Parallel Universes -Slok7565"
+GongXiFaCaiLiuDeHua: "恭喜发财 -Andy Lau"
+RejoiceThisSEASONRespectThisWORLD: "Rejoice This SEASON Respect This WORLD -Slok7565"
+TheDomeofTruth: "The Dome of Truth -Slok7565"
+HopeStillExists: "Hope Still Exists -Slok7565"
+HeartGuidedbyLight: "Heart Guided by Light -Slok7565"
+unavoidable: "unavoidable -Slok7565"
+GuardianandDream: "Guardian and Dream -Slok7565"
+AFamiliarPromise: "A Familiar Promise... -Slok7565"
+TheTruthFadesAway: "The Truth Fades Away -Slok7565"
+Mendax: "Mendax -Slok7565"
+MendaxsTimeForExperiment: "Mendax's Time For Experiment! -Slok7565"
+StarfallIntoDarkness: "Starfall Into Darkness -Slok7565"
+StarFallsWithDomeCrumbles: "Star Falls With Dome Crumbles -Slok7565"
+
 # 指令帮助 / Commands Help
 CommandList: "★ Command list:"
 Command.now: "→ Display active Settings"
