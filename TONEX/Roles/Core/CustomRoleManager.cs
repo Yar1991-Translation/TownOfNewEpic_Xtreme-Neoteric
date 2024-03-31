@@ -686,6 +686,7 @@ public enum CustomRoles
     Deputy,
     InjusticeSpirit,
     Scout,
+    Amber,
     //Neutral
     Arsonist,
     Jester,

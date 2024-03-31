@@ -17,7 +17,7 @@ public sealed class Assaulter : RoleBase, IImpostor
             CustomRoles.Assaulter,
             () => RoleTypes.Impostor,
             CustomRoleTypes.Impostor,
-            75_1_2_2300,
+            75_1_2_2500,
             SetUpOptionItem,
             "sk|嗜血殺手|嗜血"
         );

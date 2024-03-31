@@ -80,7 +80,11 @@ public sealed class Prosecutors : RoleBase, INeutralKiller,IAdditionalWinner
     {
         var (killer, target) = info.AttemptTuple;
         if (info.IsSuicide) return true;
-        if (ForProsecutors.Contains(killer.PlayerId)) return false;
+        if (ForProsecutors.Contains(killer.PlayerId))
+            {
+                killer.RpcProtectedMurderPlayer(target);
+                killer.SetKillCooldownV2(); return false;
+            }
         return true;
     }
     public override string GetProgressText(bool comms = false) => Utils.ColorString(CanUseKillButton() ? RoleInfo.RoleColor : Color.gray, $"({ProsecutorsLimit})");

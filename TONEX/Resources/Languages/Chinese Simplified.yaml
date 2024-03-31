@@ -138,6 +138,7 @@ SpecterSlayer: "借魂杀手"
 Deputy: "捕快"
 Scout: "侦察兵"
 InjusticeSpirit: "冤魂"
+Amber: "琥珀"
 
 ## 中立阵营 / Neutrals
 Jester: "小丑"
@@ -461,6 +462,7 @@ SpecterSlayerInfo: "将一切仇与冤化作力量！"
 DeputyInfo: "抓住您了！"
 ScoutInfo: "侦查骑士登场！"
 InjusticeSpiritInfo: "冤屈化作动力！"
+AmberInfo: "一切献给——琥珀王！"
 
 ## 中立阵营 / Neutral Blurbs
 ArsonistInfo: "今天天气真不错..."
@@ -655,6 +657,7 @@ SpecterSlayerInfoLong: "借魂杀手可以在报告时从尸体上汲取力量�
 HunterInfoLong: "猎人可以在场上标记多个目标，如果猎人死亡，则猎人标记的目标一同死亡，在目标名称前会有「+」表示。\n根据设置，可以使猎人在会议后清空目标，还可以限制在会议前选择目标的次数"
 DeputyInfoLong: "捕快可以使用击杀键给一个人手铐，使他在开会前失去所有能力。"
 InjusticeSpiritInfoLong: "你还有用，别退！！！\n冤魂在完成任务后可以向所有人暴露所有内鬼"
+AmberInfoLong: "琥珀使用击杀按钮可以使自己和一名其他角色获得标记，该标记可以抵挡一次伤害，标记每一次被攻击都会获得一层琥珀。每一层都会提升伤害避免率"
 
 ## 中立阵营 / Neutrals Descriptions
 ArsonistInfoLong: "纵火犯可以通过对玩家点击击杀按钮并跟随其数秒来完成涂油，开始涂油以及涂油成功时会显示护盾破碎的动画作为提示（仅自己可见）。当所有存活玩家都被纵火犯涂油后，纵火犯可以通过跳通风管来点火，并单独获得胜利。\n玩家名显示「△」表示涂油中\n玩家名显示「▲」表示已涂油。"
@@ -1160,6 +1163,7 @@ SnitchCanBeMadmate: "<color=#b8fb4f>告密者</color>可以成为<color=#ff1919>
 JudgeCanBeMadmate: "<color=#f8d85a>法官</color>可以成为<color=#ff1919>叛徒</color>"
 MadSnitchTasks: "背叛的告密者的任务数"
 MedicCooldown: "发放护盾冷却时间"
+AmberCooldown: "标记冷却时间"
 MedicSkillLimit: "发放护盾次数上限"
 MedicKnowTargetShieldBroken: "医生可以知道目标护盾受到攻击"
 =MedicKnowTargetShieldBroken: "可以得知某位玩家的护盾受到攻击"
@@ -1364,6 +1368,9 @@ CupidLoverKnowCupid: "恋人知道谁是丘比特"
 OptionContactTime: "接触时间"
 OptionContactRange: "接触距离"
 AssaulterLimit: "强袭层数"
+AmberMax: "琥珀层数上限"
+AmberGetmarkStart: "琥珀在游戏开始时获得标记"
+AmberAdd: "每层琥珀增加的闪避率"
 
 # 随机出生点 / Random Spawn Locations
 Junction: "三岔路"
@@ -1482,15 +1489,18 @@ CustomSoundHelp: "您可以在“音频管理”中下载TONEX的游戏音频或
 # 官方音乐
 SpringRejoicesinParallelUniverses: "异世庆同春 -Slok7565"
 GongXiFaCaiLiuDeHua: "恭喜发财 -刘德华"
-StarFallsWithDomeCrumbles_V4: "星陨天坠 -Slok7565"
 RejoiceThisSEASONRespectThisWORLD: "庆此春 敬此世 -Slok7565"
 TheDomeofTruth: "真理苍穹 -Slok7565"
-HopeStillExists_V2: "希望长存 -Slok7565"
+HopeStillExists: "希望长存 -Slok7565"
 HeartGuidedbyLight: "心凭光引 -Slok7565"
-Thesorrowofpartingacrosslifetimes: "无可奈何 -Slok7565"
+unavoidable: "无可奈何 -Slok7565"
 GuardianandDream: "守护与梦 -Slok7565"
 AFamiliarPromise: "一个熟悉的承诺... -Slok7565"
-DeterminationWithJustice: "真理散尽 -Slok7565"
+TheTruthFadesAway: "真理散尽 -Slok7565"
+Mendax: "门达克斯 -Slok7565"
+MendaxsTimeForExperiment: "门达克斯的实验时间! -Slok7565"
+StarfallIntoDarkness: "星逝终坠永暗 -Slok7565"
+StarFallsWithDomeCrumbles: "星陨辉逝 -Slok7565"
 
 # 指令帮助 / Commands Help
 CommandList: "★ 主要指令:"

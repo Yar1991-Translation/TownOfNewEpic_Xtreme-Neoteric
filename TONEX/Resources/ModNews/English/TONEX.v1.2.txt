@@ -20,10 +20,10 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Currently, this change is NOT permanent.
 
 ## Summary of Updates
-- Fixed 22 issues
+- Fixed 24 issues
 - Implemented 11 optimizations
 - Made changes to 11 elements
-- Added 24 new features (including roles, settings, etc.)
+- Added 26 new features (including roles, settings, etc.)
 - Temporarily removed 2 elements
 
 ## 修正
@@ -70,6 +70,10 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Fixed the bug of the ages of Mini were still displayed incorrectly in certain situations
 (Fixed By Slok)
 - Fixed the bug of "Min/Max Amount of Non-Kill Neutral Roles" was displayed as "Min/Max Amount of Neutral Roles
+(Fixed By Slok)
+- Fixed the bug of players handcuffed by Deputy would not have their kill cooldown reset after a kill
+(Fixed By Slok)
+- Fixed the bug of players blanked by the Prosecutor would not have their kill cooldown reset after a kill
 (Fixed By Slok)
 
 ## Optimization
@@ -132,9 +136,13 @@ Impostors：
 (Source Of The Idea：Town Of Us, Made By Slok)
 - Impostor Role：Evil Time Stop
 (Idea&Made By Slok)
+- Impostor Role：Assaulter
+(Idea By Zeyan, Made By Slok)
 Crewmates：
 - Crewmate Role：Scout
-(Idea&Made By 喜)
+(Idea&Made By S)
+- Crewmate Role：Amber
+(Idea By Zeyan, Made By Slok)
 中立：
 - Friendly Neutral Role/Evil Neutral Role：Meteor Arbiter（version-restricted）
 (Idea&Made By Slok)

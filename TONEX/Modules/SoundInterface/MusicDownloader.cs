@@ -198,14 +198,17 @@ public class MusicDownloader
         {"GongXiFaCaiLiuDeHua","DB200D93E613020D62645F4841DD55BD"},
         {"RejoiceThisSEASONRespectThisWORLD","7AB4778744242E4CFA0468568308EA9B"},
         {"SpringRejoicesinParallelUniverses","D92528104A82DBBFADB4FF251929BA5E"},
-        {"StarFallsWithDomeCrumbles_V4","EDCB0187C269BEF42A5E6EC25CFEADF7"},
-        {"TheDomeofTruth","183804914E3310B9F92B47392F503A9F"},
-        {"HopeStillExists_V2","8D5BA9AC283E156AB2C930F7B63A4A36"},
-        {"HeartGuidedbyLight","F1DED08A59936B8E1DB95067A69B006E"},
-        {"Thesorrowofpartingacrosslifetimes","D5071AF2BFE92465EACEB318E6FC3390"},
-        {"GuardianandDream","1AD45F97F70F05E19BCDF77C489932A6"},
-        {"AFamiliarPromise","A3672341F586B4D81EFBA6D4278CFEAE"},
-        {"DeterminationWithJustice","1AD45F97F70F05E19BCDF77C489932A6"},
+{"a3672341f586b4d81efba6d4278cfeae", "AFamiliarPromise"},
+  {"cd8fb04bad5755937496eed60c4892f3", "GuardianandDream"},
+  {"f1ded08a59936b8e1db95067a69b006e", "HeartGuidedbyLight"},
+  {"8d5ba9ac283e156ab2c930f7b63a4a36", "HopeStillExists"},
+  {"1054c90edfa66e31655bc7a58f553231", "Mendax"},
+  {"1b82e1ea81aeb9a968a94bec7f4f62fd", "MendaxsTimeForExperiment"},
+  {"46f09e0384eb8a087c3ba8cc22e4ac11", "StarfallIntoDarkness"},
+  {"dae4b094a3a7358314b0cce403453f4d", "StarFallsWithDomeCrumbles"},
+  {"183804914e3310b9f92b47392f503a9f", "TheDomeofTruth"},
+  {"75fbed53db391ed73085074ad0709d82", "TheTruthFadesAway"},
+  {"da520f4613103826b4df7647e368d4b4", "unavoidable"}
 
     };
 }

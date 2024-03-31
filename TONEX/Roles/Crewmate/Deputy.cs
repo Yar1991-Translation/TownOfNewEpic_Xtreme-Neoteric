@@ -107,7 +107,11 @@ public sealed class Deputy : RoleBase, IKiller
     {
         var (killer, target) = info.AttemptTuple;
         if (info.IsSuicide) return true;
-        if (ForDeputy.Contains(killer.PlayerId)) return false;
+        if (ForDeputy.Contains(killer.PlayerId)) 
+        {
+            killer.RpcProtectedMurderPlayer(target);
+            killer.SetKillCooldownV2(); return false; 
+        }
         return true;
     }
     public override void OnPlayerDeath(PlayerControl player, CustomDeathReason deathReason, bool isOnMeeting)
