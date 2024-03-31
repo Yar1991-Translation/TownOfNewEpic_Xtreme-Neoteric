@@ -128,9 +128,9 @@ class GameEndChecker
                         .Where(pc => pc.Is(CustomRoles.MeteorArbiter))
                         .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
                     break;
-                case CustomWinner.MeteorMurder:
+                case CustomWinner.MeteorMurderer:
                     Main.AllPlayerControls
-                        .Where(pc => pc.Is(CustomRoles.MeteorMurder))
+                        .Where(pc => pc.Is(CustomRoles.MeteorMurderer))
                         .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
                     break;
                 case CustomWinner.SharpShooter:

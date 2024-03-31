@@ -161,7 +161,7 @@ class IntroCutscenePatch
                     if (!PlayerControl.LocalPlayer.IsNeutralEvil())
                     {
                         __instance.TeamTitle.text = GetString("TeamNeutral");
-                        __instance.TeamTitle.color = new Color32(255, 171, 27, byte.MaxValue);
+                        __instance.TeamTitle.color = new Color32(255, 254, 226, byte.MaxValue);
                         __instance.BackgroundBar.material.color = Utils.GetRoleColor(PlayerControl.LocalPlayer.GetCustomRole());
                     }
                     else

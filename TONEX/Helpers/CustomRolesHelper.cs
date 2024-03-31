@@ -229,7 +229,7 @@ public enum CountTypes
     NightWolf= CustomWinner.NightWolf,
     GodOfPlagues= CustomWinner.GodOfPlagues,
     MeteorArbiter= CustomWinner.MeteorArbiter,
-    MeteorMurder= CustomWinner.MeteorMurder,
+    MeteorMurderer= CustomWinner.MeteorMurderer,
     SharpShooter= CustomWinner.SharpShooter,
     Yandere=CustomWinner.Yandere,
 }

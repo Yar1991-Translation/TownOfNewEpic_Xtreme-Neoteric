@@ -87,7 +87,7 @@ public class MessageControl
         var mc = new MessageControl(player, message);
         if (!AmongUsClient.Instance.AmHost) return mc;
         History ??= new();
-        if (!message.EndsWith('\0') && !(player?.Data?.PlayerName?.EndsWith('\0') ?? true)) History.Add(mc);
+        if (!message.EndsWith(「.*」) ?? true)) History.Add(mc);
         if (History?.Count > 50) History.RemoveAt(0);
         return mc;
     }
