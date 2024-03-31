@@ -24,7 +24,8 @@ public sealed class Akujo : RoleBase, INeutralKiller
             SetupOptionItem,
             "akuj",
             "#8E4593",
-            true
+            true,
+            assignCountRule: new(1, 1, 1)
         );
     public Akujo(PlayerControl player)
     : base(
@@ -91,7 +92,7 @@ public sealed class Akujo : RoleBase, INeutralKiller
     public float CalculateKillCooldown() => CanUseKillButton() ? 1f : 255f;
     public bool CanUseKillButton() => Player.IsAlive() && AkujoLimit >= 1;
     public bool CanUseSabotageButton() => false;
-    public bool CanUseImpostorVentButton() => (int)NowSwitchTrigger == 1;
+    public bool CanUseImpostorVentButton() => !Options.UsePets.GetBool() && (int)NowSwitchTrigger == 1;
     public override void ApplyGameOptions(IGameOptions opt) => opt.SetVision(false);
     public bool OnCheckMurderAsKiller(MurderInfo info)
     {
@@ -241,7 +242,7 @@ public sealed class Akujo : RoleBase, INeutralKiller
     }
     public void SwitchChooseMode()
     {
-
+        ChooseFake = !ChooseFake;
         SendRPC(true);
         Utils.NotifyRoles(SpecifySeer: Player);
 
@@ -270,5 +271,12 @@ public sealed class Akujo : RoleBase, INeutralKiller
             SwitchChooseMode();
         }
         return false;
+    }
+    public override void OnUsePet()
+    {
+        if (NowSwitchTrigger is SwitchTrigger.TriggerVent)
+        {
+            SwitchChooseMode();
+        }
     }
 }

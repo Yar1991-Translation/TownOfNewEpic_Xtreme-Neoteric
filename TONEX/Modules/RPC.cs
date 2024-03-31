@@ -274,6 +274,9 @@ internal class RPCHandlerPatch
             case CustomRPC.SetAkujoLoversPlayers:
                 AkujoLovers.ReceiveRPC(reader);
                 break;
+            case CustomRPC.SetCupidLoversPlayers:
+                CupidLovers.ReceiveRPC(reader);
+                break;
             case CustomRPC.SetRealKiller:
                 byte targetId = reader.ReadByte();
                 byte killerId = reader.ReadByte();
