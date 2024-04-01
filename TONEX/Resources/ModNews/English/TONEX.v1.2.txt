@@ -20,13 +20,13 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Currently, this change is NOT permanent.
 
 ## Summary of Updates
-- Fixed 24 issues
+- Fixed 24 bugs
 - Implemented 12 optimizations
 - Made changes to 11 elements
 - Added 26 new features (including roles, settings, etc.)
 - Temporarily removed 2 elements
 
-## 修正
+## Fix
 - Fixed the bug of God Of Plague can not win
 (Fixed By Slok)
 - Fixed the bug of Martry can not win
@@ -125,6 +125,8 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Idea&Changed By Slok)
 - Lovers: When the number of lovers equals the total number of players on the field, and there are no Impostors or any other team winning by numbers except lovers, the lovers win.
 (Source Of The Idea：The Other Roles, Changed By Slok)
+- Horse Mode => LongMode
+(Idea&Changed By Slok)
 
 ## Deletion
 - Temporarily remove version-restricted class: Martyr
