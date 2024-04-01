@@ -192,8 +192,8 @@ public class MainMenuManagerPatch
             if (text != null)
             {
                 text += GetString("AudioNYPro");
-                CustomPopup.Show(GetString("Warning"), text, new() { (GetString(StringNames.Okay), null) });
-            }// 哇酷哇酷
+                CustomPopup.Show(GetString("Warning"), text, new() { (GetString(StringNames.Okay), null) });// 哇酷哇酷
+            }
 
 
         }));
