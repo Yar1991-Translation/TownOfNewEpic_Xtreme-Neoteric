@@ -37,7 +37,7 @@ public static class AudioManager
 "Mendax",
 "MendaxsTimeForExperiment",
 "StarfallIntoDarkness",
-"StarFallsWithDomeCrumbles",
+"StarsFallWithDomeCrumbles",
 "TheDomeofTruth",
 "TheTruthFadesAway",
 "unavoidable",
