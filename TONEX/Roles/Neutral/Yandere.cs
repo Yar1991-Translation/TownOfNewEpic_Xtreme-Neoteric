@@ -43,6 +43,7 @@ public sealed class Yandere : RoleBase, INeutralKiller
     private static OptionItem OptionContactTime;
     private static OptionItem OptionContactRange;
     public bool IsNK { get; private set; } = true;
+    public bool IsKiller { get; private set; } = true;
     enum OptionName
     {
         OptionContactTime,
