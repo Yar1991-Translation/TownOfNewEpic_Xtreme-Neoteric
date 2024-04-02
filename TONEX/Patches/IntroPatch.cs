@@ -160,7 +160,7 @@ class IntroCutscenePatch
                 case CustomRoleTypes.Neutral:
                     if (!PlayerControl.LocalPlayer.IsNeutralEvil())
                     {
-                        __instance.TeamTitle.text = GetString("TeamNeutral");
+                        __instance.TeamTitle.text = GetString("TeamNNeutral");
                         __instance.TeamTitle.color = new Color32(255, 254, 226, byte.MaxValue);
                         __instance.BackgroundBar.material.color = Utils.GetRoleColor(PlayerControl.LocalPlayer.GetCustomRole());
                     }
