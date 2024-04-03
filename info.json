@@ -3,11 +3,11 @@
   "verHead": "1.1",
   "verDate": "20240404",
 
-  "versionPre": "1.0.20",
-  "verDatePre": "20240328",
+  "versionPre": "",
+  "verDatePre": "",
 
-  "verTestName": "Preview",
-  "verTestNum": "1",
+  "verTestName": "",
+  "verTestNum": "",
 
 
   "minVer": "latest",
@@ -16,8 +16,8 @@
   "CanUpdate": "true",
   "DebugVer": "0.0.0",
 
-  "md5Pre": "4288E783B14CC1F74D6E7DA4051CFD22",
-  "md5": "CDDFDEACA63F8878FCDED9551A35578F",
+  "md5Pre": "4288e783b14cc1f74d6e7da4051cfd22",
+  "md5": "cddfdeaca63f8878fcded9551a35578f",
   "announcement": {
     "Preview": "预览版本！Preview Version!",
     "SChinese": "清明安康",
