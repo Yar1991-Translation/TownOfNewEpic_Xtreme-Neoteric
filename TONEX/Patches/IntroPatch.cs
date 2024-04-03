@@ -167,7 +167,7 @@ class IntroCutscenePatch
                     else
                     {
                         __instance.TeamTitle.text = GetString("TeamIndependent");
-                        __instance.TeamTitle.color = new Color32(187, 187, 187, byte.MaxValue);
+                        __instance.TeamTitle.color = new Color32(187, 186, 161, byte.MaxValue);
                         __instance.BackgroundBar.material.color = Utils.GetRoleColor(PlayerControl.LocalPlayer.GetCustomRole());
                     }
                     break;

@@ -145,7 +145,7 @@ public static class SoundPanel
                 button.name = "Name Tag Item For " + sound;
                 Object.Destroy(button.GetComponent<UIScrollbarHelper>());
                 Object.Destroy(button.GetComponent<NumberButton>());
-                button.transform.GetChild(0).GetComponent<TextMeshPro>().text = AllTONEX.ContainsKey(sound) ? GetString($"{sound}") : sound;
+                button.transform.GetChild(0).GetComponent<TextMeshPro>().text = AllTONEX.ContainsKey(sound) ? GetString($"Mus.{sound}") : sound;
                 var path = @$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/{sound}.wav";
             //GetPostfix(path);
             var renderer = button.GetComponent<SpriteRenderer>();

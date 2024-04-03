@@ -210,7 +210,7 @@ public static class SoundManagerPanel
             previewText.fontSize = 1f;
             string preview ="???";
             if (sound != null)
-                preview = TONEXMusic.ContainsKey(sound)? GetString($"{sound}"):sound + ".wav";
+                preview = TONEXMusic.ContainsKey(sound)? GetString($"Mus.{sound}"):sound + ".wav";
             previewText.text = preview;
             Items.Add(sound, button);
         }
