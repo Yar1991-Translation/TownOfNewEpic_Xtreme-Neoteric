@@ -129,7 +129,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Idea&Changed By Slok)
 
 ## Deletion
-- Temporarily remove version-restricted class: Martyr
+- Temporarily remove version-restricted role: Martyr
 (Decided By Slok)
 - Nice Grenadier：Vision impaired by flash grenade
 (Decided By Slok)

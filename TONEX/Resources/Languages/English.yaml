@@ -21,6 +21,7 @@ TeamCrewmate: "Crewmate"
 ImpostorNum: "There are <color=#ff1919>{0}</color> Impotors Among Us"
 
 #职业 / Roles
+
 ## 其它 / Other
 GM: "Game Master"
 
@@ -178,7 +179,6 @@ Rebels: "Rebels"
 NightWolf: "Night Wolf"
 Martyr: "Martyr"
 Puppeteer: "Puppeteer"
-
 Plaguebearer: "Plague bearer"
 GodOfPlagues: "God Of Plagues"
 MeteorArbiter: "Meteor Arbiter"

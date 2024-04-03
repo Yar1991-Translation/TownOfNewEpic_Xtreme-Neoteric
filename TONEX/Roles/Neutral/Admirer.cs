@@ -118,7 +118,8 @@ public sealed class Admirer : RoleBase, INeutralKiller
         || pc.Is(CustomRoles.Yandere)
         || pc.Is(CustomRoles.Admirer)
         || pc.Is(CustomRoles.AdmirerLovers)
-        || Yandere.Targets.Contains(pc)));
+      //  || Yandere.Targets.Contains(pc)
+        ));
 
     public override string GetProgressText(bool comms = false) => Utils.ColorString(CanUseKillButton() ? RoleInfo.RoleColor : Color.gray, $"({AdmirerLimit})");
     public bool OverrideKillButtonSprite(out string buttonName)

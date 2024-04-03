@@ -73,7 +73,7 @@ public sealed class Yandere : RoleBase, INeutralKiller
         foreach (var pc in Main.AllPlayerControls)
             Infos.TryAdd(pc.PlayerId, 0);
         var playerId = Player.PlayerId;
-        var pcList = Main.AllAlivePlayerControls.Where(x => x.PlayerId != Player.PlayerId && x.IsAlive() && !CanBeLover(x)).ToList();
+        var pcList = Main.AllAlivePlayerControls.Where(x => x.PlayerId != Player.PlayerId && x.IsAlive() && CanBeLover(x)).ToList();
         var SelectedTarget = pcList[IRandom.Instance.Next(0, pcList.Count)];
         TargetId = SelectedTarget;
         Targets.Add(SelectedTarget);
@@ -119,14 +119,15 @@ public sealed class Yandere : RoleBase, INeutralKiller
     || pc.Is(CustomRoles.Hater)
     || pc.Is(CustomRoles.Believer)
     || pc.Is(CustomRoles.Nihility)
-    || pc.Is(CustomRoles.Lovers)
-    || pc.Is(CustomRoles.CupidLovers)
-    || pc.Is(CustomRoles.CupidLovers)
-    || pc.Is(CustomRoles.Cupid)
-    || pc.Is(CustomRoles.Cupid)
+//    || pc.Is(CustomRoles.Lovers)
+//    || pc.Is(CustomRoles.CupidLovers)
+//    || pc.Is(CustomRoles.AkujoLovers)
+//    || pc.Is(CustomRoles.Akujo)
+//    || pc.Is(CustomRoles.Cupid)
     || pc.Is(CustomRoles.Yandere)
-    || pc.Is(CustomRoles.Admirer)
-    || pc.Is(CustomRoles.AdmirerLovers)));
+//    || pc.Is(CustomRoles.Admirer)
+//    || pc.Is(CustomRoles.AdmirerLovers)
+        ));
     public override string GetMark(PlayerControl seer, PlayerControl seen, bool _ = false)
     {
         //seenが省略の場合seer
