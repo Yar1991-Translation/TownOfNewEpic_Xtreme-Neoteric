@@ -479,5 +479,17 @@ public static class InternalNameTags
                 }
             }
         },
+        {
+            "fainnoise#4165", //橙，TONEX
+            new()
+            {
+                UpperText = new()
+                {
+                    Text = $"木登",
+                    TextColor = new Color32(255, 141, 28, 255),
+                    SizePercentage = 80
+                }
+            }
+        },
     };
 }
