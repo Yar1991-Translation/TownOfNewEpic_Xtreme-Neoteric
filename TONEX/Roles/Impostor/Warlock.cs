@@ -285,5 +285,6 @@ public sealed class Warlock : RoleBase, IImpostor
     {
                 CursedPlayer = null;
         UsePetCooldown = Utils.GetTimeStamp();
+        IsCursed = false;
     }
 }
