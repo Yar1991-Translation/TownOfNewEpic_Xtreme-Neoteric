@@ -21,9 +21,9 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Currently, this change is NOT permanent.
 
 ## Summary of Updates
-- Fixed 24 bugs
+- Fixed 25 bugs
 - Implemented 12 optimizations
-- Made changes to 13 elements
+- Made changes to 14 elements
 - Added 27 new features (including roles, settings, etc.)
 - Temporarily removed 2 elements
 
@@ -76,6 +76,8 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Fixed By Slok)
 - Fixed the bug of players blanked by the Prosecutor would not have their kill cooldown reset after a kill
 (Fixed By Slok)
+- Fixed the bug of Worlock can't curse after meeting
+(Merge With TOH)
 
 ## Optimization
 - Rewrote game end judgment for optimization
@@ -130,6 +132,8 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Idea&Changed By Slok)
 - Version Text Amendment (version-restricted)
 (Idea&Changed By Slok)
+- Merge With TOHv5.1.6
+(By Slok)
 
 ## Deletion
 - Temporarily remove version-restricted role: Martyr
