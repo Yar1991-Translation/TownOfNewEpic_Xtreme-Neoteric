@@ -24,7 +24,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Fixed 24 bugs
 - Implemented 12 optimizations
 - Made changes to 13 elements
-- Added 26 new features (including roles, settings, etc.)
+- Added 27 new features (including roles, settings, etc.)
 - Temporarily removed 2 elements
 
 ## Fix
@@ -201,6 +201,9 @@ Addons：
 (Source Of The Idea：The Other Roles, Made By 喜)
 Features：
 - Command：/ank: Display Active Neutral Killer Role description
+(Idea&Made By Slok)
+Others：
+- 11 Musics！
 (Idea&Made By Slok)
 
 ## Supplement

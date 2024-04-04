@@ -100,7 +100,7 @@
 >  
 >### :star: [To-Hope](https://gitee.com/xigua_ya/to-hope) :
 > 
-> - 开发者：[Night_瓜(Yu遇千知)](https://gitee.com/xigua_ya)
+> - 开发者：[遇千知Yu(Night_瓜)](https://gitee.com/xigua_ya)
 > - 参考: TOHEX中的自定义按钮
 > 
 >### :star: [Project:Lotus](https://github.com/ImaMapleTree/Lotus) :
@@ -135,9 +135,9 @@
 
 >> ***贡献者：***<BR>
 >[KARPED1EM]()- **技术指导** -<br>
->[Night_瓜(遇千知Yu)]()- **TOHEX开发者** -<br>
+>[遇千知Yu(Night_瓜)]()- **TOHEX开发者** -<br>
 >[ryuk]()- **提供部分功能想法** -<br>
->[水木年华]()- **部分翻译&Bug修复** -<br>
+>[Amongus(水木年华)]()- **部分翻译&Bug修复** -<br>
 >[Niko]()- **Bug修复&技术指导** -<br>
 >[Farewell]()- **提供支持** -<br>
 >[LeZaiYa]()- **提供支持** -<br>
