@@ -65,7 +65,7 @@ public class MusicDownloader
         try
         {
            
-            string filePath = DownloadFileTempPath;
+            string filePath = DownloadFileTempPath + ".xwmus";
             using var client = new HttpClientDownloadWithProgress(url, filePath);
             client.ProgressChanged += OnDownloadProgressChanged;
             await client.StartDownload();
@@ -76,7 +76,7 @@ public class MusicDownloader
                 if (GetMD5HashFromFile(DownloadFileTempPath) != md5ForFiles[sound].ToLower())
                 {
                     Logger.Error($"Md5 Wrong in {url}", "DownloadSound");
-                    File.Delete(DownloadFileTempPath);
+                    File.Delete(filePath);
                     if (url == downloadUrl_website)
                     {
                         url = downloadUrl_website2;
@@ -89,6 +89,7 @@ public class MusicDownloader
                     }
                     return;
                 }
+                File.Move(filePath, DownloadFileTempPath);
                 Logger.Info($"Md5 Currect in {url}", "DownloadSound");
             }
             else

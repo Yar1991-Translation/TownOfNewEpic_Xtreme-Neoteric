@@ -137,10 +137,10 @@
   </br>
 
 >> ***Contributors：***<BR>
->[KARPED1EM]()- **Technical Support** -<br>
->[Night_瓜(遇千知Yu)]()- **Develop In TOHEX** -<br>
+>[KARPED1EM](https://github.com/KARPED1EM)- **Technical Support** -<br>
+>[遇千知Yu(Night_瓜)](https://gitee.com/xigua_ya)- **Developer In TOHEX** -<br>
 >[ryuk]()- **Provide Some Ideas Of Features** -<br>
->[水木年华]()- **Translate&Bugs Fix** -<br>
+>[Amongus(水木年华)]()- **Translate&Bugs Fix** -<br>
 >[Niko]()- **Bugs Fix&Technical Support** -<br>
 >[Farewell]()- **Support** -<br>
 >[LeZaiYa]()- **Support** -<br>

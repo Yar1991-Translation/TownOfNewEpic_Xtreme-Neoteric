@@ -27,6 +27,7 @@ using TONEX.Roles.Impostor;
 using TONEX.Roles.Neutral;
 using UnityEngine;
 using static TONEX.Translator;
+using TMPro;
 
 namespace TONEX;
 
@@ -1501,6 +1502,7 @@ public static class Utils
     public static string RemoveHtmlTags(this string str) => Regex.Replace(str, "<[^>]*?>", string.Empty);
     public static string RemoveHtmlTagsExcept(this string str, string exceptionLabel) => Regex.Replace(str, "<(?!/*" + exceptionLabel + ")[^>]*?>", string.Empty);
     public static string RemoveColorTags(this string str) => Regex.Replace(str, "</?color(=#[0-9a-fA-F]*)?>", "");
+    
     public static void FlashColor(Color color, float duration = 1f)
     {
         var hud = DestroyableSingleton<HudManager>.Instance;
@@ -1518,7 +1520,30 @@ public static class Utils
         })));
     }
 
+    public static Dictionary<string, Font> CachedFonts = new();
+
+    public static Font LoadFont(string path)
+    {
+        try
+        {
+            if (CachedFonts.TryGetValue(path, out var font)) return font;
+            Font loadedFont = Resources.Load<Font>(path);
+            if (loadedFont == null)
+            {
+                Logger.Error($"加载字体失败：{path}", "LoadFont");
+                return null;
+            }
+            CachedFonts[path] = loadedFont;
+            return loadedFont;
+        }
+        catch (Exception ex)
+        {
+            Logger.Error($"读取字体失败：{path}, 错误信息：{ex.Message}", "LoadFont");
+            return null;
+        }
+    }
     public static Dictionary<string, Sprite> CachedSprites = new();
+
     public static Sprite LoadSprite(string path, float pixelsPerUnit = 1f)
     {
         try

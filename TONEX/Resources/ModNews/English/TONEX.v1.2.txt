@@ -6,6 +6,7 @@
 #-----------------------------
 # English
 We Support English Again!
+To express our gratitude for the support of our players over the past year, we are pleased to present three version-restricted offerings!
 Happy first anniversary to TOHEX! Also, wishing everyone a happy 520(520 means I LOVE YOU) day. 
 Whether you have a lover, a yandere, a secret admirer, or even a akujo, may you all have a joyous time, as long as you're not the akujo's backup. 
 But I believe that Cupid's arrow of love will eventually find its way to you!
@@ -22,7 +23,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 ## Summary of Updates
 - Fixed 24 bugs
 - Implemented 12 optimizations
-- Made changes to 11 elements
+- Made changes to 13 elements
 - Added 26 new features (including roles, settings, etc.)
 - Temporarily removed 2 elements
 
@@ -126,6 +127,8 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Lovers: When the number of lovers equals the total number of players on the field, and there are no Impostors or any other team winning by numbers except lovers, the lovers win.
 (Source Of The Idea：The Other Roles, Changed By Slok)
 - Horse Mode => LongMode
+(Idea&Changed By Slok)
+- Version Text Amendment (version-restricted)
 (Idea&Changed By Slok)
 
 ## Deletion
