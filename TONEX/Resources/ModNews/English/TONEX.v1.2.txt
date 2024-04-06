@@ -23,7 +23,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 ## Summary of Updates
 - Fixed 32 bugs
 - Implemented 12 optimizations
-- Made changes to 16 elements
+- Made changes to 18 elements
 - Added 28 New/Remake features (including roles, settings, etc.)
 - Temporarily removed 2 elements
 
@@ -129,7 +129,13 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Idea&Changed By Slok)
 - Now, the Vigilante's killing of Schrödinger's Cat will also cause Schrödinger's Cat to join the crew team
 (Idea&Changed By Slok)
+- Now, the Specter Slayer's killing of Schrödinger's Cat will also cause Schrödinger's Cat to join the crew team
+(Idea&Changed By Slok)
 - Now, the Hunter's killing of Schrödinger's Cat will also cause Schrödinger's Cat to join the crew team
+(Idea&Changed By Slok)
+- Now, the Nice Gusser's guessing of Schrödinger's Cat will also cause Schrödinger's Cat to join the crew team
+(Idea&Changed By Slok)
+- Now, the Evil Gusser's guessing of Schrödinger's Cat will also cause Schrödinger's Cat to join the impostor team
 (Idea&Changed By Slok)
 - Schrödinger's Cat will not be counted as a separate team for victory purposes when victorious
 (Idea&Changed By Slok)

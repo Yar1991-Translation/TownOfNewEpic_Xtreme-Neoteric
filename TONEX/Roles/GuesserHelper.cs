@@ -13,6 +13,7 @@ using UnityEngine;
 using static TONEX.Translator;
 using TONEX.Roles.AddOns.Common;
 using TONEX.Modules.SoundInterface;
+using TONEX.Roles.Neutral;
 
 namespace TONEX;
 public static class GuesserHelper
@@ -137,6 +138,16 @@ public static class GuesserHelper
         {
             reason = GetString("GuessGM");
             return false;
+        }
+        if (role == CustomRoles.SchrodingerCat && target.Is(CustomRoles.SchrodingerCat))
+        {
+            var roleclass = target.GetRoleClass() as SchrodingerCat;
+            if (roleclass.Team == SchrodingerCat.TeamType.None)
+            {
+                roleclass.ChangeTeamOnKill(guesser);
+                reason = GetString("GuessSchrodingerCat");
+                return false;
+            }
         }
         if (role == CustomRoles.Mini )
         {

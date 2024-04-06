@@ -194,7 +194,8 @@ public sealed class NiceTimeStops : RoleBase
     }
     public override bool OnCheckReportDeadBody(PlayerControl reporter, GameData.PlayerInfo target)
     {
-        if (NiceTimeStopsstop.Contains(reporter.PlayerId))    return false;
+        if (NiceTimeStopsstop.Contains(reporter.PlayerId))    
+            return false;
         return true;
     }
     public override void OnExileWrapUp(GameData.PlayerInfo exiled, ref bool DecidedWinner)

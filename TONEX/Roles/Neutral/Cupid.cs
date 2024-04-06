@@ -157,7 +157,7 @@ public sealed class Cupid : RoleBase, INeutralKiller
     public override string GetProgressText(bool comms = false) => Utils.ColorString(CanUseKillButton() ? RoleInfo.RoleColor : Color.gray, $"({CupidLimit})");
     public bool OverrideKillButtonSprite(out string buttonName)
     {
-        buttonName = "Cupid";
+        buttonName = "CupidButton";
         return true;
     }
     public bool OverrideKillButtonText(out string text)
