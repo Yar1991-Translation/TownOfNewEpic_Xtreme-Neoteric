@@ -26,12 +26,16 @@ public sealed class MedicalExaminer : RoleBase, IDeathReasonSeeable
         player
     )
     {
-        TaskCompletedBatteryCharge = OptionTaskCompletedBatteryCharge.GetFloat();
+        
         CustomRoleManager.OnCheckMurderPlayerOthers_After.Add(OnCheckMurderPlayerOthers_After);
     }
     private string MsgToSend;
     private static OptionItem OptionTaskCompletedBatteryCharge;
     static OptionItem OptionKnowKiller;
+    public override void Add()
+    {
+        TaskCompletedBatteryCharge = OptionTaskCompletedBatteryCharge.GetFloat();
+    }
     enum OptionName
     {
         MedicalExaminerTaskCompletedBatteryCharge,
@@ -51,19 +55,20 @@ public sealed class MedicalExaminer : RoleBase, IDeathReasonSeeable
     }
     public override void OnReportDeadBody(PlayerControl reporter, GameData.PlayerInfo target)
     {
+        
+        if (reporter == null || !Is(reporter) || target == null || reporter.PlayerId == target.PlayerId) return;
         var tpc = target.Object;
-        if (reporter == null || !Is(reporter) || target == null || tpc == null || reporter.PlayerId == target.PlayerId) return;
+        if (tpc == null) return;
+        string msg;
+        msg = string.Format(GetString("DetectiveNoticeVictim"), tpc.GetRealName(), tpc.GetTrueRoleName());
+        if (OptionKnowKiller.GetBool())
         {
-            string msg;
-            msg = string.Format(GetString("DetectiveNoticeVictim"), tpc.GetRealName(), tpc.GetTrueRoleName());
-            if (OptionKnowKiller.GetBool())
-            {
-                var realKiller = tpc.GetRealKiller();
-                if (realKiller == null) msg += "£»" + GetString("DetectiveNoticeKillerNotFound");
-                else msg += "£»" + string.Format(GetString("DetectiveNoticeKiller"), realKiller.GetTrueRoleName());
-            }
-            MsgToSend = msg;
+            var realKiller = tpc.GetRealKiller();
+            if (realKiller == null) msg += "£»" + GetString("DetectiveNoticeKillerNotFound");
+            else msg += "£»" + string.Format(GetString("DetectiveNoticeKiller"), realKiller.GetTrueRoleName());
         }
+        MsgToSend = msg;
+
     }
     public override void NotifyOnMeetingStart(ref List<(string, byte, string)> msgToSend)
     {

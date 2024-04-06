@@ -84,7 +84,7 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
     {
         owner?.ApplySchrodingerCatOptions(opt);
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
 
         var killer = info.AttemptKiller;
@@ -103,7 +103,7 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
     /// <summary>
     /// キルしてきた人に応じて陣営の状態を変える
     /// </summary>
-    private void ChangeTeamOnKill(PlayerControl killer)
+    public void ChangeTeamOnKill(PlayerControl killer)
     {
         killer.RpcProtectedMurderPlayer(Player);
         if (killer.GetRoleClass() is ISchrodingerCatOwner catOwner)

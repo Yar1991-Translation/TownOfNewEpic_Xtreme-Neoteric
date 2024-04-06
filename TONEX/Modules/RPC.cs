@@ -93,7 +93,11 @@ public enum CustomRPC
     //患者
     SetDiseasedList,
     //琥珀
-    SetAmberProtectList
+    SetAmberProtectList,
+    //正义掷弹兵
+    SetNiceGraList,
+    //邪恶掷弹兵
+    SetEvilGraList,
 }
 public enum Sounds
 {
@@ -388,6 +392,12 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.SetAmberProtectList:
                 Amber.ReceiveRPC_SyncList(reader);
+                break;
+            case CustomRPC.SetNiceGraList:
+                NiceGrenadier.ReceiveRPC_SyncList(reader);
+                break;
+            case CustomRPC.SetEvilGraList:
+                EvilGrenadier.ReceiveRPC_SyncList(reader);
                 break;
         }
     }

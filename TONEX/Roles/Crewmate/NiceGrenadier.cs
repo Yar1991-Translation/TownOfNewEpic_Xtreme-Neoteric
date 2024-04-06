@@ -1,8 +1,9 @@
 ﻿using AmongUs.GameOptions;
-using HarmonyLib;
+using System.Collections.Generic;
 using System.Linq;
 using TONEX.Modules.SoundInterface;
 using TONEX.Roles.Core;
+using Hazel;
 using UnityEngine;
 using static TONEX.Translator;
 
@@ -26,12 +27,32 @@ public sealed class NiceGrenadier : RoleBase
         RoleInfo,
         player
     )
-    { }
+    {
+        //CustomRoleManager.SuffixOthers.Add(GetSuffixOthers);
+        CustomRoleManager.MarkOthers.Add(GetSuffixOthers);
+        Blinds = new();
+    }
 
     static OptionItem OptionSkillCooldown;
     static OptionItem OptionSkillDuration;
     static OptionItem OptionCanAffectNeutral;
     static OptionItem OptionSkillRange;
+    static List<byte> Blinds;
+    private static void SendRPC_SyncList()
+    {
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetNiceGraList, SendOption.Reliable, -1);
+        writer.Write(Blinds.Count);
+        for (int i = 0; i < Blinds.Count; i++)
+            writer.Write(Blinds[i]);
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+    }
+    public static void ReceiveRPC_SyncList(MessageReader reader)
+    {
+        int count = reader.ReadInt32();
+        Blinds = new();
+        for (int i = 0; i < count; i++)
+            Blinds.Add(reader.ReadByte());
+    }
     enum OptionName
     {
         NiceGrenadierSkillCooldown,
@@ -41,25 +62,11 @@ public sealed class NiceGrenadier : RoleBase
     }
     public static bool IsBlinding(PlayerControl target)
     {
-        foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.Is(CustomRoles.NiceGrenadier)))
-        {
-            if (pc.GetRoleClass() is not NiceGrenadier roleClass) continue;
-            if (roleClass.BlindingStartTime != -1)
-            {
-                if ((target.IsImp() || target.Is(CustomRoles.Madmate))
-                    || target.IsNeutral() && OptionCanAffectNeutral.GetBool())
-                {
-                    return true;
-                }
-            }
-            else if (roleClass.MadBlindingStartTime != -1)
-            {
-                if (!target.IsImp() && !target.Is(CustomRoles.Madmate))
-                    return true;
-            }
-        }
+        if (Blinds.Contains(target.PlayerId) && target.IsAlive())
+            return true;
         return false;
     }
+
     private long BlindingStartTime;
     private long MadBlindingStartTime;
     public long UsePetCooldown;
@@ -117,6 +124,7 @@ public sealed class NiceGrenadier : RoleBase
                 OnBlinding(pc);
             }
         }
+        SendRPC_SyncList();
         if (!Player.IsModClient()) Player.RpcProtectedMurderPlayer();
         Player.RPCPlayCustomSound("FlashBang");
         Player.Notify(GetString("NiceGrenadierSkillInUse"), OptionSkillDuration.GetFloat());
@@ -133,7 +141,9 @@ public sealed class NiceGrenadier : RoleBase
                 pc.RPCPlayCustomSound("FlashBang");
 
             }
-            pc.Notify("<size=100><color=#ffffff>●</color></size>", OptionSkillDuration.GetInt());
+            Blinds.Add(pc.PlayerId);
+            
+            //pc.Notify("<size=1000><color=#ffffff>●</color></size>", OptionSkillDuration.GetInt());
         }
     }
     public override void OnUsePet()
@@ -163,6 +173,7 @@ public sealed class NiceGrenadier : RoleBase
                 OnBlinding(pc);
             }
         }
+        SendRPC_SyncList();
         if (!Player.IsModClient()) Player.RpcProtectedMurderPlayer();
         Player.RPCPlayCustomSound("FlashBang");
         Player.Notify(GetString("NiceGrenadierSkillInUse"), OptionSkillDuration.GetFloat());
@@ -176,6 +187,8 @@ public sealed class NiceGrenadier : RoleBase
         {
             BlindingStartTime = -1;
             Player.RpcProtectedMurderPlayer();
+            Blinds.Clear();
+            SendRPC_SyncList();
             Player.Notify(GetString("NiceGrenadierSkillStop"));
             Utils.MarkEveryoneDirtySettings();
         }
@@ -183,6 +196,8 @@ public sealed class NiceGrenadier : RoleBase
         {
             MadBlindingStartTime = -1;
             Player.RpcProtectedMurderPlayer();
+            Blinds.Clear();
+            SendRPC_SyncList();
             Player.Notify(GetString("NiceGrenadierSkillStop"));
             Utils.MarkEveryoneDirtySettings();
         }
@@ -205,5 +220,23 @@ public sealed class NiceGrenadier : RoleBase
     {
         MadBlindingStartTime = -1;
         BlindingStartTime = -1;
+    }
+    public static string GetSuffixOthers(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false)
+    {
+        seen ??= seer;
+        if (IsBlinding(seer))
+            return "<size=1000><color=#ffffff>●</color></size>";
+        return "";
+    }
+
+    public override bool GetAbilityButtonSprite(out string buttonName)
+    {
+        buttonName = "Gangstar";
+        return true;
+    }
+    public override bool GetPetButtonSprite(out string buttonName)
+    {
+        buttonName = "Gangstar";
+        return !(UsePetCooldown != -1);
     }
 }

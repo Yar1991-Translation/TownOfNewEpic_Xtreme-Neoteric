@@ -56,7 +56,8 @@ public class MusicDownloader
         }
         retry:
         DownloadFileTempPath = DownloadFileTempPath.Replace("{{sound}}", $"{sound}");
-        File.Create(DownloadFileTempPath).Close();
+        string filePath = DownloadFileTempPath + ".xwmus";
+        File.Create(filePath).Close();
        
 
         Logger.Msg("Start Downloading from: " + url, "DownloadSound");
@@ -65,7 +66,7 @@ public class MusicDownloader
         try
         {
            
-            string filePath = DownloadFileTempPath + ".xwmus";
+            
             using var client = new HttpClientDownloadWithProgress(url, filePath);
             client.ProgressChanged += OnDownloadProgressChanged;
             await client.StartDownload();
@@ -73,7 +74,7 @@ public class MusicDownloader
             
             if (md5ForFiles.ContainsKey(sound))
             {
-                if (GetMD5HashFromFile(DownloadFileTempPath) != md5ForFiles[sound].ToLower())
+                if (GetMD5HashFromFile(filePath) != md5ForFiles[sound].ToLower())
                 {
                     Logger.Error($"Md5 Wrong in {url}", "DownloadSound");
                     File.Delete(filePath);
@@ -95,7 +96,7 @@ public class MusicDownloader
             else
             {
                 Logger.Error($"Md5 No Found in {url}", "DownloadSound");
-                File.Delete(DownloadFileTempPath);
+                File.Delete(filePath);
                 if (url == downloadUrl_website)
                 {
                     url = downloadUrl_website2;
@@ -114,9 +115,9 @@ public class MusicDownloader
         catch (Exception ex)
         {
             Logger.Error($"Failed to download\n{ex.Message}", "DownloadSound", false);
-            if (!string.IsNullOrEmpty(DownloadFileTempPath))
+            if (!string.IsNullOrEmpty(filePath))
             {
-                File.Delete(DownloadFileTempPath);
+                File.Delete(filePath);
             }
         }
         if (!succeed)
@@ -199,17 +200,18 @@ public class MusicDownloader
         {"GongXiFaCaiLiuDeHua","DB200D93E613020D62645F4841DD55BD"},
         {"RejoiceThisSEASONRespectThisWORLD","7AB4778744242E4CFA0468568308EA9B"},
         {"SpringRejoicesinParallelUniverses","D92528104A82DBBFADB4FF251929BA5E"},
-{"a3672341f586b4d81efba6d4278cfeae", "AFamiliarPromise"},
-  {"cd8fb04bad5755937496eed60c4892f3", "GuardianandDream"},
-  {"f1ded08a59936b8e1db95067a69b006e", "HeartGuidedbyLight"},
-  {"8d5ba9ac283e156ab2c930f7b63a4a36", "HopeStillExists"},
-  {"1054c90edfa66e31655bc7a58f553231", "Mendax"},
-  {"1b82e1ea81aeb9a968a94bec7f4f62fd", "MendaxsTimeForExperiment"},
-  {"46f09e0384eb8a087c3ba8cc22e4ac11", "StarfallIntoDarkness"},
-  {"b5ccabeaf3324cedb107c83a2dc0ce1e", "StarsFallWithDomeCrumbles"},
-  {"183804914e3310b9f92b47392f503a9f", "TheDomeofTruth"},
-  {"75fbed53db391ed73085074ad0709d82", "TheTruthFadesAway"},
-  {"da520f4613103826b4df7647e368d4b4", "unavoidable"}
+{"AFamiliarPromise", "a3672341f586b4d81efba6d4278cfeae"},
+{"GuardianandDream", "cd8fb04bad5755937496eed60c4892f3"},
+{"HeartGuidedbyLight", "f1ded08a59936b8e1db95067a69b006e"},
+{"HopeStillExists", "8d5ba9ac283e156ab2c930f7b63a4a36"},
+{"Mendax", "1054c90edfa66e31655bc7a58f553231"},
+{"MendaxsTimeForExperiment", "1b82e1ea81aeb9a968a94bec7f4f62fd"},
+{"StarfallIntoDarkness", "46f09e0384eb8a087c3ba8cc22e4ac11"},
+{"StarsFallWithDomeCrumbles", "b5ccabeaf3324cedb107c83a2dc0ce1e"},
+{"TheDomeofTruth", "183804914e3310b9f92b47392f503a9f"},
+{"TheTruthFadesAway", "75fbed53db391ed73085074ad0709d82"},
+{"unavoidable", "da520f4613103826b4df7647e368d4b4"}
+
 
     };
 }

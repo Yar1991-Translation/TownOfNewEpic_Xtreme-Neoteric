@@ -73,6 +73,15 @@ public static class CustomRoleManager
             }
             if (killer.IsKiller)
             {
+                if (targetRole != null)
+                {
+                    // 被害者检查击杀
+                    if (!targetRole.OnCheckMurderAsTargetBefore(info))
+                    {
+                        Logger.Info($"被害者阻塞了击杀", "CheckMurder");
+                        return false;
+                    }
+                }
                 foreach (var onCheckMurderPlayer in OnCheckMurderPlayerOthers_Before)
                 {
                     if (!onCheckMurderPlayer(info))
@@ -98,7 +107,7 @@ public static class CustomRoleManager
                 if (targetRole != null)
                 {
                     // 被害者检查击杀
-                    if (!targetRole.OnCheckMurderAsTarget(info))
+                    if (!targetRole.OnCheckMurderAsTargetAfter(info))
                     {
                         Logger.Info($"被害者阻塞了击杀", "CheckMurder");
                         return false;

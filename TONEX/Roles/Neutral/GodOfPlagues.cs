@@ -41,7 +41,7 @@ public sealed class GodOfPlagues: RoleBase, INeutralKiller
     public float CalculateKillCooldown()=> Plaguebearer.OptionGodOfPlaguesKillCooldown.GetFloat();
     public override void ApplyGameOptions(IGameOptions opt) => opt.SetVision(false);
     public bool CanUseSabotageButton() => false;
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (info.IsSuicide) return true;
             var (killer, target) = info.AttemptTuple;

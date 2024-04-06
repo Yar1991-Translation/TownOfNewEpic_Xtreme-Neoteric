@@ -83,6 +83,11 @@ public class PlayerState
             SubRoles.Remove(CustomRoles.Charmed);
             SubRoles.Remove(CustomRoles.LastImpostor);
         }
+        if (role is CustomRoles.EvilAngle)
+        {
+            SubRoles.Remove(CustomRoles.Madmate);
+            SubRoles.Remove(CustomRoles.LastImpostor);
+        }
     }
     public void SetSubRole(CustomRoles role, bool AllReplace = false)
     {

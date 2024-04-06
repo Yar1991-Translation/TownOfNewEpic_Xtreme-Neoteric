@@ -25,8 +25,9 @@ public sealed class Adventurer : RoleBase
         player
     )
     {
-        ForAdventurer = new();
+        
     }
+    
     public static List<byte> ForAdventurer;
     static OptionItem OptionLimit;
     enum OptionName

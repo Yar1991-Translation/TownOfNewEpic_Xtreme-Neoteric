@@ -59,6 +59,7 @@ public sealed class Concealer : RoleBase, IImpostor
         if (!AmongUsClient.Instance.AmHost) return false;
 
         Camouflage.CheckCamouflage();
+        Player.RpcResetAbilityCooldown();
         return false;
     }
     public override bool GetAbilityButtonSprite(out string buttonName)

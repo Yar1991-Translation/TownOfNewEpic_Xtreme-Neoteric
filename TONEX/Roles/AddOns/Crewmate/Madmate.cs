@@ -112,7 +112,7 @@ public static class Madmate
     }
     public static bool CanBeMadmate(this PlayerControl pc)
     {
-        return pc != null && (pc.GetRoleClass()?.CanBeMadmate ?? false) && !pc.Is(CustomRoles.Madmate)
+        return pc != null &&pc.IsCrew() && !pc.Is(CustomRoles.Madmate)
         && !(
             (pc.Is(CustomRoles.Sheriff) && !SheriffCanBeMadmate.GetBool()) ||
             (pc.Is(CustomRoles.Mayor) && !MayorCanBeMadmate.GetBool()) ||
@@ -132,6 +132,16 @@ public static class Madmate
             if (Main.AllPlayerControls.Count(p => p.Is(CustomRoles.Madmate)) < CustomRoles.Madmate.GetCount() && voter.CanBeMadmate())
             {
                 voter.RpcSetCustomRole(CustomRoles.Madmate);
+                if (voter.Is(CustomRoles.Snitch))
+                {
+                    var taskState = voter.GetPlayerTaskState();
+                    taskState.AllTasksCount = Madmate.MadSnitchTasks.GetInt();
+                    if (AmongUsClient.Instance.AmHost)
+                    {
+                        GameData.Instance.RpcSetTasks(voter.PlayerId, Array.Empty<byte>());
+                        voter.SyncSettings();
+                    }
+                }
                 Logger.Info($"注册附加职业：{voter.GetNameWithRole()} => {CustomRoles.Madmate}", "AssignCustomSubRoles");
                 voter.ShowPopUp(GetString("MadmateSelfVoteModeSuccessfulMutiny"));
                 Utils.SendMessage(GetString("MadmateSelfVoteModeSuccessfulMutiny"), voter.PlayerId);
@@ -157,6 +167,16 @@ public static class Madmate
             var player = allPlayers[IRandom.Instance.Next(0, allPlayers.Count)];
             allPlayers.Remove(player);
             PlayerState.GetByPlayerId(player.PlayerId).SetSubRole(CustomRoles.Madmate);
+            if (player.Is(CustomRoles.Snitch))
+            {
+                var taskState = player.GetPlayerTaskState();
+                taskState.AllTasksCount = Madmate.MadSnitchTasks.GetInt();
+                if (AmongUsClient.Instance.AmHost)
+                {
+                    GameData.Instance.RpcSetTasks(player.PlayerId, Array.Empty<byte>());
+                    player.SyncSettings();
+                }
+            }
             Logger.Info($"注册附加职业：{player?.Data?.PlayerName}（{player.GetCustomRole()}）=> {CustomRoles.Madmate}", "AssignCustomSubRoles");
         }
     }

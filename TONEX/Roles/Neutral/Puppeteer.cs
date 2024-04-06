@@ -96,7 +96,7 @@ public sealed class Puppeteer : RoleBase, INeutralKiller
         Skins = new GameData.PlayerOutfit().Set(Player.GetRealName(), Player.Data.DefaultOutfit.ColorId, Player.Data.DefaultOutfit.HatId, Player.Data.DefaultOutfit.SkinId, Player.Data.DefaultOutfit.VisorId, Player.Data.DefaultOutfit.PetId);
         return false;
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (info.IsSuicide) return true;
         if (!CanKill)

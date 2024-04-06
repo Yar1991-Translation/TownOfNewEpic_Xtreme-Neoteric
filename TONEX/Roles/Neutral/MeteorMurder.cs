@@ -69,7 +69,7 @@ public sealed class MeteorMurderer : RoleBase, INeutralKiller
     public bool CanUseSabotageButton() => false;
     public bool CanUseImpostorVentButton() => false;
     public float CalculateKillCooldown() => 25f;
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (info.IsSuicide) return true;
 

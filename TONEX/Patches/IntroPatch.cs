@@ -153,7 +153,7 @@ class IntroCutscenePatch
                     __instance.TeamTitle.color = __instance.BackgroundBar.material.color = new Color32(255, 25, 25, byte.MaxValue);
                     break;
                 case CustomRoleTypes.Crewmate:
-                    __instance.TeamTitle.text = $"{GetString("TeamCrewmate")}\n{string.Format(GetString("ImpostorNum"), Main.RealOptionsData.GetInt(Int32OptionNames.NumImpostors))}";
+                    __instance.TeamTitle.text = $"{GetString("TeamCrewmate")}\n{string.Format(GetString("ImpostorNum"), Options.SetImpNum.GetBool() ? Options.ImpNum.GetInt() : Main.RealOptionsData.GetInt(Int32OptionNames.NumImpostors))}";
                     __instance.TeamTitle.color = new Color32(140, 255, 255, byte.MaxValue);
                     __instance.BackgroundBar.material.color = Utils.GetRoleColor(PlayerControl.LocalPlayer.GetCustomRole());
                     break;

@@ -53,7 +53,7 @@ public sealed class CursedWolf : RoleBase, IImpostor
         
         SpellLimit = reader.ReadInt32();
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (SpellLimit < 1) return true;
         var (killer, target) = info.AttemptTuple;
@@ -69,8 +69,8 @@ public sealed class CursedWolf : RoleBase, IImpostor
 
         target.Notify(Translator.GetString("CursedWolfSkill"));
 
-        Logger.Info($"{target.GetNameWithRole()} 呪狼反杀 => {killer.GetNameWithRole()}", "CursedWolf.OnCheckMurderAsTarget");
-        Logger.Info($"{target.GetNameWithRole()} 呪狼反杀：剩余{SpellLimit}次", "CursedWolf.OnCheckMurderAsTarget");
+        Logger.Info($"{target.GetNameWithRole()} 呪狼反杀 => {killer.GetNameWithRole()}", "CursedWolf.OnCheckMurderAsTargetAfter");
+        Logger.Info($"{target.GetNameWithRole()} 呪狼反杀：剩余{SpellLimit}次", "CursedWolf.OnCheckMurderAsTargetAfter");
         return false;
     }
     public override string GetProgressText(bool comms = false) => Utils.ColorString(SpellLimit >= 1 ? Color.red : Color.gray, $"({SpellLimit})");

@@ -28,7 +28,7 @@ public sealed class InjusticeSpirit : RoleBase
         player
     )
     {
-        SetYet = false;
+        
         EnableTargetArrow = OptionEnableTargetArrow.GetBool();
         CanGetColoredArrow = OptionCanGetColoredArrow.GetBool();
         CanFindNeutralEvil = OptionCanFindNeutralEvil.GetBool();
@@ -45,9 +45,11 @@ public sealed class InjusticeSpirit : RoleBase
     private static bool CanFindCharmed;
     private static bool CanFindWolfmate;
 
-    private bool IsExposed = false;
     private bool IsComplete = false;
-
+    public override void Add()
+    {
+        SetYet = false;
+    }
     //複数Snitchで共有するためstatic
     private static HashSet<byte> TargetList = new();
     private static Dictionary<byte, Color> TargetColorlist = new();

@@ -44,7 +44,7 @@ public sealed class SuperStar : RoleBase
     }
     public override void OverrideDisplayRoleNameAsSeen(PlayerControl seer, ref bool enabled, ref Color roleColor, ref string roleText)
         => enabled |= OptionEveryoneKnowSuperStar.GetBool();
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetBefore(MurderInfo info)
     {
         var (killer, target) = info.AttemptTuple;
         if (info.IsSuicide) return true;

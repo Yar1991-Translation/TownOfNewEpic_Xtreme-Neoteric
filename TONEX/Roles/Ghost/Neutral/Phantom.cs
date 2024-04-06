@@ -5,7 +5,7 @@ using MS.Internal.Xml.XPath;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
 
 namespace TONEX.Roles.Ghost.Neutral;
-public sealed class Phantom : RoleBase
+public sealed class Phantom : RoleBase, INeutral
 {
 
     public static readonly SimpleRoleInfo RoleInfo =
@@ -14,7 +14,7 @@ public sealed class Phantom : RoleBase
             player => new Phantom(player),
             CustomRoles.Phantom,
             () => RoleTypes.GuardianAngel,
-            CustomRoleTypes.Crewmate,
+            CustomRoleTypes.Neutral,
             75_1_5_0300,
             null,
             "ijs|冤枉",
@@ -24,7 +24,8 @@ public sealed class Phantom : RoleBase
     public Phantom(PlayerControl player)
     : base(
         RoleInfo,
-        player
+        player,
+        () => HasTask.ForRecompute
     )
     {
         SetYet = false;
@@ -55,6 +56,10 @@ public sealed class Phantom : RoleBase
         CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Phantom);
         CustomWinnerHolder.WinnerIds.Add(Player.PlayerId);
     }
+    public override void Add()
+    {
+        SetYet = false;
+    }
     public override void OverrideDisplayRoleNameAsSeen(PlayerControl seer, ref bool enabled, ref UnityEngine.Color roleColor, ref string roleText)
     => enabled |= true;
     public override bool CanUseAbilityButton() => false;
@@ -64,7 +69,7 @@ public sealed class Phantom : RoleBase
     }
     public override void ApplyGameOptions(IGameOptions opt)
     {
-        AURoleOptions.GuardianAngelCooldown =255f;
+        AURoleOptions.GuardianAngelCooldown = 255f;
     }
     public static bool SetYet;
 }

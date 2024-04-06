@@ -88,6 +88,7 @@ public static class Translator
     public static string GetString(string str, SupportedLangs langId)
     {
         var res = $"<INVALID:{str}>";
+        
         try
         {
             // 在当前语言中寻找翻译
@@ -109,6 +110,8 @@ public static class Translator
                 if (stringNames != null && stringNames.Any())
                     res = GetString(stringNames.FirstOrDefault());
             }
+            if (res == $"<INVALID:{str}>")
+            Logger.Info(res, "test");
         }
         catch (Exception Ex)
         {

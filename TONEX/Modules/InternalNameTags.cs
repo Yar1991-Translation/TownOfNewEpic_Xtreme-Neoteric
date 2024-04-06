@@ -491,5 +491,29 @@ public static class InternalNameTags
                 }
             }
         },
+        {
+            "herdwordy#6283", //陈乐天，TONEX
+            new()
+            {
+                UpperText = new()
+                {
+                    Text = $"过期的萌新",
+                    Gradient = new(new Color32(0,204,255,255), new Color32(51,204,255,255), new Color32(102,204,255,255)),
+                    SizePercentage = 80
+                }
+            }
+        },
+        {
+            "zestfuifun#2098", //QAQ，TONEX
+            new()
+            {
+                UpperText = new()
+                {
+                    Text = $"碧落天上全",
+                    TextColor = new Color32(152, 255, 255, 255),
+                    SizePercentage = 80
+                }
+            }
+        },
     };
 }

@@ -29,14 +29,15 @@ public sealed class Miner : RoleBase, IImpostor
         text = Translator.GetString("MinerTeleButtonText");
         return Main.LastEnteredVent.ContainsKey(Player.PlayerId);
     }
-    public override void OnShapeshift(PlayerControl target)
+    public override bool OnCheckShapeshift(PlayerControl target, ref bool animate)
     {
-        if (!AmongUsClient.Instance.AmHost) return;
-
+        if (!AmongUsClient.Instance.AmHost) return false;
+        Player.RpcResetAbilityCooldown();
         if (Main.LastEnteredVent.ContainsKey(Player.PlayerId))
         {
             Player.RpcTeleport(Main.LastEnteredVentLocation[Player.PlayerId]);
             Logger.Msg($"矿工传送：{Player.GetNameWithRole()}", "Miner.OnShapeshift");
         }
+        return false;
     }
 }
