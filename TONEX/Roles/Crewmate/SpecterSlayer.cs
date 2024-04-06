@@ -3,10 +3,11 @@ using Hazel;
 using Sentry.Internal.Http;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
+using TONEX.Roles.Neutral;
 using UnityEngine;
 
 namespace TONEX.Roles.Crewmate;
-public sealed class SpecterSlayer : RoleBase, IKiller
+public sealed class SpecterSlayer : RoleBase, IKiller, ISchrodingerCatOwner
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
@@ -30,6 +31,8 @@ public sealed class SpecterSlayer : RoleBase, IKiller
     )
     { }
     public int KillLimit;
+    public SchrodingerCat.TeamType SchrodingerCatChangeTo => SchrodingerCat.TeamType.Crew;
+
     public override void Add()
     {
         KillLimit = 0;

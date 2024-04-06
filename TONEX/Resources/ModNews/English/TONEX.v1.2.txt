@@ -23,8 +23,8 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 ## Summary of Updates
 - Fixed 25 bugs
 - Implemented 12 optimizations
-- Made changes to 14 elements
-- Added 27 new features (including roles, settings, etc.)
+- Made changes to 18 elements
+- Added 28 New/Remake features (including roles, settings, etc.)
 - Temporarily removed 2 elements
 
 ## Fix
@@ -113,6 +113,14 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Nice Grenadier's skill has been modified: causing the Impostors to lose most of their vision => causing the Impostors to lose their vision
 (Idea&Changed By Slok)
 - Now, the Vigilante's killing of Schrödinger's Cat will also cause Schrödinger's Cat to join the crew team
+(Idea&Changed By Slok)
+- Now, the Specter Slayer's killing of Schrödinger's Cat will also cause Schrödinger's Cat to join the crew team
+(Idea&Changed By Slok)
+- Now, the Hunter's killing of Schrödinger's Cat will also cause Schrödinger's Cat to join the crew team
+(Idea&Changed By Slok)
+- Now, the Nice Gusser's guessing of Schrödinger's Cat will also cause Schrödinger's Cat to join the crew team
+(Idea&Changed By Slok)
+- Now, the Evil Gusser's guessing of Schrödinger's Cat will also cause Schrödinger's Cat to join the impostor team
 (Idea&Changed By Slok)
 - Schrödinger's Cat will not be counted as a separate team for victory purposes when victorious
 (Idea&Changed By Slok)
