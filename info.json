@@ -1,9 +1,46 @@
 {
+  "version": "1.1.0",
+  "verHead": "1.1",
+  "verDate": "20240404",
+
+  "versionPre": "",
+  "verDatePre": "",
+
+  "verTestName": "",
+  "verTestNum": "",
+
+
+  "minVer": "latest",
+  "creation": "1",
+  "allowStart": "true",
+  "CanUpdate": "true",
+  "DebugVer": "0.0.0",
+
+  "md5Pre": "4288e783b14cc1f74d6e7da4051cfd22",
+  "md5": "cddfdeaca63f8878fcded9551a35578f",
+  "announcement": {
+    "Preview": "预览版本！Preview Version!",
+    "SChinese": "清明安康",
+    "English": "Create/join public lobbies is temporarily falut\nThis change is due to a server-side update that makes modded public lobbies unavailable for vanilla.\nPrivate lobbies are not affected.\nCurrently, this change is NOT permanent."
+  },
+
+  "url": {
+    "github": "https://github.com/XtremeWave/TownOfNewEpic_Xtreme/releases/latest/download/TONEX.dll",
+    "gitee": "https://gitee.com/TEAM_TONEX/TownOfNewEpic_Xtreme/releases/download/{{showVer}}/TONEX.dll",
+    "website": "https://tonex.cc/Resource/Download/TONEX.dll",
+    "website2": "https://tohex.club/Resource/Download/TONEX.dll",
+    "githubmus": "https://github.com/XtremeWave/TownOfNewEpic_Xtreme/raw/TONEX/Assets/Sounds/{{sound}}.wav",
+    "giteemus": "https://gitee.com/TEAM_TONEX/TownOfNewEpic_Xtreme/raw/TONEX/Assets/Sounds/{{sound}}.wav",
+    "websitemus": "https://cn-sy1.rains3.com/tonex/Sounds/{{sound}}.wav",
+    "website2mus": "https://tohex.club/Resource/Sounds/{{sound}}.wav"
+  }
+}/*
+{
   "version": "1.2.0",
   "verHead": "1.1",
   "verDate": "20240521",
 
-  "versionPre": "1.1.20",
+  "versionPre": "1.1.21",
   "verDatePre": "20240514",
 
   "verTestName": "",
@@ -35,3 +72,4 @@
     "website2mus": "https://tohex.club/Resource/Sounds/{{sound}}.wav"
   }
 }
+//*/
