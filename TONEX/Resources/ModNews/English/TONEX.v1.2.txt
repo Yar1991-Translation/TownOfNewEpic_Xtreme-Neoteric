@@ -21,7 +21,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Currently, this change is NOT permanent.
 
 ## Summary of Updates
-- Fixed 25 bugs
+- Fixed 33 bugs
 - Implemented 12 optimizations
 - Made changes to 18 elements
 - Added 28 New/Remake features (including roles, settings, etc.)
@@ -78,6 +78,22 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Fixed By Slok)
 - Fixed the bug of Worlock can't curse after meeting
 (Merge With TOH)
+- Fixed the bug of if Medical Examiner is exists that can not start meeting
+(Fixed By Slok)
+- Fixed the bug of the number of Mad-Snitch's tasks was not being overridden
+(Fixed By Slok)
+- Fixed the bug of the number of Wolf's tasks was not being overridden
+(Fixed By Slok)
+- Fixed the bug of Madmates were sometimes not being assigned at the beginning of the game.
+(Fixed By Slok)
+- Fixed the bug of some roles using shapeshift button did not have cooldown times for their skills.
+(Fixed By Slok)
+- Fixed the bug of the Vigilante would lose attempts upon failing to kill a Superstar.
+(Fixed By Slok)
+- Fixed the bug of the Hunter would cause linked targets to die without dying themselves in some cases
+(Fixed By Slok)
+- Fixed the bug of the Blackmailer's targets' mark may be displayed wrong
+(Fixed By Slok)
 
 ## Optimization
 - Rewrote game end judgment for optimization
@@ -142,6 +158,8 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Idea&Changed By Slok)
 - Merge With TOHv5.1.6
 (By Slok)
+- Change the name color in lobby of mod client
+(Idea&Changed By Slok)
 
 ## Deletion
 - Temporarily remove version-restricted role: Martyr

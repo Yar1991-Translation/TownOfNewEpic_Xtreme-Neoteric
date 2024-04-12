@@ -366,7 +366,7 @@ class ReportDeadBodyPatch
                 return false;
             }
         }
-        //对于仅仅是报告尸体的处理
+        // 对于仅仅是报告的处理
         if (target != null)
         {
             if (__instance.Is(CustomRoles.Oblivious) && !Utils.GetPlayerById(target.PlayerId).Is(CustomRoles.Bait)) return false;
@@ -374,7 +374,7 @@ class ReportDeadBodyPatch
             {
                 if(!(Utils.IsActive(SystemTypes.Comms) || Utils.IsActive(SystemTypes.Electrical) || Utils.IsActive(SystemTypes.Reactor) || Utils.IsActive(SystemTypes.LifeSupp) || Utils.IsActive(SystemTypes.MushroomMixupSabotage)))
                 {
-                    __instance.Notify("NobodyNoticed");
+                    __instance.Notify(GetString("NobodyNoticed"));
                     return false;
                 }
             }

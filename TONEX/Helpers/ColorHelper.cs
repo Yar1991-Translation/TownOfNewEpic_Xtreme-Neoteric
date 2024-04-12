@@ -79,7 +79,7 @@ public static class ColorHelper
         ColorUtility.TryParseHtmlString("#" + hex, out color);
         return color;
     }
-    private static string ColorToHex(Color color)
+    public static string ColorToHex(Color color)
     {
         Color32 color32 = (Color32)color;
         return $"{color32.r:X2}{color32.g:X2}{color32.b:X2}{color32.a:X2}";

@@ -94,45 +94,50 @@ public sealed class Cupid : RoleBase, INeutralKiller
     public bool OnCheckMurderAsKiller(MurderInfo info)
     {
         var (killer, target) = info.AttemptTuple;
- 
-            if (CanBeLover(target))
-            {
-                if (CupidLimit >= 1)
-                {
-                    CupidLimit--;
-                    ReadyPlayers.Add(target.PlayerId);
-                    NameColorManager.Add(Player.PlayerId, target.PlayerId, $"{RoleInfo.RoleColor}");
-                    SendRPC();
-                }
-                if (ReadyPlayers.Count ==2)
-                {
-                    foreach (var id in ReadyPlayers)
-                    {
-                        CupidLoversPlayers.Clear();
-                        isCupidLoversDead = false;
-                        CupidLoversPlayers.Add(Utils.GetPlayerById(id));
-                        PlayerState.GetByPlayerId(id).SetSubRole(CustomRoles.CupidLovers);
-                        NameColorManager.Add(id, Player.PlayerId, $"{RoleInfo.RoleColor}");
-                        ReadyPlayers.Clear();
-                        SendRPC();
-                    }
-                }
 
-                killer.RpcProtectedMurderPlayer(target);
+        if (CanBeLover(target))
+        {
+            if (CupidLimit >= 1)
+            {
+                CupidLimit--;
+                ReadyPlayers.Add(target.PlayerId);
+                NameColorManager.Add(Player.PlayerId, target.PlayerId, $"{ColorHelper.ColorToHex(RoleInfo.RoleColor)}");
+                SendRPC();
                 target.RpcProtectedMurderPlayer(killer);
+                killer.SetKillCooldownV2();
+                Utils.NotifyRoles(killer);
             }
-            else if (target.Is(CustomRoles.CupidLovers) || ReadyPlayers.Contains(target.PlayerId))
+            if (ReadyPlayers.Count == 2 && CupidLimit == 0)
             {
+                foreach (var id in ReadyPlayers)
+                {
+                    CupidLoversPlayers.Clear();
+                    isCupidLoversDead = false;
+                    CupidLoversPlayers.Add(Utils.GetPlayerById(id));
+                    PlayerState.GetByPlayerId(id).SetSubRole(CustomRoles.CupidLovers);
+                    NameColorManager.Add(id, Player.PlayerId, $"{ColorHelper.ColorToHex(RoleInfo.RoleColor)}");
+                    target.RpcProtectedMurderPlayer(killer);
+                    Utils.NotifyRoles(target);
+                }
+                ReadyPlayers.Clear();
+                SendRPC();
+            }
 
-                Player.Notify(GetString("CupidSix"));
-            }
-            else 
-            {
-                
-                    Player.Notify(GetString("CupidCant"));
-                
-            }
-        
+
+        }
+        else if (target.Is(CustomRoles.CupidLovers) || ReadyPlayers.Contains(target.PlayerId))
+        {
+
+            Player.Notify(GetString("CupidSix"));
+        }
+        else
+        {
+
+            Player.Notify(GetString("CupidCant"));
+
+        }
+
+
 
         return false;
     }
