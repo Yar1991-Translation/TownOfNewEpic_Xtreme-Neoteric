@@ -44,6 +44,14 @@ public sealed class Blackmailer : RoleBase, IImpostor
         OptionShapeshiftCooldown = FloatOptionItem.Create(RoleInfo, 10, OptionName.BlackmailerCooldown, new(2.5f, 180f, 2.5f), 30f, false)
             .SetValueFormat(OptionFormat.Seconds);
     }
+    public override string GetMark(PlayerControl seer, PlayerControl seen, bool _ = false)
+    {
+        //seenが省略の場合seer
+        seen ??= seer;
+        if (ForBlackmailer.Contains(seen.PlayerId)) return Utils.ColorString(RoleInfo.RoleColor, "‼");
+        else
+            return "";
+    }
     public override void Add()
     {
         ForBlackmailer = new();
@@ -104,6 +112,6 @@ public sealed class Blackmailer : RoleBase, IImpostor
     public static string MarkOthers(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false)
     {
         seen ??= seer;
-        return (ForBlackmailer.Contains(seen.PlayerId) && isForMeeting == true) ? Utils.ColorString(RoleInfo.RoleColor, "‼") : "";
+        return (ForBlackmailer.Contains(seen.PlayerId) && isForMeeting) ? Utils.ColorString(RoleInfo.RoleColor, "‼") : "";
     }
 }

@@ -92,7 +92,7 @@ public sealed class Akujo : RoleBase, INeutralKiller
     public float CalculateKillCooldown() => CanUseKillButton() ? 1f : 255f;
     public bool CanUseKillButton() => Player.IsAlive() && AkujoLimit >= 1;
     public bool CanUseSabotageButton() => false;
-    public bool CanUseImpostorVentButton() => !Options.UsePets.GetBool() && (int)NowSwitchTrigger == 1;
+    public bool CanUseImpostorVentButton() => !Options.UsePets.GetBool() && (int)NowSwitchTrigger == 0;
     public override void ApplyGameOptions(IGameOptions opt) => opt.SetVision(false);
     public bool OnCheckMurderAsKiller(MurderInfo info)
     {
@@ -106,8 +106,14 @@ public sealed class Akujo : RoleBase, INeutralKiller
                     FakeLimit--;
                     PlayerState.GetByPlayerId(target.PlayerId).SetSubRole(CustomRoles.AkujoFakeLovers);
                     NameColorManager.Add(Player.PlayerId, target.PlayerId, $"{Utils.GetRoleColorCode(CustomRoles.AkujoFakeLovers)}");
-                    NameColorManager.Add(target.PlayerId, Player.PlayerId, $"{RoleInfo.RoleColor}");
+                    NameColorManager.Add(target.PlayerId, Player.PlayerId, $"{ColorHelper.ColorToHex(RoleInfo.RoleColor)}");
                     SendRPC();
+                    killer.RpcProtectedMurderPlayer(target);
+                    target.RpcProtectedMurderPlayer(killer);
+                    killer.SetKillCooldownV2();
+                    Utils.NotifyRoles(killer);
+                    Utils.NotifyRoles(target);
+
                 }
                 else if (!ChooseFake && AkujoLimit >= 1)
                 {
@@ -117,14 +123,18 @@ public sealed class Akujo : RoleBase, INeutralKiller
                     AkujoLoversPlayers.Add(killer);
                     AkujoLoversPlayers.Add(target);
                     PlayerState.GetByPlayerId(target.PlayerId).SetSubRole(CustomRoles.AkujoLovers);
-                    NameColorManager.Add(Player.PlayerId, target.PlayerId, $"{RoleInfo.RoleColor}");
-                    NameColorManager.Add(target.PlayerId, Player.PlayerId, $"{RoleInfo.RoleColor}");
+                    NameColorManager.Add(Player.PlayerId, target.PlayerId, $"{ColorHelper.ColorToHex(RoleInfo.RoleColor)}");
+                    NameColorManager.Add(target.PlayerId, Player.PlayerId, $"{ColorHelper.ColorToHex(RoleInfo.RoleColor)}");
                     SyncAkujoLoversPlayers();
                     SendRPC();
+                    killer.RpcProtectedMurderPlayer(target);
+                    target.RpcProtectedMurderPlayer(killer);
+                    killer.SetKillCooldownV2();
+                    Utils.NotifyRoles(killer);
+                    Utils.NotifyRoles(target);
                 }
 
-                killer.RpcProtectedMurderPlayer(target);
-                target.RpcProtectedMurderPlayer(killer);
+
             }
             else if (target.Is(CustomRoles.AkujoLovers))
             {
@@ -158,7 +168,7 @@ public sealed class Akujo : RoleBase, INeutralKiller
         if (NowSwitchTrigger == SwitchTrigger.TriggerDouble)
         {
             var fake = killer.CheckDoubleTrigger(target, () => {
-                if (!ChooseFake && AkujoLimit >= 1 && CanBeLover(target))
+                if (AkujoLimit >= 1 && CanBeLover(target))
                 {
                     AkujoLimit--;
                     AkujoLoversPlayers.Clear();
@@ -166,15 +176,29 @@ public sealed class Akujo : RoleBase, INeutralKiller
                     AkujoLoversPlayers.Add(killer);
                     AkujoLoversPlayers.Add(target);
                     PlayerState.GetByPlayerId(target.PlayerId).SetSubRole(CustomRoles.AkujoLovers);
+                    NameColorManager.Add(Player.PlayerId, target.PlayerId, $"{ColorHelper.ColorToHex(RoleInfo.RoleColor)}");
+                    NameColorManager.Add(target.PlayerId, Player.PlayerId, $"{ColorHelper.ColorToHex(RoleInfo.RoleColor)}");
                     SyncAkujoLoversPlayers();
                     SendRPC();
+                    killer.RpcProtectedMurderPlayer(target);
+                    target.RpcProtectedMurderPlayer(killer);
+                    killer.SetKillCooldownV2();
+                    Utils.NotifyRoles(killer);
+                    Utils.NotifyRoles(target);
                 };
             });
             if (fake && CanBeLover(target))
             {
                 FakeLimit--;
                 PlayerState.GetByPlayerId(target.PlayerId).SetSubRole(CustomRoles.AkujoFakeLovers);
+                NameColorManager.Add(Player.PlayerId, target.PlayerId, $"{Utils.GetRoleColorCode(CustomRoles.AkujoFakeLovers)}");
+                NameColorManager.Add(target.PlayerId, Player.PlayerId, $"{ColorHelper.ColorToHex(RoleInfo.RoleColor)}");
                 SendRPC();
+                killer.RpcProtectedMurderPlayer(target);
+                target.RpcProtectedMurderPlayer(killer);
+                killer.SetKillCooldownV2();
+                Utils.NotifyRoles(killer);
+                Utils.NotifyRoles(target);
 
             }
             if (!CanBeLover(target))

@@ -21,7 +21,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Currently, this change is NOT permanent.
 
 ## Summary of Updates
-- Fixed 32 bugs
+- Fixed 33 bugs
 - Implemented 12 optimizations
 - Made changes to 18 elements
 - Added 28 New/Remake features (including roles, settings, etc.)
@@ -92,7 +92,8 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Fixed By Slok)
 - Fixed the bug of the Hunter would cause linked targets to die without dying themselves in some cases
 (Fixed By Slok)
-
+- Fixed the bug of the Blackmailer's targets' mark may be displayed wrong
+(Fixed By Slok)
 
 ## Optimization
 - Rewrote game end judgment for optimization
@@ -158,7 +159,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Merge With TOHv5.1.6
 (By Slok)
 - Change the name color in lobby of mod client
-(想法&更改 By Slok)
+(Idea&Changed By Slok)
 
 ## Deletion
 - Temporarily remove version-restricted role: Martyr
