@@ -27,11 +27,11 @@
   "url": {
     "github": "https://github.com/XtremeWave/TownOfNewEpic_Xtreme/releases/latest/download/TONEX.dll",
     "gitee": "https://gitee.com/TEAM_TONEX/TownOfNewEpic_Xtreme/releases/download/{{showVer}}/TONEX.dll",
-    "website": "https://tonex.cc/Resource/Download/TONEX.dll",
+    "website": "https://cn-sy1.rains3.com/xtremewave/TONEX.dll",
     "website2": "https://tohex.club/Resource/Download/TONEX.dll",
     "githubmus": "https://github.com/XtremeWave/TownOfNewEpic_Xtreme/raw/TONEX/Assets/Sounds/{{sound}}.wav",
     "giteemus": "https://gitee.com/TEAM_TONEX/TownOfNewEpic_Xtreme/raw/TONEX/Assets/Sounds/{{sound}}.wav",
-    "websitemus": "https://cn-sy1.rains3.com/tonex/Sounds/{{sound}}.wav",
+    "websitemus": "https://cn-sy1.rains3.com/xtremewave/Sounds/{{sound}}.wav",
     "website2mus": "https://tohex.club/Resource/Sounds/{{sound}}.wav"
   }
 }/*
