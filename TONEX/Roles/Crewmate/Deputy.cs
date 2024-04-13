@@ -48,7 +48,7 @@ public sealed class Deputy : RoleBase, IKiller
         if (!clear)
             foreach (var pc in ForDeputy)
                 sender.Writer.Write(pc);
-        
+
     }
     public override void ReceiveRPC(MessageReader reader)
     {
@@ -62,10 +62,10 @@ public sealed class Deputy : RoleBase, IKiller
         {
             var id = reader.ReadByte();
             if (!ForDeputy.Contains(id))
-    {
+            {
                 ForDeputy.Add(id);
             }
-    }
+        }
     public override void ReceiveRPC(MessageReader reader)
     {
         

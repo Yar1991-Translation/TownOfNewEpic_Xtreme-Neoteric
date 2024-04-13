@@ -74,7 +74,7 @@ public sealed class Blackmailer : RoleBase, IImpostor
     {
 
         Shapeshifting = !Is(target);
-
+        Player.RpcResetAbilityCooldown();
         if (!AmongUsClient.Instance.AmHost) return false;
 
         if (Shapeshifting)

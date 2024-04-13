@@ -1,12 +1,14 @@
 ﻿using AmongUs.GameOptions;
 using HarmonyLib;
+using Hazel;
 using System.Linq;
 using TONEX.Modules.SoundInterface;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
-using TONEX.Roles.Crewmate;
+using System.Collections.Generic;
 using UnityEngine;
 using static TONEX.Translator;
+using AmongUs.Data.Settings;
 
 namespace TONEX.Roles.Impostor;
 public sealed class EvilGrenadier : RoleBase, IImpostor
@@ -27,20 +29,44 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
         RoleInfo,
         player
     )
-    { }
+    {
+        Blinds = new();
+        CustomRoleManager.MarkOthers.Add(GetSuffixOthers);
+    }
 
     static OptionItem OptionSkillCooldown;
     static OptionItem OptionSkillDuration;
     static OptionItem OptionSkillRange;
+    private static void SendRPC_SyncList()
+    {
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetEvilGraList, SendOption.Reliable, -1);
+        writer.Write(Blinds.Count);
+        for (int i = 0; i < Blinds.Count; i++)
+            writer.Write(Blinds[i]);
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+    }
+    public static void ReceiveRPC_SyncList(MessageReader reader)
+    {
+        int count = reader.ReadInt32();
+        Blinds = new();
+        for (int i = 0; i < count; i++)
+            Blinds.Add(reader.ReadByte());
+    }
     enum OptionName
     {
         NiceGrenadierSkillCooldown,
         NiceGrenadierSkillDuration,
         NiceGrenadierSkillRange,
     }
-
+    public static bool IsBlinding(PlayerControl target)
+    {
+        if (Blinds.Contains(target.PlayerId) && target.IsAlive())
+            return true;
+        return false;
+    }
     private long BlindingStartTime;
     public long UsePetCooldown;
+    static List<byte> Blinds;
     private static void SetupOptionItem()
     {
         OptionSkillCooldown = FloatOptionItem.Create(RoleInfo, 10, OptionName.NiceGrenadierSkillCooldown, new(2.5f, 180f, 2.5f), 20f, false)
@@ -58,23 +84,33 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
     public override void OnGameStart()
     {
         if (Options.UsePets.GetBool()) UsePetCooldown = Utils.GetTimeStamp();
+
+    }
+    public override void ApplyGameOptions(IGameOptions opt)
+    {
+        AURoleOptions.ShapeshifterLeaveSkin = false;
+        AURoleOptions.ShapeshifterCooldown = OptionSkillDuration.GetFloat();
+        AURoleOptions.ShapeshifterDuration = 1f;
     }
     public override bool GetAbilityButtonText(out string text)
     {
-        text = GetString("EvilGrenadierVetnButtonText");
+        text = GetString("NiceGrenadierVetnButtonText");
         return true;
     }
     public override bool GetPetButtonText(out string text)
     {
-        text = GetString("EvilGrenadierVetnButtonText");
+        text = GetString("NiceGrenadierVetnButtonText");
         return !(UsePetCooldown != -1);
     }
     public override bool OnCheckShapeshift(PlayerControl target, ref bool animate)
     {
+        Player.RpcResetAbilityCooldown();
+        BlindingStartTime = Utils.GetTimeStamp();
         foreach (var pc in Main.AllAlivePlayerControls.Where(x => !x.IsImp() && !x.Is(CustomRoles.Madmate)))
         {
             OnBlinding(pc);
         }
+        SendRPC_SyncList();
         Player.RPCPlayCustomSound("FlashBang");
         foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.IsImp() || x.Is(CustomRoles.Madmate)))
             pc.Notify(GetString("NiceGrenadierSkillInUse"), OptionSkillDuration.GetFloat());
@@ -91,19 +127,9 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
                 pc.RPCPlayCustomSound("FlashBang");
 
             }
-            pc.Notify("<size=100><color=#ffffff>●</color></size>", OptionSkillDuration.GetInt());
-        }
-    }
-    public static bool IsBlinding(PlayerControl target)
-    {
-        foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.Is(CustomRoles.EvilGrenadier)))
-        {
-            if (pc.GetRoleClass() is not EvilGrenadier roleClass) continue;
-            if (roleClass.BlindingStartTime != -1)
-            {
-                if (!target.IsImp() && !target.Is(CustomRoles.Madmate))
-                    return true;
-            }
+            Blinds.Add(pc.PlayerId);
+            
+            //pc.Notify("<size=1000><color=#ffffff>●</color></size>", OptionSkillDuration.GetInt());
         }
         return false;
     }
@@ -117,10 +143,13 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
             return;
         }
         UsePetCooldown = Utils.GetTimeStamp();
+        BlindingStartTime = Utils.GetTimeStamp();
         foreach (var pc in Main.AllAlivePlayerControls.Where(x => !x.IsImp() && !x.Is(CustomRoles.Madmate)))
         {
+
             OnBlinding(pc);
         }
+        SendRPC_SyncList();
         Player.RPCPlayCustomSound("FlashBang");
         foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.IsImp() || x.Is(CustomRoles.Madmate)))
             pc.Notify(GetString("NiceGrenadierSkillInUse"), OptionSkillDuration.GetFloat());
@@ -133,7 +162,8 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
         if (BlindingStartTime != -1 && BlindingStartTime + (long)OptionSkillDuration.GetFloat() < now)
         {
             BlindingStartTime = -1;
-            Player.RpcProtectedMurderPlayer();
+            Blinds.Clear();
+            SendRPC_SyncList();
             Player.Notify(GetString("NiceGrenadierSkillStop"));
             Utils.MarkEveryoneDirtySettings();
         }
@@ -148,14 +178,27 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
     {
         UsePetCooldown = Utils.GetTimeStamp();
     }
-    public override void ApplyGameOptions(IGameOptions opt)
-    {
-        AURoleOptions.ShapeshifterLeaveSkin = false;
-        AURoleOptions.ShapeshifterCooldown = OptionSkillDuration.GetFloat();
-        AURoleOptions.ShapeshifterDuration = 1f;
-    }
+    
     public override void OnStartMeeting()
     {
         BlindingStartTime = -1;
+    }
+    public static string GetSuffixOthers(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false)
+    {
+        seen ??= seer;
+        if (IsBlinding(seer))
+            return "<size=1000><color=#ffffff>●</color></size>";
+        return "";
+    }
+
+    public override bool GetAbilityButtonSprite(out string buttonName)
+    {
+        buttonName = "Gangstar";
+        return true;
+    }
+    public override bool GetPetButtonSprite(out string buttonName)
+    {
+        buttonName = "Gangstar";
+        return !(UsePetCooldown != -1);
     }
 }

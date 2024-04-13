@@ -57,7 +57,7 @@ public interface IKiller
     /// 若您确定本次击杀不会发生，返回 false 立刻终止击杀事件，目标不会收到任何影响<br/>
     /// </summary>
     /// <param name="info">击杀事件的信息</param>
-    /// <returns>false：不再触发 OnCheckMurderAsTarget 函数</returns>
+    /// <returns>false：不再触发 OnCheckMurderAsTargetAfter 函数</returns>
     /// public bool CanUseImpostorVentButton() => true;
     public bool OnCheckMurderAsKiller(MurderInfo info) => true;
 

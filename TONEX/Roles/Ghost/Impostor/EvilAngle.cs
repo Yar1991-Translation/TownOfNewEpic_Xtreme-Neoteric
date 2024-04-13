@@ -29,6 +29,10 @@ public sealed class EvilAngle : RoleBase, IImpostor
         SetYet = false;
         Maxi = OptionTryMax.GetInt();
     }
+    public override void Add()
+    {
+        SetYet = false;
+    }
     public static bool SetYet;
     public static PlayerControl SetPlayer;
     public static OptionItem EnableEvilAngle;
@@ -71,7 +75,7 @@ public sealed class EvilAngle : RoleBase, IImpostor
         Maxi --;
         if (IRandom.Instance.Next(0, 100) < OptionProbability.GetInt())
         {
-            target.Notify(string.Format(GetString("KillForEvilAngle")), 2f);
+            target.Notify(string.Format(GetString("KillForEvilAngle")));
             Player.RpcTeleport(target.GetTruePosition());
             RPC.PlaySoundRPC(Player.PlayerId, Sounds.KillSound);
             Player.RpcMurderPlayerV2(target);

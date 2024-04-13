@@ -96,7 +96,7 @@ public sealed class Puppeteer : RoleBase, INeutralKiller
         Skins = new GameData.PlayerOutfit().Set(Player.GetRealName(), Player.Data.DefaultOutfit.ColorId, Player.Data.DefaultOutfit.HatId, Player.Data.DefaultOutfit.SkinId, Player.Data.DefaultOutfit.VisorId, Player.Data.DefaultOutfit.PetId);
         return false;
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (info.IsSuicide) return true;
         if (!CanKill)
@@ -135,16 +135,16 @@ public sealed class Puppeteer : RoleBase, INeutralKiller
         }
     }
     public override bool OnCheckReportDeadBody(PlayerControl reporter, GameData.PlayerInfo target)
-        {
+    {
 
-            CanKill = true;
-            Timer = -1;  
-            Player.RpcTeleport(MyLastPos);
-            Player.MarkDirtySettings();
-            Main.AllPlayerNames[Player.PlayerId] = Name;
-            var outfit = Skins;
-            Player.SetOutFitStatic(outfit.ColorId, outfit.HatId, outfit.SkinId, outfit.VisorId, outfit.PetId);
-            Player.MarkDirtySettings();
+        CanKill = true;
+        Timer = -1;
+        Player.RpcTeleport(MyLastPos);
+        Player.MarkDirtySettings();
+        Main.AllPlayerNames[Player.PlayerId] = Name;
+        var outfit = Skins;
+        Player.SetOutFitStatic(outfit.ColorId, outfit.HatId, outfit.SkinId, outfit.VisorId, outfit.PetId);
+        Player.MarkDirtySettings();
         return true;
 
     }

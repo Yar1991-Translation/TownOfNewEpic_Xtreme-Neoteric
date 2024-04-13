@@ -110,7 +110,7 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
             foreach (var pc in Main.AllPlayerControls.Where(x => x.PlayerId != target.PlayerId && player.Contains(x)))
             {
                 if (pc.IsAlive())
-             {
+                {
                     if ((pc.GetRoleClass() as Martyr).HasProtect)
                     {
                         pc.RpcTeleport(target.transform.position);

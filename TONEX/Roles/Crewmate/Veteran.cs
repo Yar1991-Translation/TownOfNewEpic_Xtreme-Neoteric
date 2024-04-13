@@ -166,14 +166,14 @@ public sealed class Veteran : RoleBase
             player.Notify(string.Format(GetString("PetSkillCanUse")));
         }
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (info.IsSuicide) return true;
         if (ProtectStartTime != -1 && ProtectStartTime + OptionSkillDuration.GetFloat() >= Utils.GetTimeStamp())
         {
             var (killer, target) = info.AttemptTuple;
             target.RpcMurderPlayerV2(killer);
-            Logger.Info($"{target.GetRealName()} 老兵反弹击杀：{killer.GetRealName()}", "Veteran.OnCheckMurderAsTarget");
+            Logger.Info($"{target.GetRealName()} 老兵反弹击杀：{killer.GetRealName()}", "Veteran.OnCheckMurderAsTargetAfter");
             return false;
         }
         return true;

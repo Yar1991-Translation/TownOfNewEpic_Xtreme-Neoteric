@@ -167,73 +167,76 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Nice Grenadier：Vision impaired by flash grenade
 (Decided By Slok)
 
-## New Roles
+## New/Remake Roles
 Impostors：
-- Impostor Role：Evil Grenadier
+- New Impostor Role：Evil Grenadier
 (Source Of The Idea：Town Of Us, Made By Slok)
-- Impostor Role：Evil Time Stop
+- New Impostor Role：Evil Time Stop
 (Idea&Made By Slok)
-- Impostor Role：Assaulter
+- New Impostor Role：Assaulter
 (Idea By Zeyan, Made By Slok)
 Crewmates：
-- Crewmate Role：Scout
+- New Crewmate Role：Scout
 (Idea&Made By S)
-- Crewmate Role：Amber
+- New Crewmate Role：Amber
 (Idea By Zeyan, Made By Slok)
 中立：
-- Friendly Neutral Role/Evil Neutral Role：Meteor Arbiter（version-restricted）
+- New Friendly Neutral Role/Evil Neutral Role：Meteor Arbiter（version-restricted）
 (Idea&Made By Slok)
-- Evil Neutral Role：Meteor Murderer（version-restricted）
+- New Evil Neutral Role：Meteor Murderer（version-restricted）
 (Idea&Made By Slok)
-- Evil Neutral Role：Sharp Shooter
+- New Evil Neutral Role：Sharp Shooter
 (Source Of The Idea：Town Of Host:The Other Roles, Made By 喜)
-- Evil Neutral Role：Innocent
+- Remake Evil Neutral Role：Innocent
 (Source Of The Idea：Super New Roles, Made By Slok)
-- Friendly Neutral Role：Provocateur
+- Remake Friendly Neutral Role：Provocateur
 (Idea By 法师, Made By Slok)
-- Friendly Neutral Role：？？？
+- Remake Friendly Neutral Role：？？？
 (Idea By 咔皮呆, Made By Slok)
-- Evil Neutral Role：Stalker
+- Remake Evil Neutral Role：Stalker
 (Source：Town Of Host_Y)
-- Evil Neutral Role：Collecter
+- Remake Evil Neutral Role：Collecter
 (Idea By 咔皮呆, Made By Slok)
-- Evil Neutral Role：Akujo
+- New Evil Neutral Role：Akujo
 (Source Of The Idea：The Other Roles GM Haoming Edition, Made By Slok)
-- Evil Neutral Role：Admirer
+- New Evil Neutral Role：Admirer
 (Source Of The Idea：Town Of Host_Y, Made By Slok)
-- Evil Neutral Role：Yandere
+- New Evil Neutral Role：Yandere
 (Source Of The Idea：Town Of Us, Made By 喜)
-- Evil Neutral Role：Cupid
+- New Evil Neutral Role：Cupid
 (Source Of The Idea：The Other Roles GM Haoming Edition, Made By Slok)
 Addons：
-- Addon Role：Nihility
+- New Addon Role：Nihility
 (Idea By 永恒, Made By Slok)
-- Addon Role：Believer
+- New Addon Role：Believer
 (Idea By 永恒, Made By Slok)
-- Impostor Addon Role：Public Opinion Shaper
+- New Impostor Addon Role：Public Opinion Shaper
 (Idea By ㍿, Made By Slok)
 
-## New Feature
+## New/Remake Feature
 Setting：
 Impostors：
-- Impostor Team Setting：Override The Amount Of Impostors
+- New Impostor Team Setting：Override The Amount Of Impostors
 (Idea&Made By Slok)
-- Impostor Team Setting：The Amount Of Impostors
+- New Impostor Team Setting：The Amount Of Impostors
 (Idea&Made By Slok)
 Crewmates：
-- Nice Grenadier Setting：Grenade Impact Range
+- New Nice Grenadier Setting：Grenade Impact Range
 (Idea&Made By Slok)
 Neutrals：
-- Plaguebearer Setting：Start as God of Plagues
+- New Plaguebearer Setting：Start as God of Plagues
 (Source Of The Idea：Town Of Us, Made By Slok)
 Addons：
-- Bait Setting：Players can see if there are players inside the pipes
+- New Bait Setting：Players can see if there are players inside the pipes
 (Source Of The Idea：The Other Roles, Made By 喜)
 Features：
-- Command：/ank: Display Active Neutral Killer Role description
+- New Command：/ank: Display Active Neutral Killer Role description
 (Idea&Made By Slok)
-Others：
+
+## Others：
 - 11 Musics！
+(Idea&Made By Slok)
+- Flashbang Effects
 (Idea&Made By Slok)
 
 ## Supplement

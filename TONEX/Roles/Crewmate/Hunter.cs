@@ -10,9 +10,10 @@ using System.Linq;
 using UnityEngine.Video;
 using TONEX.Roles.Neutral;
 using UnityEngine.UIElements.UIR;
+using static TONEX.Roles.Neutral.SchrodingerCat;
 
 namespace TONEX.Roles.Crewmate;
-public sealed class Hunter : RoleBase, IKiller
+public sealed class Hunter : RoleBase, IKiller, ISchrodingerCatOwner
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
@@ -50,6 +51,7 @@ public sealed class Hunter : RoleBase, IKiller
     private int HunterLimit;
     private static List<byte> ForHunter;
     public bool IsKiller { get; private set; } = false;
+    public SchrodingerCat.TeamType SchrodingerCatChangeTo => SchrodingerCat.TeamType.Crew;
     private static void SetupOptionItem()
     {
         HunterCooldown = FloatOptionItem.Create(RoleInfo, 10, GeneralOption.SkillCooldown, new(2.5f, 180f, 2.5f), 30f, false)
@@ -109,19 +111,27 @@ public sealed class Hunter : RoleBase, IKiller
         info.CanKill = false;
         return false;
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override void BeforeMurderPlayerAsTarget(MurderInfo info)
     {
         var (killer, target) = info.AttemptTuple;
         if (!info.IsSuicide) return true;
         if (target.Is(CustomRoles.Hunter))
         {
-           foreach (var pc in ForHunter)
+        foreach (var pc in ForHunter)
+        {
+            var player = Utils.GetPlayerById(pc);
+            if (player.Is(CustomRoles.SchrodingerCat))
             {
-                var player = Utils.GetPlayerById(pc);
-            if (!player.IsAlive() || player == null || Pelican.IsEaten(pc)) continue;
-                player.RpcMurderPlayerV2(player);
-                player.SetRealKiller(target);
+                if ((player.GetRoleClass() as SchrodingerCat).Team == TeamType.None)
+                {
+                    (player.GetRoleClass() as SchrodingerCat).ChangeTeamOnKill(killer);
+                    continue;
+                }
             }
+            if (!player.IsAlive() || player == null || Pelican.IsEaten(pc)) continue;
+            player.RpcMurderPlayerV2(player);
+            player.SetRealKiller(target);
+        }
         }
         return true;
     }

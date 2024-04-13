@@ -169,20 +169,20 @@ public class PlayerGameOptionsSender : GameOptionsSender
             opt.SetFloat(FloatOptionNames.ImpostorLightMod, 5f);
             Utils.NotifyRoles(player);
         }*/
-        // Õ∂÷¿…µπœµ∞¿≤£°£°£°£°£°
-        
-        if (NiceGrenadier.IsBlinding(player))
+        // Õ∂÷¿…µπœµ∞¿≤£°£°£°£°
+        if (CustomRoles.NiceGrenadier.IsExist() && NiceGrenadier.IsBlinding(player))
         {
             opt.SetVision(false);
-            opt.SetFloat(FloatOptionNames.CrewLightMod, 0.1f);
-            opt.SetFloat(FloatOptionNames.ImpostorLightMod,0.1f);
+            opt.SetFloat(FloatOptionNames.CrewLightMod, 5f);
+            opt.SetFloat(FloatOptionNames.ImpostorLightMod,5f);
         }
-        if (EvilGrenadier.IsBlinding(player))
+        if (CustomRoles.EvilGrenadier.IsExist() && EvilGrenadier.IsBlinding(player))
         {
             opt.SetVision(false);
-            opt.SetFloat(FloatOptionNames.CrewLightMod, 0.1f);
-            opt.SetFloat(FloatOptionNames.ImpostorLightMod, 0.1f);
+            opt.SetFloat(FloatOptionNames.CrewLightMod, 5f);
+            opt.SetFloat(FloatOptionNames.ImpostorLightMod, 5f);
         }
+        //*/
 
         AURoleOptions.EngineerCooldown = Mathf.Max(0.01f, AURoleOptions.EngineerCooldown);
 

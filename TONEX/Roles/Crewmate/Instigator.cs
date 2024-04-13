@@ -145,7 +145,7 @@ public override bool GetAbilityButtonText(out string text)
             player.Notify(string.Format(GetString("PetSkillCanUse")));
         }
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (info.IsSuicide) return true;
         if (ProtectStartTime != -1 && ProtectStartTime + (long)OptionSkillDuration.GetFloat() >= Utils.GetTimeStamp())

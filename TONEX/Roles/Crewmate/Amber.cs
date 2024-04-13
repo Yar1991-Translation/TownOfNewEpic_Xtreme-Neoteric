@@ -170,7 +170,7 @@ public sealed class Amber : RoleBase, IKiller
         Utils.NotifyRoles(target);
         return false;
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (ProtectList[Player.PlayerId] > 0)
         {

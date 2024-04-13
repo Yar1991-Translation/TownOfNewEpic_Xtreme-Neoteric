@@ -63,7 +63,7 @@ public sealed class Assaulter : RoleBase, IImpostor
         SendRPC();
         return true;
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (AssaulterL >0)
         {

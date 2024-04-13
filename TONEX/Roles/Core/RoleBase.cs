@@ -147,7 +147,18 @@ public abstract class RoleBase : IDisposable
     /// </summary>
     /// <param name="info">击杀事件的信息</param>
     /// <returns>false：不再向下执行击杀事件</returns>
-    public virtual bool OnCheckMurderAsTarget(MurderInfo info) => true;
+    public virtual bool OnCheckMurderAsTargetAfter(MurderInfo info) => true;
+
+    /// <summary>
+    /// CheckMurder 作为目标处理函数<br/>
+    /// 该函数用于您被击杀前的检查，调用该函数前已经调用过 OnCheckMurderAsKiller 函数<br/>
+    /// 因此您不需要判断击杀者是否真的尝试击杀你，击杀者对您尝试的击杀是确定的<br/>
+    /// 对于无法被击杀的状态（无敌、被保护）等，设置 info.CanKill = false<br/>
+    /// 若本次击杀本身就不合法，您可以返回 false 以完全终止本次击杀事件<br/>
+    /// </summary>
+    /// <param name="info">击杀事件的信息</param>
+    /// <returns>false：不再向下执行击杀事件</returns>
+    public virtual bool OnCheckMurderAsTargetBefore(MurderInfo info) => true;
 
     /// <summary>
     /// 已确定本次击杀会发生，但在真正发生前，您想要做点什么吗？

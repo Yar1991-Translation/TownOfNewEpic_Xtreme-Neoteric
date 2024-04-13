@@ -149,7 +149,7 @@ public sealed class ViciousSeeker : RoleBase, IImpostor
         
           
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (info.IsSuicide) return true;
         if (Limit>=2)

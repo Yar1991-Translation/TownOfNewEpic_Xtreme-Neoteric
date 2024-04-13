@@ -133,7 +133,7 @@ public sealed class TimeMaster : RoleBase
         {
             ProtectStartTime = -1;
             player.RpcProtectedMurderPlayer();
-            player.Notify(string.Format(GetString("NiceTimeStopsOffGuard")));
+            player.Notify(string.Format(GetString("TimeMasterOffGuard")));
         }
         if (UsePetCooldown + (long)Cooldown < now && UsePetCooldown != -1 && Options.UsePets.GetBool())
         {
@@ -179,7 +179,7 @@ public sealed class TimeMaster : RoleBase
     {
         Player.RpcResetAbilityCooldown();
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (info.IsSuicide) return true;
         if (ProtectStartTime != -1 && ProtectStartTime + OptionSkillDuration.GetFloat() >= Utils.GetTimeStamp() && Marked)
@@ -205,5 +205,15 @@ public sealed class TimeMaster : RoleBase
     public override void OnStartMeeting()
     {
         ProtectStartTime = -1;
+    }
+    public override bool GetAbilityButtonSprite(out string buttonName)
+    {
+        buttonName = "KingOfTime";
+        return true;
+    }
+    public override bool GetPetButtonSprite(out string buttonName)
+    {
+        buttonName = "KingOfTime";
+        return !(UsePetCooldown != -1);
     }
 }

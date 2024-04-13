@@ -9,6 +9,7 @@ using TONEX.Roles.Core.Interfaces.GroupAndRole;
 using UnityEngine;
 using UnityEngine.UIElements.UIR;
 using static TONEX.Translator;
+using System;
 using static UnityEngine.ParticleSystem.PlaybackState;
 
 namespace TONEX.Roles.Neutral;
@@ -162,9 +163,19 @@ public sealed class Jackal : RoleBase, INeutralKiller
         else
         {
             if (target.CanUseKillButton())
-                 target.RpcSetCustomRole(CustomRoles.Sidekick);
-             else
-                 target.RpcSetCustomRole(CustomRoles.Whoops);
+                target.RpcSetCustomRole(CustomRoles.Sidekick);
+            else
+            {
+                
+                target.RpcSetCustomRole(CustomRoles.Whoops);
+                var taskState = target.GetPlayerTaskState();
+                taskState.AllTasksCount = Jackal.OptionWhoopsTasksCount.GetInt();
+                if (AmongUsClient.Instance.AmHost)
+                {
+                    GameData.Instance.RpcSetTasks(target.PlayerId, Array.Empty<byte>());
+                    target.SyncSettings();
+                }
+            }
         }
        
 

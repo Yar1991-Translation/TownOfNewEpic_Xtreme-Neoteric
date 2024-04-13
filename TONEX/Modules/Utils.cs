@@ -615,6 +615,11 @@ public static class Utils
             case CustomRoles.GM:
                 hasTasks = false;
                 break;
+            case CustomRoles.InjusticeSpirit:
+            case CustomRoles.Phantom:
+                hasTasks = true;
+                break;
+
             default:
                 if (role.IsImpostor()) hasTasks = false;
                 break;
@@ -1282,24 +1287,38 @@ public static class Utils
 
         if (InjusticeSpirit.SetPlayer != null)
         {
+           
             InjusticeSpirit.SetPlayer.RpcSetCustomRole(CustomRoles.InjusticeSpirit);
-            InjusticeSpirit.SetPlayer.Data.IsDead = false;
-            AntiBlackout.SendGameData();
+            var taskState = InjusticeSpirit.SetPlayer.GetPlayerTaskState();
+            taskState.AllTasksCount = InjusticeSpirit.OptionTaskCount.GetInt();
+            if (AmongUsClient.Instance.AmHost)
+            {
+                GameData.Instance.RpcSetTasks(InjusticeSpirit.SetPlayer.PlayerId, Array.Empty<byte>());
+                InjusticeSpirit.SetPlayer.SyncSettings();
+            }
             InjusticeSpirit.SetPlayer = null;
+
         }
         if (Phantom.SetPlayer != null)
         {
+           
             Phantom.SetPlayer.RpcSetCustomRole(CustomRoles.Phantom);
-            Phantom.SetPlayer.Data.IsDead = false;
-            AntiBlackout.SendGameData();
+            var taskState = Phantom.SetPlayer.GetPlayerTaskState();
+            taskState.AllTasksCount = Phantom.OptionTaskCount.GetInt();
+            if (AmongUsClient.Instance.AmHost)
+            {
+                GameData.Instance.RpcSetTasks(Phantom.SetPlayer.PlayerId, Array.Empty<byte>());
+                Phantom.SetPlayer.SyncSettings();
+            }
             Phantom.SetPlayer = null;
+
         }
         if (EvilAngle.SetPlayer != null)
         {
+            
             EvilAngle.SetPlayer.RpcSetCustomRole(CustomRoles.EvilAngle);
-            EvilAngle.SetPlayer.Data.IsDead = false;
-            AntiBlackout.SendGameData();
             EvilAngle.SetPlayer = null;
+
         }
 
         if (Options.AirShipVariableElectrical.GetBool())

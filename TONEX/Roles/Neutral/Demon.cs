@@ -132,7 +132,7 @@ public sealed class Demon : RoleBase, INeutralKiller
         Logger.Info($"{killer.GetNameWithRole()} 对玩家 {target.GetNameWithRole()} 造成了 {OptionDamage.GetInt()} 点伤害", "Demon");
         return false;
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         var (killer, target) = info.AttemptTuple;
         if (info.IsSuicide) return true;

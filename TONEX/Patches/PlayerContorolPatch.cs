@@ -16,6 +16,7 @@ using TONEX.Roles.AddOns.Crewmate;
 using TONEX.Roles.AddOns.Impostor;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
+using TONEX.Roles.Crewmate;
 using TONEX.Roles.Ghost.Crewmate;
 using TONEX.Roles.Ghost.Impostor;
 using TONEX.Roles.Ghost.Neutral;
@@ -537,6 +538,7 @@ class FixedUpdatePatch
         //役職テキストの表示
         var RoleTextTransform = __instance.cosmetics.nameText.transform.Find("RoleText");
         var RoleText = RoleTextTransform.GetComponent<TMPro.TextMeshPro>();
+        var colorblindtext = __instance.cosmetics.colorBlindText.text;
         if (RoleText != null && __instance != null)
         {
             if (GameStates.IsLobby)
@@ -546,7 +548,7 @@ class FixedUpdatePatch
                     if (Main.ForkId != ver.forkId) // フォークIDが違う場合
                         __instance.cosmetics.nameText.text = $"<color=#ff0000><size=1.5>{ver.forkId}</size>\n{__instance?.name}</color>";
                     else if (Main.version.CompareTo(ver.version) == 0)
-                        __instance.cosmetics.nameText.text = ver.tag == $"{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch})" ? $"<color=#fcc5f8>{__instance.name}</color>" : $"<color=#ffff00><size=1.5>{ver.tag}</size>\n{__instance?.name}</color>";
+                        __instance.cosmetics.nameText.text = ver.tag == $"{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch})" ? $"<color=#C5DBFC>{__instance.name}</color>" : $"<color=#ffff00><size=1.5>{ver.tag}</size>\n{__instance?.name}</color>";
                     else __instance.cosmetics.nameText.text = $"<color=#ff0000><size=1.5>v{ver.version}</size>\n{__instance?.name}</color>";
                 }
                 else __instance.cosmetics.nameText.text = __instance?.Data?.PlayerName;
@@ -564,7 +566,7 @@ class FixedUpdatePatch
                     RoleText.enabled = false; //ゲームが始まっておらずフリープレイでなければロールを非表示
                     if (!__instance.AmOwner) __instance.cosmetics.nameText.text = __instance?.Data?.PlayerName;
                 }
-                
+
                 //変数定義
                 var seer = PlayerControl.LocalPlayer;
                 var seerRole = seer.GetRoleClass();
@@ -588,6 +590,14 @@ class FixedUpdatePatch
 
                 //NameColorManager準拠の処理
                 RealName = RealName.ApplyNameColorData(seer, target, false);
+
+                // 模组端色盲文字处理
+                if (CustomRoles.NiceGrenadier.IsExist() && NiceGrenadier.IsBlinding(PlayerControl.LocalPlayer))
+                    foreach (var pc in Main.AllAlivePlayerControls)
+                        pc.cosmetics.colorBlindText.text = $"<size=1000><color=#ffffff>●</color></size>";
+                if (CustomRoles.EvilGrenadier.IsExist() && EvilGrenadier.IsBlinding(PlayerControl.LocalPlayer))
+                        foreach (var pc in Main.AllAlivePlayerControls)
+                    pc.cosmetics.colorBlindText.text = $"<size=1000><color=#ffffff>●</color></size>";
 
                 //seer役職が対象のMark
                 Mark.Append(seerRole?.GetMark(seer, target, false));
@@ -811,13 +821,14 @@ class PlayerControlSetRolePatch
                 var self = seer.PlayerId == target.PlayerId;
                 var seerIsKiller = seer.GetRoleClass() is IKiller;
 
-                if ((self && targetIsKiller && !target.Is(CustomRoles.EvilAngle)) || (!seerIsKiller && target.Is(CustomRoleTypes.Impostor) && !target.Is(CustomRoles.EvilAngle)))
-                {
-                    ghostRoles[seer] = RoleTypes.Impostor;
-                }
-                else if(target.Is(CustomRoles.EvilAngle) || target.Is(CustomRoles.Phantom) || target.Is(CustomRoles.InjusticeSpirit))
+                
+                if(target.Is(CustomRoles.EvilAngle) || target.Is(CustomRoles.Phantom) || target.Is(CustomRoles.InjusticeSpirit))
                 {
                    ghostRoles[seer] = RoleTypes.GuardianAngel;
+                }
+                else if ((self && targetIsKiller) || (!seerIsKiller && target.Is(CustomRoleTypes.Impostor)))
+                {
+                    ghostRoles[seer] = RoleTypes.Impostor;
                 }
                 else
                 {
@@ -861,32 +872,53 @@ public static class PlayerControlDiePatch
             writer.Write(false);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             CustomRoleManager.AllActiveRoles.Values.Do(role => role.OnPlayerDeath(__instance, PlayerState.GetByPlayerId(__instance.PlayerId).DeathReason, GameStates.IsMeeting));
-            switch (__instance.GetCustomRole().GetCustomRoleTypes())
+            if (__instance.Is(CustomRoles.Madmate))
             {
-                case CustomRoleTypes.Crewmate:
-                    if (!InjusticeSpirit.SetYet && InjusticeSpirit.EnableInjusticeSpirit.GetBool())
-                    {
-                        InjusticeSpirit.SetYet = true;
-                        __instance.Notify(GetString("Surprise"));
-                        InjusticeSpirit.SetPlayer = __instance;
-                    }
-                    break;
-                case CustomRoleTypes.Neutral:
-                    if (!Phantom.SetYet && Phantom.EnablePhantom.GetBool())
-                    {
-                        Phantom.SetYet = true;
-                        __instance.Notify(GetString("Surprise"));
-                        Phantom.SetPlayer = __instance;
-                    }
-                    break;
-                case CustomRoleTypes.Impostor:
-                    if (!EvilAngle.SetYet && EvilAngle.EnableEvilAngle.GetBool())
-                    {
-                        EvilAngle.SetYet = true;
-                        __instance.Notify(GetString("Surprise"));
-                        EvilAngle.SetPlayer = __instance;
-                    }
-                    break;
+                if (!EvilAngle.SetYet && EvilAngle.EnableEvilAngle.GetBool())
+                {
+                    EvilAngle.SetYet = true;
+                    __instance.Notify(GetString("Surprise"));
+                    EvilAngle.SetPlayer = __instance;
+                }
+            }
+            else if (__instance.Is(CustomRoles.Wolfmate) || __instance.Is(CustomRoles.Charmed))
+            {
+                if (!Phantom.SetYet && Phantom.EnablePhantom.GetBool())
+                {
+                    Phantom.SetYet = true;
+                    __instance.Notify(GetString("Surprise"));
+                    Phantom.SetPlayer = __instance;
+                }
+            }
+            else
+            {
+                switch (__instance.GetCustomRole().GetCustomRoleTypes())
+                {
+                    case CustomRoleTypes.Crewmate:
+                        if (!InjusticeSpirit.SetYet && InjusticeSpirit.EnableInjusticeSpirit.GetBool())
+                        {
+                            InjusticeSpirit.SetYet = true;
+                            __instance.Notify(GetString("Surprise"));
+                            InjusticeSpirit.SetPlayer = __instance;
+                        }
+                        break;
+                    case CustomRoleTypes.Neutral:
+                        if (!Phantom.SetYet && Phantom.EnablePhantom.GetBool())
+                        {
+                            Phantom.SetYet = true;
+                            __instance.Notify(GetString("Surprise"));
+                            Phantom.SetPlayer = __instance;
+                        }
+                        break;
+                    case CustomRoleTypes.Impostor:
+                        if (!EvilAngle.SetYet && EvilAngle.EnableEvilAngle.GetBool())
+                        {
+                            EvilAngle.SetYet = true;
+                            __instance.Notify(GetString("Surprise"));
+                            EvilAngle.SetPlayer = __instance;
+                        }
+                        break;
+                }
             }
 
             // Libertarian

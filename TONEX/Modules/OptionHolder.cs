@@ -810,7 +810,7 @@ public static class Options
         ShowImpRemainOnEject = BooleanOptionItem.Create(3_000_002, "ShowImpRemainOnEject", true, TabGroup.GameSettings, false)
             .SetGameMode(CustomGameMode.Standard)
             .SetColor(new Color32(255, 238, 232, byte.MaxValue));
-        ShowNKRemainOnEject = BooleanOptionItem.Create(3_000_003, "ShowNERemainOnEject", true, TabGroup.GameSettings, false).SetParent(ShowImpRemainOnEject)
+        ShowNERemainOnEject = BooleanOptionItem.Create(3_000_003, "ShowNERemainOnEject", true, TabGroup.GameSettings, false).SetParent(ShowImpRemainOnEject)
             .SetGameMode(CustomGameMode.Standard)
             .SetColor(new Color32(255, 238, 232, byte.MaxValue));
         ShowNKRemainOnEject = BooleanOptionItem.Create(3_000_004, "ShowNKRemainOnEject", true, TabGroup.GameSettings, false).SetParent(ShowImpRemainOnEject)
