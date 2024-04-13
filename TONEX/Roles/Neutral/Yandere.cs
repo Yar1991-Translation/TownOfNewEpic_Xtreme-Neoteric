@@ -166,7 +166,6 @@ public sealed class Yandere : RoleBase, INeutralKiller
             if (newRate >= 100)
             {
                 NeedKill.Add(pc.PlayerId);
-                TargetArrow.Add(Player.PlayerId, pc.PlayerId);
                 Infos.Remove(pc.PlayerId);
                 SendRPC();
             }
