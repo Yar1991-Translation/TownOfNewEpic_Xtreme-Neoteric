@@ -23,7 +23,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 ## Summary of Updates
 - Fixed 37 bugs
 - Implemented 12 optimizations
-- Made changes to 18 elements
+- Made changes to 21 elements
 - Added 28 New/Remake features (including roles, settings, etc.)
 - Temporarily removed 2 elements
 
@@ -167,6 +167,10 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Merge With TOHv5.1.6
 (By Slok)
 - Change the name color in lobby of mod client
+(Idea&Changed By Slok)
+- Prosecutor：Render the target powerless before the meeting => Invalidate the target's next kill
+(Idea&Changed By Slok)
+- Deputy：Render the target powerless before the meeting => Invalidate the target's next kill
 (Idea&Changed By Slok)
 
 ## Deletion

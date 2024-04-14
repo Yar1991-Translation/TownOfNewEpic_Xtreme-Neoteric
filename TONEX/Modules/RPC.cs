@@ -98,6 +98,10 @@ public enum CustomRPC
     SetNiceGraList,
     //邪恶掷弹兵
     SetEvilGraList,
+    //起诉
+    SetProsecutorList,
+    //捕快
+    SetDeputyList,
 }
 public enum Sounds
 {
@@ -398,6 +402,12 @@ internal class RPCHandlerPatch
                 break;
             case CustomRPC.SetEvilGraList:
                 EvilGrenadier.ReceiveRPC_SyncList(reader);
+                break;
+            case CustomRPC.SetProsecutorList:
+                EvilGrenadier.ReceiveRPC_SyncList(reader);
+                break;
+            case CustomRPC.SetDeputyList:
+                Deputy.ReceiveRPC_SyncList(reader);
                 break;
         }
     }

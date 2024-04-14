@@ -37,35 +37,35 @@ public sealed class Deputy : RoleBase, IKiller
         ForDeputy = new();
         DeputyLimit = Sheriff.DeputySkillLimit.GetInt();
     }
+    private static void SendRPC_SyncList()
+    {
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetEvilGraList, SendOption.Reliable, -1);
+        writer.Write(ForDeputy.Count);
+        for (int i = 0; i < ForDeputy.Count; i++)
+            writer.Write(ForDeputy[i]);
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+    }
+    public static void ReceiveRPC_SyncList(MessageReader reader)
+    {
+        int count = reader.ReadInt32();
+        ForDeputy = new();
+        for (int i = 0; i < count; i++)
+            ForDeputy.Add(reader.ReadByte());
+
+    }
     public bool IsKiller { get; private set; } = false;
     private int DeputyLimit;
     public static List<byte> ForDeputy;
-    private void SendRPC(bool clear = false)
+    private void SendRPC()
     {
         using var sender = CreateSender();
         sender.Writer.Write(DeputyLimit);
-        sender.Writer.Write(clear);
-        if (!clear)
-            foreach (var pc in ForDeputy)
-                sender.Writer.Write(pc);
 
     }
     public override void ReceiveRPC(MessageReader reader)
     {
 
         DeputyLimit = reader.ReadInt32();
-        var clear = reader.ReadBoolean();
-        if (clear)
-            ForDeputy.Clear();
-        else
-            for (int i = 0; i < ForDeputy.Count; i++)
-            {
-                var id = reader.ReadByte();
-                if (!ForDeputy.Contains(id))
-                {
-                    ForDeputy.Add(id);
-                }
-            }
     }
 
     public float CalculateKillCooldown() => CanUseKillButton() ? Sheriff.DeputySkillCooldown.GetFloat() : 255f;
@@ -82,6 +82,7 @@ public sealed class Deputy : RoleBase, IKiller
 
             ForDeputy.Add(target.PlayerId);
             SendRPC();
+            SendRPC_SyncList();
         }
         info.CanKill = false;
         killer.RpcProtectedMurderPlayer(target);
@@ -95,7 +96,10 @@ public sealed class Deputy : RoleBase, IKiller
         if (ForDeputy.Contains(killer.PlayerId)) 
         {
             killer.RpcProtectedMurderPlayer(target);
-            killer.SetKillCooldownV2(); return false; 
+            killer.SetKillCooldownV2();
+            ForDeputy.Remove(killer.PlayerId);
+            SendRPC_SyncList();
+            return false;
         }
         return true;
     }
@@ -121,11 +125,6 @@ public sealed class Deputy : RoleBase, IKiller
         }
     }
     public override string GetProgressText(bool comms = false) => Utils.ColorString(CanUseKillButton() ? RoleInfo.RoleColor : Color.gray, $"({DeputyLimit})");
-    public override void OnStartMeeting()
-    {
-        ForDeputy.Clear();
-        SendRPC(true);
-    }
     public override string GetMark(PlayerControl seer, PlayerControl seen, bool _ = false)
     {
         //seenが省略の場合seer

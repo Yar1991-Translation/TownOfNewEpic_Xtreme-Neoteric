@@ -53,6 +53,22 @@ public sealed class Prosecutors : RoleBase, INeutralKiller,IAdditionalWinner
         
         ProsecutorsLimit = reader.ReadInt32();
     }
+    private static void SendRPC_SyncList()
+    {
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetEvilGraList, SendOption.Reliable, -1);
+        writer.Write(ForProsecutors.Count);
+        for (int i = 0; i < ForProsecutors.Count; i++)
+            writer.Write(ForProsecutors[i]);
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+    }
+    public static void ReceiveRPC_SyncList(MessageReader reader)
+    {
+        int count = reader.ReadInt32();
+        ForProsecutors = new();
+        for (int i = 0; i < count; i++)
+            ForProsecutors.Add(reader.ReadByte());
+
+    }
     public bool CheckWin(ref CustomRoles winnerRole , ref CountTypes winnerCountType)
     {
         return Player.IsAlive();
@@ -70,6 +86,7 @@ public sealed class Prosecutors : RoleBase, INeutralKiller,IAdditionalWinner
             ProsecutorsLimit -= 1;
             SendRPC();
             ForProsecutors.Add(target.PlayerId);
+            SendRPC_SyncList();
         }
         info.CanKill = false;
         killer.RpcProtectedMurderPlayer(target);
@@ -83,8 +100,12 @@ public sealed class Prosecutors : RoleBase, INeutralKiller,IAdditionalWinner
         if (ForProsecutors.Contains(killer.PlayerId))
             {
                 killer.RpcProtectedMurderPlayer(target);
-                killer.SetKillCooldownV2(); return false;
-            }
+                killer.SetKillCooldownV2();
+            ForProsecutors.Remove(killer.PlayerId);
+            SendRPC_SyncList();
+            return false;
+
+        }
         return true;
     }
     public override string GetProgressText(bool comms = false) => Utils.ColorString(CanUseKillButton() ? RoleInfo.RoleColor : Color.gray, $"({ProsecutorsLimit})");
