@@ -114,7 +114,7 @@ public sealed class Hunter : RoleBase, IKiller, ISchrodingerCatOwner
     public override void BeforeMurderPlayerAsTarget(MurderInfo info)
     {
         var (killer, target) = info.AttemptTuple;
-        if (!info.IsSuicide) return true;
+        if (!info.IsSuicide) return;
         if (target.Is(CustomRoles.Hunter))
         {
         foreach (var pc in ForHunter)
@@ -133,7 +133,6 @@ public sealed class Hunter : RoleBase, IKiller, ISchrodingerCatOwner
             player.SetRealKiller(target);
         }
         }
-        return true;
     }
     public override void AfterMeetingTasks()
     {

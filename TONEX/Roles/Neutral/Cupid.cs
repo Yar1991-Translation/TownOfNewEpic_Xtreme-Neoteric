@@ -56,7 +56,7 @@ public sealed class Cupid : RoleBase, INeutralKiller
         CupidLoverSuicide = BooleanOptionItem.Create(RoleInfo, 13, OptionName.LoverSuicide, true, false);
     }
     public bool IsKiller { get; private set; } = false;
-    public bool IsNE { get; private set; } = true;
+
     private int CupidLimit;
     List<byte> ReadyPlayers=new();
     bool Shield;

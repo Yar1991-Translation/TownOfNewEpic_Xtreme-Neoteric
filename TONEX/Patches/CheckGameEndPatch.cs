@@ -143,6 +143,26 @@ class GameEndChecker
                         .Where(pc => pc.Is(CustomRoles.Yandere))
                         .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
                     break;
+                case CustomWinner.Lovers:
+                    Main.AllPlayerControls
+                        .Where(pc => pc.Is(CustomRoles.Lovers))
+                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    break;
+                case CustomWinner.AdmirerLovers:
+                    Main.AllPlayerControls
+                        .Where(pc => pc.Is(CustomRoles.AdmirerLovers))
+                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    break;
+                case CustomWinner.AkujoLovers:
+                    Main.AllPlayerControls
+                        .Where(pc => pc.Is(CustomRoles.AkujoLovers) || pc.Is(CustomRoles.Akujo))
+                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    break;
+                case CustomWinner.CupidLovers:
+                    Main.AllPlayerControls
+                        .Where(pc => pc.Is(CustomRoles.CupidLovers) || pc.Is(CustomRoles.Cupid))
+                        .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    break;
             }
             if (CustomWinnerHolder.WinnerTeam is not CustomWinner.Draw and not CustomWinner.None and not CustomWinner.Error)
             {
@@ -203,10 +223,10 @@ class GameEndChecker
                     }
                 }
 
-                Lovers.CheckWin();
-                AdmirerLovers.CheckWin();
-                AkujoLovers.CheckWin();
-                CupidLovers.CheckWin();
+                //Lovers.CheckWin();
+                //AdmirerLovers.CheckWin();
+                //AkujoLovers.CheckWin();
+                //CupidLovers.CheckWin();
             }
             ShipStatus.Instance.enabled = false;
             StartEndGame(reason);
@@ -380,7 +400,7 @@ class GameEndChecker
 
             foreach (var loverRole in loverRoles)// 多种恋人判断胜利
             {
-                if (Main.AllAlivePlayerControls.Count(p => p.Is(loverRole)) >= playerCount / 2 && !Main.AllAlivePlayerControls.Any(p => playerTypeCounts.ContainsKey(p.GetCountTypes()) && !p.IsCrew() || ForLover(p, loverRole)))
+                if (Main.AllAlivePlayerControls.Count(p => p.Is(loverRole)) >= playerCount / 2 && !Main.AllAlivePlayerControls.Where(p => !p.Is(loverRole)).Any(p => playerTypeCounts.ContainsKey(p.GetCountTypes()) && !p.IsCrew() || ForLover(p, loverRole)))
                 {
                     skip = true;
                     reason = GameOverReason.ImpostorByKill;
@@ -442,8 +462,8 @@ class GameEndChecker
             
         };
         LoverRoles.Remove(role);
-        if (LoverRoles.Contains(p.GetCustomRole())) return true;
-        return false;
+        bool hasCommonItems = LoverRoles.Intersect(p.GetCustomSubRoles()).Any();
+        return hasCommonItems;
     }
     class HotPotatoGameEndPredicate : GameEndPredicate
     {

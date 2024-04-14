@@ -49,7 +49,7 @@ public sealed class Admirer : RoleBase, INeutralKiller
         AdmirerLoverSuicide = BooleanOptionItem.Create(RoleInfo, 13, OptionName.LoverSuicide, true, false);
     }
     public bool IsKiller { get; private set; } = false;
-    public bool IsNE { get; private set; } = true;
+
     private int AdmirerLimit;
     public override void Add()
     {

@@ -52,37 +52,22 @@ public sealed class Deputy : RoleBase, IKiller
     }
     public override void ReceiveRPC(MessageReader reader)
     {
-        
+
         DeputyLimit = reader.ReadInt32();
         var clear = reader.ReadBoolean();
         if (clear)
             ForDeputy.Clear();
         else
-        for (int i = 0; i < ForDeputy.Count; i++)
-        {
-            var id = reader.ReadByte();
-            if (!ForDeputy.Contains(id))
+            for (int i = 0; i < ForDeputy.Count; i++)
             {
-                ForDeputy.Add(id);
+                var id = reader.ReadByte();
+                if (!ForDeputy.Contains(id))
+                {
+                    ForDeputy.Add(id);
+                }
             }
-        }
-    public override void ReceiveRPC(MessageReader reader)
-    {
-        
-        DeputyLimit = reader.ReadInt32();
-        var clear = reader.ReadBoolean();
-        if (clear)
-            ForDeputy.Clear();
-        else
-        for (int i = 0; i < ForDeputy.Count; i++)
-        {
-            var id = reader.ReadByte();
-            if (!ForDeputy.Contains(id))
-            {
-                ForDeputy.Add(id);
-            }
-        }
     }
+
     public float CalculateKillCooldown() => CanUseKillButton() ? Sheriff.DeputySkillCooldown.GetFloat() : 255f;
     public bool CanUseKillButton() => Player.IsAlive() && DeputyLimit >= 1;
     public bool CanUseSabotageButton() => false;

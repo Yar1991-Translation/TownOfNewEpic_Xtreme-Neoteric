@@ -28,13 +28,12 @@ public sealed class Phantom : RoleBase, INeutral
         () => HasTask.ForRecompute
     )
     {
-        SetYet = false;
     }
     public static PlayerControl SetPlayer;
     public static OptionItem EnablePhantom;
     public static OptionItem OptionTaskCount;
 
-    int Maxi;
+
     public static void SetupOptionItem()
     {
         EnablePhantom = BooleanOptionItem.Create(75_1_5_0310, "EnablePhantom", false, TabGroup.NeutralRoles, false)
@@ -56,7 +55,7 @@ public sealed class Phantom : RoleBase, INeutral
         CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Phantom);
         CustomWinnerHolder.WinnerIds.Add(Player.PlayerId);
     }
-    public override void Add()
+    public override void OnGameStart()
     {
         SetYet = false;
     }

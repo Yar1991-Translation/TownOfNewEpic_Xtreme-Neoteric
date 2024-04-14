@@ -47,7 +47,7 @@ public sealed class InjusticeSpirit : RoleBase
 
     private bool IsExposed = false;
     private bool IsComplete = false;
-    public override void Add()
+    public override void OnGameStart()
     {
         SetYet = false;
     }

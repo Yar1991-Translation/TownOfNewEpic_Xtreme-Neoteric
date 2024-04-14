@@ -26,12 +26,7 @@ public sealed class EvilAngle : RoleBase, IImpostor
         player
     )
     {
-        SetYet = false;
         Maxi = OptionTryMax.GetInt();
-    }
-    public override void Add()
-    {
-        SetYet = false;
     }
     public static bool SetYet;
     public static PlayerControl SetPlayer;
@@ -40,7 +35,10 @@ public sealed class EvilAngle : RoleBase, IImpostor
     static OptionItem OptionKiilCooldown;
     static OptionItem OptionTryMax;
     int Maxi;
-
+    public override void OnGameStart()
+    {
+        SetYet = false;
+    }
     public override void OverrideDisplayRoleNameAsSeen(PlayerControl seer, ref bool enabled, ref UnityEngine.Color roleColor, ref string roleText)
     => enabled |= true;
     public static void SetupOptionItem()

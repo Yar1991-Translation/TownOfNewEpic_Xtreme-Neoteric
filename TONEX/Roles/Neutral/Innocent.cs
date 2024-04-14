@@ -50,7 +50,7 @@ public sealed class Innocent : RoleBase,  INeutralKiller
         IsKilled = reader.ReadBoolean();
     }
     public bool IsNK { get; private set; } = false;
-    public bool IsNE { get; private set; } = true;
+
     public float CalculateKillCooldown() => 1f;
     public bool CanUseKillButton() => true;
     public bool CanUseSabotageButton() => false;

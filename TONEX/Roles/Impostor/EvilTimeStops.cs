@@ -98,11 +98,11 @@ public sealed class EvilTimeStops : RoleBase, IImpostor
         Player.RpcResetAbilityCooldown();
         ProtectStartTime = Utils.GetTimeStamp();
         UsePetCooldown = Utils.GetTimeStamp();
-        foreach (var pc in Main.AllPlayerControls.Where(p => p.IsImp() || p.Is(CustomRoles.Madmate)))
+        foreach (var pc in Main.AllPlayerControls.Where(p => p.IsImpTeam()))
             pc.Notify(GetString("NiceTimeStopsOnGuard"));
         foreach (var player in Main.AllAlivePlayerControls)
         {
-            if (Player == player || player.IsImp() || player.Is(CustomRoles.Madmate)) continue;
+            if (Player == player || player.IsImpTeam() || player.Is(CustomRoles.Madmate)) continue;
             if (!player.IsAlive() || Pelican.IsEaten(player.PlayerId)) continue;
             NameNotifyManager.Notify(player, Utils.ColorString(Utils.GetRoleColor(CustomRoles.NiceTimeStops), GetString("ForNiceTimeStops")));
             var tmpSpeed1 = Main.AllPlayerSpeed[player.PlayerId];
@@ -153,11 +153,11 @@ public sealed class EvilTimeStops : RoleBase, IImpostor
         Player.RpcResetAbilityCooldown();
         ProtectStartTime = Utils.GetTimeStamp();
         UsePetCooldown = Utils.GetTimeStamp();
-        foreach (var pc in Main.AllPlayerControls.Where(p => p.IsImp() || p.Is(CustomRoles.Madmate)))
+        foreach (var pc in Main.AllPlayerControls.Where(p => p.IsImpTeam()))
             pc.Notify(GetString("NiceTimeStopsOnGuard"));
         foreach (var player in Main.AllAlivePlayerControls)
         {
-            if (Player == player || player.IsImp() || player.Is(CustomRoles.Madmate)) continue;
+            if (Player == player || player.IsImpTeam()) continue;
             if (!player.IsAlive() || Pelican.IsEaten(player.PlayerId)) continue;
             NameNotifyManager.Notify(player, Utils.ColorString(Utils.GetRoleColor(CustomRoles.NiceTimeStops), GetString("ForNiceTimeStops")));
             var tmpSpeed1 = Main.AllPlayerSpeed[player.PlayerId];

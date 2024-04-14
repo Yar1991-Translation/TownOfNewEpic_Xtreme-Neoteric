@@ -144,26 +144,37 @@ class OnPlayerLeftPatch
     }
     public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)] ClientData data, [HarmonyArgument(1)] DisconnectReasons reason)
     {
-        //            Logger.info($"RealNames[{data.Character.PlayerId}]を削除");
-        //            main.RealNames.Remove(data.Character.PlayerId);
-        if (GameStates.IsInGame)
+        if (data == null)
         {
-            Lovers.OnPlayerLeft(data);
-            AdmirerLovers.OnPlayerLeft(data);
-            AkujoLovers.OnPlayerLeft(data);
-            CupidLovers.OnPlayerLeft(data);
-            var state = PlayerState.GetByPlayerId(data.Character.PlayerId);
-            if (state.DeathReason == CustomDeathReason.etc) //死因が設定されていなかったら
-            {
-                state.DeathReason = CustomDeathReason.Disconnected;
-                state.SetDead();
-            }
-            AntiBlackout.OnDisconnect(data.Character.Data);
-            PlayerGameOptionsSender.RemoveSender(data.Character);
+            Logger.Error("错误的客户端数据：数据为空", "Session");
         }
-
-        Main.playerVersion.Remove(data.Character.PlayerId);
-        Logger.Info($"{data?.PlayerName}(ClientID:{data?.Id}/FriendCode:{data?.FriendCode})断开连接(理由:{reason}，Ping:{AmongUsClient.Instance.Ping})", "Session");
+        else if (data != null && data.Character != null)
+        {
+            if (GameStates.IsInGame)
+            {
+                Lovers.OnPlayerLeft(data);
+                AdmirerLovers.OnPlayerLeft(data);
+                AkujoLovers.OnPlayerLeft(data);
+                CupidLovers.OnPlayerLeft(data);
+                var state = PlayerState.GetByPlayerId(data.Character.PlayerId);
+                if (state != null)
+                {
+                    if (state.DeathReason == CustomDeathReason.etc) // 如果死亡原因未设置
+                    {
+                        state.DeathReason = CustomDeathReason.Disconnected;
+                        state.SetDead();
+                    }
+                }
+                else
+                {
+                    Logger.Error("错误的玩家数据：数据为空", "Session");
+                }
+                AntiBlackout.OnDisconnect(data.Character.Data);
+                PlayerGameOptionsSender.RemoveSender(data.Character);
+            }
+            Main.playerVersion.Remove(data.Character.PlayerId);
+        }
+        Logger.Info($"{data?.PlayerName}(ClientID:{data?.Id}/FriendCode:{data?.FriendCode}/Role:{data?.Character?.GetNameWithRole()})断开连接(理由:{reason}，Ping:{AmongUsClient.Instance.Ping})", "Session");
 
         if (AmongUsClient.Instance.AmHost)
         {

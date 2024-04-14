@@ -31,12 +31,26 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
         InitRoleCommands();
         AllCommands = new()
         {
+                        new(["srm"], CommandAccess.Debugger, mc =>
+            {
+                ChatCommand.GetRoleByInputName(mc.Args, out var role);
+                PlayerState.GetByPlayerId(mc.Player.PlayerId).SetMainRole(role);
+                return (MsgRecallMode.Block, null);
+            }),
+            new(["srs"], CommandAccess.Debugger, mc =>
+            {
+
+                ChatCommand.GetRoleByInputName(mc.Args, out var role);
+                PlayerState.GetByPlayerId(mc.Player.PlayerId).SetSubRole(role);
+                return (MsgRecallMode.Block, null);
+            }),
             new(["sr"], CommandAccess.Debugger, mc =>
             {
                 
                 SetRoles(mc.Args, mc.Player.PlayerId);
                 return (MsgRecallMode.Block, null);
             }),
+
             new(["rev"], CommandAccess.Debugger, mc =>
             {
                 var id = Convert.ToByte(mc.Args);

@@ -35,7 +35,6 @@ public sealed class Lawyer : RoleBase, IAdditionalWinner,INeutralKiller
     {
 
         Lawyers.Add(this);
-        CustomRoleManager.OnMurderPlayerOthers.Add(OnMurderPlayerOthers);
         CustomRoleManager.MarkOthers.Add(GetMarkOthers);
     }
     public static byte WinnerID;
@@ -108,11 +107,6 @@ public sealed class Lawyer : RoleBase, IAdditionalWinner,INeutralKiller
     public override void OnDestroy()
     {
         Lawyers.Remove(this);
-
-        if (Lawyers.Count <= 0)
-        {
-            CustomRoleManager.OnMurderPlayerOthers.Remove(OnMurderPlayerOthers);
-        }
     }
     public void SendRPC()
     {
@@ -130,18 +124,10 @@ public sealed class Lawyer : RoleBase, IAdditionalWinner,INeutralKiller
     {
         if (OptionKnowTargetRole.GetBool() && seen.PlayerId == TargetId) enabled = true;
     }
-    public static void OnMurderPlayerOthers(MurderInfo info)
+    public override void OnPlayerDeath(PlayerControl player, CustomDeathReason deathReason, bool isOnMeeting = false)
     {
-        var target = info.AttemptTarget;
-
-        foreach (var executioner in Lawyers.ToArray())
-        {
-            if (executioner.TargetId == target.PlayerId)
-            {
-                executioner.ChangeRole();
-                break;
-            }
-        }
+        if (player.PlayerId != TargetId || isOnMeeting) return;
+        ChangeRole();
     }
     public override string GetMark(PlayerControl seer, PlayerControl seen, bool _ = false)
     {

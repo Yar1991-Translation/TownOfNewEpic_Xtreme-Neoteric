@@ -32,7 +32,10 @@ static class ExtendedPlayerControl
             values.Add(null);
             Main.SetRolesList.Add(player.PlayerId, values);
         }
-        Main.SetRolesList[player.PlayerId].Add(player.GetTrueRoleName());
+
+        // 游戏结束用
+        var id = player.PlayerId;
+        Main.SetRolesList[player.PlayerId].Add(Utils.GetTrueRoleName(id, false) + Utils.GetSubRolesText(id, false, false, true));
 
         if (role < CustomRoles.NotAssigned)
         {
@@ -686,6 +689,7 @@ static class ExtendedPlayerControl
         return rangePlayers;
     }
     public static bool IsImp(this PlayerControl player) => player.Is(CustomRoleTypes.Impostor);
+    public static bool IsImpTeam(this PlayerControl player) => player.IsImp() || player.Is(CustomRoles.Madmate);
 
     public static bool IsCrew(this PlayerControl player) => player.Is(CustomRoleTypes.Crewmate);
     public static bool IsCrewKiller(this PlayerControl player) => player.IsCrew() && ((CustomRoleManager.GetByPlayerId(player.PlayerId) as IKiller)?.IsKiller ?? false);
@@ -693,10 +697,10 @@ static class ExtendedPlayerControl
 
     public static bool IsNeutral(this PlayerControl player) => player.Is(CustomRoleTypes.Neutral);
 
-    public static bool IsNeutralKiller(this PlayerControl player) => player.IsNeutral() && ((player.GetRoleClass() as INeutralKiller)?.IsNK ?? false);
+    public static bool IsNeutralKiller(this PlayerControl player) => player.IsNeutral() && ((CustomRoleManager.GetByPlayerId(player.PlayerId) as INeutralKiller)?.IsNK ?? false);
     public static bool IsNeutralNonKiller(this PlayerControl player) => !player.IsNeutralKiller();
 
-    public static bool IsNeutralEvil(this PlayerControl player) => player.IsNeutral() && ((player.GetRoleClass() as INeutral)?.IsNE ?? false);
+    public static bool IsNeutralEvil(this PlayerControl player) => player.IsNeutral() && ((CustomRoleManager.GetByPlayerId(player.PlayerId) as INeutral)?.IsNE ?? false);
     public static bool IsNeutralBenign(this PlayerControl player) => !player.IsNeutralEvil();
 
     public static bool IsShapeshifting(this PlayerControl player) => Main.CheckShapeshift.TryGetValue(player.PlayerId, out bool ss) && ss;

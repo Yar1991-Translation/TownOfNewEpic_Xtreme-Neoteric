@@ -41,7 +41,7 @@ public sealed class MeteorMurderer : RoleBase, INeutralKiller
     {
     }
     public bool IsNK { get; private set; } = true;
-    public bool IsNE { get; private set; } = true;
+
     #region 全局变量
     public int LOVE;
     public int LVOverFlow;

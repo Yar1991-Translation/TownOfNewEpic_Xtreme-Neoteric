@@ -213,7 +213,7 @@ class IntroCutscenePatch
                 {
                     new LateTask(() =>
                     {
-                        PlayerControl.LocalPlayer.Data.Role.IntroSound = DestroyableSingleton<HnSImpostorScreamSfx>.Instance.HnSOtherImpostorTransformSfx;
+                        PlayerControl.LocalPlayer.Data.Role.IntroSound = PlayerControl.LocalPlayer.KillSfx;
                     }, 4f, "Sound");
                     break;
                 }

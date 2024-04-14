@@ -26,16 +26,12 @@ public sealed class MedicalExaminer : RoleBase, IDeathReasonSeeable
         player
     )
     {
-        
+        TaskCompletedBatteryCharge = OptionTaskCompletedBatteryCharge.GetFloat();
         CustomRoleManager.OnCheckMurderPlayerOthers_After.Add(OnCheckMurderPlayerOthers_After);
     }
     private string MsgToSend;
     private static OptionItem OptionTaskCompletedBatteryCharge;
     static OptionItem OptionKnowKiller;
-    public override void Add()
-    {
-        TaskCompletedBatteryCharge = OptionTaskCompletedBatteryCharge.GetFloat();
-    }
     enum OptionName
     {
         MedicalExaminerTaskCompletedBatteryCharge,

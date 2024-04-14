@@ -58,7 +58,7 @@ public sealed class Collector : RoleBase, INeutral
         CollectorCollectAmount = IntegerOptionItem.Create(RoleInfo, 10, OptionName.CollectorCollectAmount, new(1, 999, 1), 20, false)
             .SetValueFormat(OptionFormat.Votes);
     }
-    public bool IsNE { get; private set; } = true;
+
     public override void ApplyGameOptions(IGameOptions opt) => opt.SetVision(false);
 
     public override string GetProgressText(bool comms = false)

@@ -33,7 +33,7 @@ public sealed class Medic : RoleBase, IKiller
     )
     {
         ProtectList = new();
-
+        ProtectLimit = OptionProtectNums.GetInt();
         CustomRoleManager.MarkOthers.Add(GetMarkOthers);
         CustomRoleManager.OnCheckMurderPlayerOthers_Before.Add(OnCheckMurderPlayerOthers_Before);
     }
@@ -75,10 +75,6 @@ public sealed class Medic : RoleBase, IKiller
         OptionSeenShieldMode = StringOptionItem.Create(RoleInfo, 12, OptionName.MedicSeenShieldMode, EnumHelper.GetAllNames<SwitchSeenShieldMode>(), 2, false);
         OptionKnowTargetShieldBroken = BooleanOptionItem.Create(RoleInfo, 13, OptionName.MedicKnowTargetShieldBroken, true, false);
         OptionMedicShieldMode = StringOptionItem.Create(RoleInfo, 14, OptionName.MedicShieldMode, EnumHelper.GetAllNames<SwitchShieldMode>(), 1, false);
-    }
-    public override void Add()
-    {
-        ProtectLimit = OptionProtectNums.GetInt();
     }
     private void SendRPC_SyncLimit()
     {
@@ -184,14 +180,27 @@ public sealed class Medic : RoleBase, IKiller
     }
     public override void OnFixedUpdate(PlayerControl player)
     {
-        if (!Player.IsAlive() && OptionMedicShieldMode.GetInt()==1)
+        if (!Player.IsAlive() && OptionMedicShieldMode.GetInt() == 1)
         {
+            List<PlayerControl> playersToRemove = new();
+
             foreach (var pc in ProtectList)
             {
-                ProtectList.Remove(pc);
-                SendRPC_SyncList();
+                playersToRemove.Add(Utils.GetPlayerById(pc));
+
+                if (OptionSeenShieldMode.GetInt() == 1 || OptionSeenShieldMode.GetInt() == 2)
+                    Utils.GetPlayerById(pc).RpcProtectedMurderPlayer(Utils.GetPlayerById(pc));
+
                 Logger.Info($"{Utils.GetPlayerById(pc).GetNameWithRole()} : 来自医生的盾破碎", "Medic.OnCheckMurderPlayerOthers_Before");
             }
+
+            foreach (var pc in playersToRemove)
+            {
+                ProtectList.Remove(pc.PlayerId);
+            }
+
+            SendRPC_SyncList();
         }
     }
+
 }

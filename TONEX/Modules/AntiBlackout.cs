@@ -19,14 +19,17 @@ public static class AntiBlackout
     ///<summary>
     ///是否只有一个内鬼
     ///</summary>
-    public static bool IsSingleImpostor => (Main.RealOptionsData?.GetInt(Int32OptionNames.NumImpostors) ?? Main.NormalOptions.NumImpostors) - Main.AllPlayerControls.Count(x => GameStates.IsInGame && x.Is(CustomRoles.CrewPostor)) <= 1;
+    public static bool IsSingleImpostor 
+        => (Main.RealOptionsData?.GetInt(Int32OptionNames.NumImpostors) ?? Main.NormalOptions.NumImpostors) 
+        - Main.AllPlayerControls.Count(x => GameStates.IsInGame && x.Is(CustomRoles.CrewPostor)) <= 1;
     ///<summary>
     ///AntiBlackout内的处理是否必要
     ///</summary>
-    public static bool IsRequired => Options.NoGameEnd.GetBool()
-        || Enum.GetValues(typeof(CustomRoles))
-        .Cast<CustomRoles>()
-        .Any(role => role.GetRoleInfo().IsNK && role.IsExistCountDeath());
+    public static bool IsRequired
+            => Options.NoGameEnd.GetBool()
+                || Enum.GetValues(typeof(CustomRoles))
+                .Cast<CustomRoles>()
+                .Any(role => role.GetRoleInfo()?.IsNK ?? false && role.IsExistCountDeath());
     ///<summary>
     ///非内鬼玩家人数与内鬼人数之差
     ///</summary>

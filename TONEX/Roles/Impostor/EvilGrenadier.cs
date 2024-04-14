@@ -106,13 +106,13 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
     {
         Player.RpcResetAbilityCooldown();
         BlindingStartTime = Utils.GetTimeStamp();
-        foreach (var pc in Main.AllAlivePlayerControls.Where(x => !x.IsImp() && !x.Is(CustomRoles.Madmate)))
+        foreach (var pc in Main.AllAlivePlayerControls.Where(x => !x.IsImpTeam()))
         {
             OnBlinding(pc);
         }
         SendRPC_SyncList();
         Player.RPCPlayCustomSound("FlashBang");
-        foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.IsImp() || x.Is(CustomRoles.Madmate)))
+        foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.IsImpTeam()))
             pc.Notify(GetString("NiceGrenadierSkillInUse"), OptionSkillDuration.GetFloat());
         return false;
     }
@@ -131,7 +131,6 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
             
             //pc.Notify("<size=1000><color=#ffffff>●</color></size>", OptionSkillDuration.GetInt());
         }
-        return false;
     }
     public override void OnUsePet()
     {
@@ -144,7 +143,7 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
         }
         UsePetCooldown = Utils.GetTimeStamp();
         BlindingStartTime = Utils.GetTimeStamp();
-        foreach (var pc in Main.AllAlivePlayerControls.Where(x => !x.IsImp() && !x.Is(CustomRoles.Madmate)))
+        foreach (var pc in Main.AllAlivePlayerControls.Where(x => !x.IsImpTeam() ))
         {
 
             OnBlinding(pc);

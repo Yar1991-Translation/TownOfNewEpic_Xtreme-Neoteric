@@ -63,7 +63,7 @@ public sealed class Akujo : RoleBase, INeutralKiller
         AkujoLoverSuicide = BooleanOptionItem.Create(RoleInfo, 13, OptionName.LoverSuicide, true, false);
     }
     public bool IsKiller { get; private set; } = false;
-    public bool IsNE { get; private set; } = true;
+
     private int AkujoLimit;
     private int FakeLimit;
     bool ChooseFake;

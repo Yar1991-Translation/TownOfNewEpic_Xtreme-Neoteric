@@ -8,22 +8,14 @@ public interface IKiller
     /// <summary>
     /// 可以使用击杀键击杀玩家
     /// </summary>
-    public bool IsNE => true;
-    /*
+    public bool CanKill => true;
+
     /// <summary>
     /// 是按下击杀按键则击杀的职业吗<br/>
     /// 若设置为 false 则在您尝试击杀时不会请求目标进行任何检查
     /// 默认：返回 <see cref="CanKill"/> 的值
     /// </summary>
     public bool IsKiller => CanKill;
-
-
-    /// <summary>
-    /// 是否中立杀手
-    /// 默认：返回 false
-    /// </summary>
-    /// <returns>true：是</returns>
-    public bool IsNK => false;
     /// <summary>
     /// 是否可以使用击杀按键
     /// 默认：返回 <see cref="CanKill"/> 的值

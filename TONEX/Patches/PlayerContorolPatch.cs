@@ -6,6 +6,7 @@ using InnerNet;
 using MS.Internal.Xml.XPath;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TONEX.Modules;
@@ -371,7 +372,7 @@ class ReportDeadBodyPatch
         if (target != null)
         {
             if (__instance.Is(CustomRoles.Oblivious) && !Utils.GetPlayerById(target.PlayerId).Is(CustomRoles.Bait)) return false;
-            if (target.Object.GetRealKiller().Is(CustomRoles.PublicOpinionShaper))
+            if (target.Object.GetRealKiller() != null && target.Object.GetRealKiller().Is(CustomRoles.PublicOpinionShaper))
             {
                 if(!(Utils.IsActive(SystemTypes.Comms) || Utils.IsActive(SystemTypes.Electrical) || Utils.IsActive(SystemTypes.Reactor) || Utils.IsActive(SystemTypes.LifeSupp) || Utils.IsActive(SystemTypes.MushroomMixupSabotage)))
                 {
@@ -419,7 +420,7 @@ class ReportDeadBodyPatch
         foreach (var pc in Main.AllAlivePlayerControls)
             Signal.AddPosi(pc);
         if (target != null)
-            if (target.Object.GetRealKiller().Is(CustomRoles.Spiders))
+            if (target.Object.GetRealKiller() != null && target.Object.GetRealKiller().Is(CustomRoles.Spiders))
             {
                 Main.AllPlayerSpeed[__instance.PlayerId] = Spiders.OptionSpeed.GetFloat();
                 __instance.MarkDirtySettings();
@@ -922,10 +923,17 @@ public static class PlayerControlDiePatch
             }
 
             // Libertarian
-            foreach (var player in Libertarian.playerIdList)
+            if (!GameStates.IsMeeting)
             {
-                var li = Utils.GetPlayerById(player);
-                if (Vector2.Distance(li.transform.position, __instance.transform.position) <= Libertarian.OptionRadius.GetFloat())li?.NoCheckStartMeeting(__instance?.Data);
+                var playerIdListCopy = Libertarian.playerIdList;
+                foreach (var player in playerIdListCopy)
+                {
+                    var li = Utils.GetPlayerById(player);
+                    if (li != null && Vector2.Distance(li.transform.position, __instance.transform.position) <= Libertarian.OptionRadius.GetFloat())
+                    {
+                        li.NoCheckStartMeeting(__instance?.Data);
+                    }
+                }
             }
             // 死者の最終位置にペットが残るバグ対応
             __instance.SetOutFitStatic(petId:"");

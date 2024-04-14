@@ -1446,24 +1446,8 @@ public static class Utils
             return LastResultForChat[id];
         }
         else
-        {
+        { 
 
-                  builder.Append(Main.AllPlayerNames[id]);
-                  builder.Append(": ").Append(GetProgressText(id).RemoveColorTags());
-                  builder.Append(' ').Append(GetVitalText(id));
-                  string oldRoleName = GetOldRoleName(id);
-                  var newRoleName = GetTrueRoleName(id, false);
-                  if (!string.IsNullOrEmpty(oldRoleName) && oldRoleName != newRoleName)
-                  {
-                      builder.AppendFormat("<pos={0}em>", 0); // 修改此处，设置 pos 值
-                      builder.Append(oldRoleName + newRoleName);
-                  }
-                  else
-                  {
-                      builder.Append(' ').Append(GetTrueRoleName(id, false).RemoveColorTags());
-                  }
-
-            builder = new StringBuilder();
             // 全プレイヤー中最長の名前の長さからプレイヤー名の後の水平位置を計算する
             // 1em ≒ 半角2文字
             // 空白は0.5emとする
@@ -1479,11 +1463,14 @@ public static class Utils
             // "Lover's Suicide " = 8em
             // "回線切断 " = 4.5em
             pos += DestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID == SupportedLangs.English ? 8f : 4.5f;
-            if (!string.IsNullOrEmpty(oldRoleName) && oldRoleName != newRoleName)
+            string oldRoleName = GetOldRoleName(id);
+            var newRoleName = GetTrueRoleName(id, false) + Utils.GetSubRolesText(id, false, false, true);
+
+            if (!string.IsNullOrEmpty(oldRoleName))
             {
                 builder.AppendFormat("<pos={0}em>", pos);
                 builder.Append(oldRoleName);
-                builder.Append(GetTrueRoleName(id, false));
+                builder.Append(newRoleName);
                 builder.Append("</pos>");
                 if (!LastResultForChat.ContainsKey(id))
                     LastResultForChat.Add(id, builder.ToString());
@@ -1492,8 +1479,7 @@ public static class Utils
                 return builder.ToString();
             }
             builder.AppendFormat("<pos={0}em>", pos);
-            builder.Append(GetTrueRoleName(id, false));
-            builder.Append(GetSubRolesText(id));
+            builder.Append(newRoleName);
             builder.Append("</pos>");
         }
         if (!LastResultForChat.ContainsKey(id))

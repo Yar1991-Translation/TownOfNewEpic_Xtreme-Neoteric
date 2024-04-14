@@ -21,16 +21,16 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Currently, this change is NOT permanent.
 
 ## Summary of Updates
-- Fixed 33 bugs
+- Fixed 37 bugs
 - Implemented 12 optimizations
 - Made changes to 18 elements
 - Added 28 New/Remake features (including roles, settings, etc.)
 - Temporarily removed 2 elements
 
 ## Fix
-- Fixed the bug of God Of Plague can not win
+- Fixed the bug of God Of Plague could not win
 (Fixed By Slok)
-- Fixed the bug of Martry can not win
+- Fixed the bug of Martry could not win
 (Fixed By Slok)
 - Fixed the bug of there was no confirmation prompt when ejecting the host
 (Fixed By Slok, Technical Support：Karped)
@@ -93,6 +93,14 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Fixed the bug of the Hunter would cause linked targets to die without dying themselves in some cases
 (Fixed By Slok)
 - Fixed the bug of the Blackmailer's targets' mark may be displayed wrong
+(Fixed By Slok)
+- Fixed the bug of the Medic's shield breaking still made them immune to kills.
+(Fixed By Slok)
+- Fixed the bug of the Executioner's target quitting the game would not change the Executioner's role
+(Fixed By Slok)
+- Fixed the bug of the Lawyer's client quitting the game would not change the Lawyer's role
+(Fixed By Slok)
+- Fixed the bug of the Lover and other addon roles might not being displayed in the last result
 (Fixed By Slok)
 
 ## Optimization

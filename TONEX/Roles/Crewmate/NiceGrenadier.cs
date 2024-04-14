@@ -110,7 +110,7 @@ public sealed class NiceGrenadier : RoleBase
         if (Player.Is(CustomRoles.Madmate))
         {
             MadBlindingStartTime = Utils.GetTimeStamp();
-            foreach (var pc in Main.AllAlivePlayerControls.Where(x => !x.IsImp() && !x.Is(CustomRoles.Madmate)))
+            foreach (var pc in Main.AllAlivePlayerControls.Where(x => !x.IsImpTeam()))
             {
 
                 OnBlinding(pc);
@@ -119,7 +119,7 @@ public sealed class NiceGrenadier : RoleBase
         else
         {
             BlindingStartTime = Utils.GetTimeStamp();
-            foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.IsImp() || (x.IsNeutral() && OptionCanAffectNeutral.GetBool())))
+            foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.IsImpTeam() || (x.IsNeutral() && OptionCanAffectNeutral.GetBool())))
             {
                 OnBlinding(pc);
             }
@@ -159,7 +159,7 @@ public sealed class NiceGrenadier : RoleBase
         if (Player.Is(CustomRoles.Madmate))
         {
             MadBlindingStartTime = Utils.GetTimeStamp();
-            foreach (var pc in Main.AllAlivePlayerControls.Where(x => !x.IsImp() && !x.Is(CustomRoles.Madmate)))
+            foreach (var pc in Main.AllAlivePlayerControls.Where(x => !x.IsImpTeam()))
             {
 
                 OnBlinding(pc);
@@ -168,7 +168,7 @@ public sealed class NiceGrenadier : RoleBase
         else
         {
             BlindingStartTime = Utils.GetTimeStamp();
-            foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.IsImp() || (x.IsNeutral() && OptionCanAffectNeutral.GetBool())))
+            foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.IsImpTeam() || (x.IsNeutral() && OptionCanAffectNeutral.GetBool())))
             {
                 OnBlinding(pc);
             }

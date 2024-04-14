@@ -35,7 +35,6 @@ public sealed class Executioner : RoleBase, IAdditionalWinner, INeutral
         ChangeRolesAfterTargetKilled = ChangeRoles[OptionChangeRolesAfterTargetKilled.GetValue()];
 
         Executioners.Add(this);
-        CustomRoleManager.OnMurderPlayerOthers.Add(OnMurderPlayerOthers);
 
         TargetExiled = false;
     }
@@ -96,10 +95,6 @@ public sealed class Executioner : RoleBase, IAdditionalWinner, INeutral
     {
         Executioners.Remove(this);
 
-        if (Executioners.Count <= 0)
-        {
-            CustomRoleManager.OnMurderPlayerOthers.Remove(OnMurderPlayerOthers);
-        }
     }
     public void SendRPC()
     {
@@ -118,19 +113,7 @@ public sealed class Executioner : RoleBase, IAdditionalWinner, INeutral
         TargetId = byte.MaxValue;
         SendRPC();
     }
-    public static void OnMurderPlayerOthers(MurderInfo info)
-    {
-        var target = info.AttemptTarget;
 
-        foreach (var executioner in Executioners.ToArray())
-        {
-            if (executioner.TargetId == target.PlayerId)
-            {
-                executioner.ChangeRole();
-                break;
-            }
-        }
-    }
     public override string GetMark(PlayerControl seer, PlayerControl seen, bool _ = false)
     {
         //seenが省略の場合seer
@@ -163,7 +146,11 @@ public sealed class Executioner : RoleBase, IAdditionalWinner, INeutral
         Player.RpcSetCustomRole(ChangeRolesAfterTargetKilled);
         Utils.NotifyRoles();
     }
-
+    public override void OnPlayerDeath(PlayerControl player, CustomDeathReason deathReason, bool isOnMeeting = false)
+    {
+        if (player.PlayerId != TargetId || isOnMeeting) return;
+        ChangeRoleByTarget (TargetId);
+    }
     public static void ChangeRoleByTarget(byte targetId)
     {
         foreach (var executioner in Executioners)
