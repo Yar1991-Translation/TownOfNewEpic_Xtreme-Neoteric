@@ -280,6 +280,15 @@ public abstract class RoleBase : IDisposable
     /// <returns>false：将玩家被踢出通风管，其他人将看不到动画。</returns>
     public virtual bool OnEnterVent(PlayerPhysics physics, int ventId) =>  true;
 
+    /// <summary>
+    /// <para>离开通风管时调用的函数</para>
+    /// <para>可以取消</para>
+    /// </summary>
+    /// <param name="physics"></param>
+    /// <param name="ventId">通风管 ID</param>
+    /// <returns>false：将玩家被无法退出通风管，其他人将看不到动画。</returns>
+    public virtual bool OnExitVent(PlayerPhysics physics, int ventId) => true;
+
     public virtual void CheckNotWin(PlayerControl player)
     {  }
     /// <summary>
@@ -600,13 +609,6 @@ public abstract class RoleBase : IDisposable
     public virtual void OnGameStart()
     { }
 
-    /// <summary>
-    /// 技能影响目标的函数
-    /// </summary>
-    public virtual bool SkillEffects(SkillReleaseType type, PlayerControl user = null, List<PlayerControl> effectTargetList = null,  MurderInfo info = null)
-    {
-        return true;
-    }
     protected static AudioClip GetIntroSound(RoleTypes roleType) =>
         RoleManager.Instance.AllRoles.Where((role) => role.Role == roleType).FirstOrDefault().IntroSound;
 

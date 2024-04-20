@@ -45,7 +45,7 @@ public enum CustomRPC
 
     //TONEX
     ColorFlash,
-    CantDoAnyActPlayer,
+    DisableAct,
     SetAdmirerLoversPlayers,
     SetAkujoLoversPlayers,
     SetCupidLoversPlayers,
@@ -117,7 +117,7 @@ public enum Sounds
 internal class RPCHandlerPatch
 {
     public static bool TrustedRpc(byte id)
- => (CustomRPC)id is CustomRPC.VersionCheck or CustomRPC.CantDoAnyActPlayer or CustomRPC.RequestRetryVersionCheck or CustomRPC.AntiBlackout or CustomRPC.Judge or CustomRPC.Swap or CustomRPC.Guess or CustomRPC.OnClickMeetingButton or CustomRPC.PlaySound;
+ => (CustomRPC)id is CustomRPC.VersionCheck or CustomRPC.DisableAct or CustomRPC.RequestRetryVersionCheck or CustomRPC.AntiBlackout or CustomRPC.Judge or CustomRPC.Swap or CustomRPC.Guess or CustomRPC.OnClickMeetingButton or CustomRPC.PlaySound;
 
     public static bool Prefix(PlayerControl __instance, [HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
     {
@@ -317,20 +317,8 @@ internal class RPCHandlerPatch
             case CustomRPC.SyncNameNotify:
                 NameNotifyManager.ReceiveRPC(reader);
                 break;
-            case CustomRPC.CantDoAnyActPlayer:
-                var counta = reader.ReadInt32();
-                if (reader.ReadBoolean())
-                {
-                    for (int i = 0; i < counta; i++)
-                        if (!Main.CantDoActList.Contains(reader.ReadByte()))
-                            Main.CantDoActList.Add(reader.ReadByte());
-                }
-                else
-                    for (int i = 0; i < counta; i++)
-                            Main.CantDoActList.Remove(reader.ReadByte());
-
-
-
+            case CustomRPC.DisableAct:
+                ExtendedPlayerControl.ReceiveDisableAct(reader);
                 break;
             case CustomRPC.KillFlash:
                 Utils.FlashColor(new(1f, 0f, 0f, 0.3f));

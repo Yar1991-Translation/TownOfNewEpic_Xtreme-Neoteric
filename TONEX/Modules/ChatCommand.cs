@@ -154,6 +154,11 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
                 SpecifyRole(mc.Args, mc.Player.PlayerId);
                 return (MsgRecallMode.Block, null);
             }),
+            new(["qq", "share"], CommandAccess.Host, mc =>
+            {
+                Cloud.ShareLobby(true);
+                return (MsgRecallMode.Block, null);
+            }),
             new(["h", "help"], CommandAccess.All, mc =>
             {
                 Utils.ShowHelp(mc.Player.PlayerId);
@@ -169,9 +174,9 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
                 string text = GetString("Message.ReadySetScanner");
                 var player = mc.Player;
                 player.RpcSetScanner(true);
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(player.NetId, (byte)RpcCalls.SetScanner, SendOption.Reliable, -1);
+             /*   MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(player.NetId, (byte)RpcCalls.SetScanner, SendOption.Reliable, -1);
                 writer.Write(true);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);*/
                 mc.SendToList.Add(mc.Player.PlayerId);
                 return (MsgRecallMode.Block, text);
             }),

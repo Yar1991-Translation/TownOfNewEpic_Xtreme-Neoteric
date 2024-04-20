@@ -107,11 +107,11 @@ public sealed class NiceTimeStops : RoleBase
     public override bool OnEnterVent(PlayerPhysics physics, int ventId)
     {
         ReduceNowCooldown();
-       Player.SyncSettings();
+        Player.SyncSettings();
         Player.RpcResetAbilityCooldown();
         ProtectStartTime = Utils.GetTimeStamp();
-            if (!Player.IsModClient()) Player.RpcProtectedMurderPlayer(Player);
-            Player.Notify(GetString("NiceTimeStopsOnGuard"));
+        if (!Player.IsModClient()) Player.RpcProtectedMurderPlayer(Player);
+        Player.Notify(GetString("NiceTimeStopsOnGuard"));
         Player.ColorFlash(Utils.GetRoleColor(CustomRoles.SchrodingerCat));
         CustomSoundsManager.RPCPlayCustomSoundAll("TheWorld");
         foreach (var player in Main.AllAlivePlayerControls)
@@ -119,19 +119,14 @@ public sealed class NiceTimeStops : RoleBase
             if (Player == player) continue;
             if (!player.IsAlive() || Pelican.IsEaten(player.PlayerId)) continue;
             NameNotifyManager.Notify(player, Utils.ColorString(Utils.GetRoleColor(CustomRoles.NiceTimeStops), GetString("ForNiceTimeStops")));
-            var tmpSpeed1 = Main.AllPlayerSpeed[player.PlayerId];
             NiceTimeStopsstop.Add(player.PlayerId);
-            Main.AllPlayerSpeed[player.PlayerId] = Main.MinSpeed;
-            Main.CantDoActList.Add(player.PlayerId);
-            ExtendedPlayerControl.SendCantDoActPlayer(true);
-            player.MarkDirtySettings();
+            player.DisableAct(ExtendedPlayerControl.PlayerActionType.Move | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Meeting);
+
+
             new LateTask(() =>
             {
-                Main.AllPlayerSpeed[player.PlayerId] = Main.AllPlayerSpeed[player.PlayerId] - Main.MinSpeed + tmpSpeed1;
-                Main.CantDoActList.Remove(player.PlayerId);
-                ExtendedPlayerControl.SendCantDoActPlayer(false);
-                player.MarkDirtySettings();
-              NiceTimeStopsstop.Remove(player.PlayerId);
+                player.EnableAct(ExtendedPlayerControl.PlayerActionType.Move | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Meeting);
+                NiceTimeStopsstop.Remove(player.PlayerId);
                 RPC.PlaySoundRPC(player.PlayerId, Sounds.TaskComplete);
             }, OptionSkillDuration.GetFloat(), "Time Stop");
         }
@@ -175,18 +170,13 @@ public sealed class NiceTimeStops : RoleBase
             if (Player == player) continue;
             if (!player.IsAlive() || Pelican.IsEaten(player.PlayerId)) continue;
             NameNotifyManager.Notify(player, Utils.ColorString(Utils.GetRoleColor(CustomRoles.NiceTimeStops), GetString("ForNiceTimeStops")));
-            var tmpSpeed1 = Main.AllPlayerSpeed[player.PlayerId];
             NiceTimeStopsstop.Add(player.PlayerId);
-            Main.AllPlayerSpeed[player.PlayerId] = Main.MinSpeed;
-            Main.CantDoActList.Add(player.PlayerId);
-            ExtendedPlayerControl.SendCantDoActPlayer(true);
-            player.MarkDirtySettings();
+            player.DisableAct(ExtendedPlayerControl.PlayerActionType.Move | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Meeting);
+
+
             new LateTask(() =>
             {
-                Main.AllPlayerSpeed[player.PlayerId] = Main.AllPlayerSpeed[player.PlayerId] - Main.MinSpeed + tmpSpeed1;
-                Main.CantDoActList.Remove(player.PlayerId);
-                ExtendedPlayerControl.SendCantDoActPlayer(false);
-                player.MarkDirtySettings();
+                player.EnableAct(ExtendedPlayerControl.PlayerActionType.Move | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Meeting);
                 NiceTimeStopsstop.Remove(player.PlayerId);
                 RPC.PlaySoundRPC(player.PlayerId, Sounds.TaskComplete);
             }, OptionSkillDuration.GetFloat(), "Time Stop");

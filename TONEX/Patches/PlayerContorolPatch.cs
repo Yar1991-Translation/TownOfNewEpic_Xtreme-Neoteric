@@ -236,6 +236,7 @@ public static class PlayerControlCheckShapeshiftPatch
         {
             return false;
         }
+        if (__instance.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.All)) return false;
 
         // 無効な変身を弾く．これより前に役職等の処理をしてはいけない
         if (!CheckInvalidShapeshifting(__instance, target, shouldAnimate))
@@ -244,21 +245,25 @@ public static class PlayerControlCheckShapeshiftPatch
             return false;
         }
         // 役職の処理
-        var role = __instance.GetRoleClass();
-        if (role?.OnCheckShapeshift(target, ref shouldAnimate) == false)
+        if (!__instance.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.Skill))
         {
-            if (role.CanDesyncShapeshift)
+            var role = __instance.GetRoleClass();
+            if (role?.OnCheckShapeshift(target, ref shouldAnimate) == false)
             {
-                __instance.RpcSpecificRejectShapeshift(target, shouldAnimate);
+                if (role.CanDesyncShapeshift)
+                {
+                    __instance.RpcSpecificRejectShapeshift(target, shouldAnimate);
+                }
+                else
+                {
+                    __instance.RpcRejectShapeshift();
+                }
+                return false;
             }
-            else
-            {
-                __instance.RpcRejectShapeshift();
-            }
-            return false;
-        }
 
-        __instance.RpcShapeshift(target, shouldAnimate);
+
+            __instance.RpcShapeshift(target, shouldAnimate);
+        }
         return false;
     }
     private static bool CheckInvalidShapeshifting(PlayerControl instance, PlayerControl target, bool animate)
@@ -309,16 +314,19 @@ class ShapeshiftPatch
         var shapeshifter = __instance;
         var shapeshifting = shapeshifter.PlayerId != target.PlayerId;
 
-        if (Main.CheckShapeshift.TryGetValue(shapeshifter.PlayerId, out var last) && last == shapeshifting)
-        {
-            Logger.Info($"{__instance?.GetNameWithRole()}:Cancel Shapeshift.Prefix", "Shapeshift");
-            return;
-        }
+        if (shapeshifter.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.All)) return;
+
+        if (!(shapeshifter.IsEaten() && shapeshifter.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.Skill)))
+            if (Main.CheckShapeshift.TryGetValue(shapeshifter.PlayerId, out var last) && last == shapeshifting)
+            {
+                Logger.Info($"{__instance?.GetNameWithRole()}:Cancel Shapeshift.Prefix", "Shapeshift");
+                return;
+            }
 
         Main.CheckShapeshift[shapeshifter.PlayerId] = shapeshifting;
         Main.ShapeshiftTarget[shapeshifter.PlayerId] = target.PlayerId;
 
-        if (!shapeshifter.IsEaten() && (shapeshifter.CanUseSkill() || !shapeshifter.CantDoAnyAct()))
+        if (!(shapeshifter.IsEaten() && shapeshifter.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.Skill)))
             shapeshifter.GetRoleClass()?.OnShapeshift(target);
 
         if (!AmongUsClient.Instance.AmHost) return;
@@ -347,7 +355,7 @@ class ReportDeadBodyPatch
         Logger.Info("1", "test");
         if (Options.DisableMeeting.GetBool()) return false;
         if (Options.CurrentGameMode == CustomGameMode.HotPotato) return false;
-        if (__instance.CantDoAnyAct())
+        if (__instance.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Report, ExtendedPlayerControl.PlayerActionInUse.All))
         {
             WaitReport[__instance.PlayerId].Add(target);
             Logger.Warn($"{__instance.GetNameWithRole()}:通報禁止中のため可能になるまで待機します", "ReportDeadBody");
@@ -384,10 +392,17 @@ class ReportDeadBodyPatch
 
         foreach (var role in CustomRoleManager.AllActiveRoles.Values)
         {
-            if (role.OnCheckReportDeadBody(__instance, target) == false)
+            if (!__instance.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Report, ExtendedPlayerControl.PlayerActionInUse.Skill))
             {
-                Logger.Info($"会议被 {role.Player.GetNameWithRole()} 取消", "ReportDeadBody");
-                return false;
+                if (role.OnCheckReportDeadBody(__instance, target) == false)
+                {
+                    Logger.Info($"会议被 {role.Player.GetNameWithRole()} 取消", "ReportDeadBody");
+                    return false;
+                }
+            }
+            else
+            {
+                Logger.Info($" {role.Player.GetNameWithRole()} 技能被禁用", "ReportDeadBody");
             }
         }
 
@@ -704,7 +719,7 @@ class CoEnterVentPatch
         Logger.Info($"{__instance.myPlayer.GetNameWithRole()} CoEnterVent: {id}", "CoEnterVent");
 
         var user = __instance.myPlayer;
-        if (user.CantDoAnyAct() || !user.CanUseSkill() && user.GetCustomRole() is CustomRoles.EvilInvisibler or CustomRoles.Arsonist or CustomRoles.Veteran or CustomRoles.NiceTimeStops or CustomRoles.TimeMaster or CustomRoles.Instigator or CustomRoles.Paranoia or CustomRoles.Mayor or CustomRoles.DoveOfPeace or CustomRoles.NiceGrenadier)
+        if (user.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.EnterVent) || user.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.EnterVent, ExtendedPlayerControl.PlayerActionInUse.Skill) && user.GetCustomRole() is CustomRoles.EvilInvisibler or CustomRoles.Arsonist or CustomRoles.Veteran or CustomRoles.NiceTimeStops or CustomRoles.TimeMaster or CustomRoles.Instigator or CustomRoles.Paranoia or CustomRoles.Mayor or CustomRoles.DoveOfPeace or CustomRoles.NiceGrenadier)
         {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, -1);
             writer.WritePacked(127);
@@ -718,9 +733,9 @@ class CoEnterVentPatch
             }, 0.5f, "Fix DesyncImpostor Stuck");
             return false;
         }
-        if ((!user.GetRoleClass()?.OnEnterVent(__instance, id) ?? false) ||
-                    (user.Data.Role.Role != RoleTypes.Engineer && //エンジニアでなく
-                !user.CanUseImpostorVentButton()) //インポスターベントも使えない
+        if ((!user.GetRoleClass()?.OnEnterVent(__instance, id) ?? false) 
+            || (user.Data.Role.Role != RoleTypes.Engineer //非工程师
+            && !user.CanUseImpostorVentButton()) //也不能使用内鬼管道
         )
         {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, -1);
@@ -738,6 +753,51 @@ class CoEnterVentPatch
         return true;
     }
 }
+[HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.CoExitVent))]
+class CoExitVentPatch
+{
+    public static bool Prefix(PlayerPhysics __instance, [HarmonyArgument(0)] int id)
+    {
+        if (!AmongUsClient.Instance.AmHost) return true;
+
+        Logger.Info($"{__instance.myPlayer.GetNameWithRole()} CoExitVent: {id}", "CoEnterVent");
+
+        var user = __instance.myPlayer;
+        if (user.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.ExitVent) || user.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.ExitVent, ExtendedPlayerControl.PlayerActionInUse.Skill))
+        {
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, -1);
+            writer.WritePacked(127);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            _ = new LateTask(() =>
+            {
+                int clientId = user.GetClientId();
+                MessageWriter writer2 = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, clientId);
+                writer2.Write(id);
+                AmongUsClient.Instance.FinishRpcImmediately(writer2);
+            }, 0.5f, "Fix DesyncImpostor Stuck");
+            return false;
+        }
+        if ((!user.GetRoleClass()?.OnExitVent(__instance, id) ?? false)
+             || (user.Data.Role.Role != RoleTypes.Engineer //非工程师
+             && !user.CanUseImpostorVentButton()) //也不能使用内鬼管道
+         )
+        {
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, -1);
+            writer.WritePacked(127);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            _ = new LateTask(() =>
+            {
+                int clientId = user.GetClientId();
+                MessageWriter writer2 = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, clientId);
+                writer2.Write(id);
+                AmongUsClient.Instance.FinishRpcImmediately(writer2);
+            }, 0.5f, "Fix DesyncImpostor Stuck");
+            return false;
+        }
+        return true;
+    }
+}
+
 #endregion
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetName))]
 class SetNamePatch
@@ -868,10 +928,10 @@ public static class PlayerControlDiePatch
     {
         if (AmongUsClient.Instance.AmHost)
         {
-           __instance.RpcSetScanner(false);
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.SetScanner, SendOption.Reliable, -1);
+            __instance.RpcSetScanner(false);
+           /* MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.SetScanner, SendOption.Reliable, -1);
             writer.Write(false);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);*/
             CustomRoleManager.AllActiveRoles.Values.Do(role => role.OnPlayerDeath(__instance, PlayerState.GetByPlayerId(__instance.PlayerId).DeathReason, GameStates.IsMeeting));
             if (__instance.Is(CustomRoles.Madmate))
             {

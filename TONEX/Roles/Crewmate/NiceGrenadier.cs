@@ -114,6 +114,7 @@ public sealed class NiceGrenadier : RoleBase
             {
 
                 OnBlinding(pc);
+                pc.DisableAct();
             }
         }
         else
@@ -122,6 +123,7 @@ public sealed class NiceGrenadier : RoleBase
             foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.IsImpTeam() || (x.IsNeutral() && OptionCanAffectNeutral.GetBool())))
             {
                 OnBlinding(pc);
+                pc.DisableAct();
             }
         }
         SendRPC_SyncList();

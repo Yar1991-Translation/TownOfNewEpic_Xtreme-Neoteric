@@ -48,6 +48,8 @@ public static class CustomRoleManager
         if (appearanceKiller != attemptKiller || appearanceTarget != attemptTarget)
             Logger.Info($"Apperance：{appearanceKiller.GetNameWithRole()} => {appearanceTarget.GetNameWithRole()}", "CheckMurder");
 
+        if (attemptKiller.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Kill)) return false;
+
         var info = new MurderInfo(attemptKiller, attemptTarget, appearanceKiller, appearanceTarget);
 
         appearanceKiller.ResetKillCooldown();
@@ -61,11 +63,11 @@ public static class CustomRoleManager
 
         var killerRole = attemptKiller.GetRoleClass();
         var targetRole = attemptTarget.GetRoleClass();
-        if (attemptKiller.CantDoAnyAct()) return false;
+        
         // 首先凶手确实是击杀类型的职业
         if (killerRole is IKiller killer)
         {
-            if (!attemptKiller.CanUseSkill()) return false;
+            if (attemptKiller.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Kill, ExtendedPlayerControl.PlayerActionInUse.Skill)) return false;
             // 其他职业类对击杀事件的事先检查
             if (!killer.IsKiller)
             {
@@ -97,38 +99,12 @@ public static class CustomRoleManager
                 Logger.Info($"凶手阻塞了击杀", "CheckMurder");
                 return false;
             }
-            if (!attemptKiller.GetRoleClass().SkillEffects(RoleBase.SkillReleaseType.Kill_Killer, info: info))
-            {
-                Logger.Info($"凶手阻塞了击杀", "CheckMurder");
-                return false;
-            }
             if (killer.IsKiller)
             {
                 if (targetRole != null)
                 {
                     // 被害者检查击杀
                     if (!targetRole.OnCheckMurderAsTargetAfter(info))
-                    {
-                        Logger.Info($"被害者阻塞了击杀", "CheckMurder");
-                        return false;
-                    }
-                }
-                // 其他职业类对击杀事件的事后检查
-                foreach (var onCheckMurderPlayer in OnCheckMurderPlayerOthers_After)
-                {
-                    if (!onCheckMurderPlayer(info))
-                    {
-                        Logger.Info($"OtherAfter：{onCheckMurderPlayer.Method.Name} 阻塞了击杀", "CheckMurder");
-                        return false;
-                    }
-                }
-            }
-            if (killer.IsKiller)
-            {
-                if (targetRole != null)
-                {
-                    // 被害者检查击杀
-                    if (!targetRole.SkillEffects(RoleBase.SkillReleaseType.Kill_Target, info: info))
                     {
                         Logger.Info($"被害者阻塞了击杀", "CheckMurder");
                         return false;
@@ -174,7 +150,6 @@ public static class CustomRoleManager
     /// <param name="appearanceTarget">视觉上被击杀的玩家，可变</param>
     public static void OnMurderPlayer(PlayerControl appearanceKiller, PlayerControl appearanceTarget)
     {
-        if (appearanceKiller.CantDoAnyAct()) return;
         //MurderInfoの取得
         if (CheckMurderInfos.TryGetValue(appearanceKiller.PlayerId, out var info))
         {
@@ -197,7 +172,6 @@ public static class CustomRoleManager
         //ターゲットの処理
         var targetRole = attemptTarget.GetRoleClass();
         targetRole?.OnMurderPlayerAsTarget(info);
-        targetRole?.SkillEffects(RoleBase.SkillReleaseType.Kill_Target, info: info);
         //SubRoles
         Bait.OnMurderPlayerOthers(info);
         Beartrap.OnMurderPlayerOthers(info);

@@ -116,9 +116,9 @@ public sealed class Vagator : RoleBase, INeutralKiller
     public bool CanUseImpostorVentButton() => false;
     public float CalculateKillCooldown() => KillCooldown;
     public bool IsNK { get; private set; } = true;
-    public override bool SkillEffects(SkillReleaseType type, PlayerControl user = null, List<PlayerControl> effectTargetList = null, MurderInfo info = null)
+    public override bool OnCheckMurderAsTargetBefore(MurderInfo info)
     {
-        if (info.IsSuicide || (int)type == 1) return true;
+        if (info.IsSuicide) return true;
         var (killer, target) = info.AttemptTuple;
         if (ShieldsCount > 0 && target.Is(CustomRoles.Vagator))
         {

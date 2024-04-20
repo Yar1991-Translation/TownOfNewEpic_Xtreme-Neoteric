@@ -52,7 +52,7 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
         BecomeGodOfPlaguesStart
     }
 
-    List<byte> PlaguePlayers;
+    public List<byte> PlaguePlayers;
 
     public static bool CanVent;
 
@@ -76,11 +76,12 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
     public override void ApplyGameOptions(IGameOptions opt) => opt.SetVision(false);
     public bool CanUseSabotageButton() => false;
     public bool CanUseKillButton() => Player.IsAlive();
-    private void SendRPC()
+    public void SendRPC()
     {
         var sender = CreateSender();
         sender.Writer.Write(PlaguePlayers.Count);
-        PlaguePlayers.Do(sender.Writer.Write);
+        foreach (var pc in PlaguePlayers)
+            sender.Writer.Write(pc);
     }
     public override void ReceiveRPC(MessageReader reader)
     {

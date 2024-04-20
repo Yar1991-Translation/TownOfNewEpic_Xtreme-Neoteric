@@ -155,7 +155,7 @@ public sealed class Amber : RoleBase, IKiller
     {
         if (info.IsSuicide) return true;
         var (killer, target) = info.AttemptTuple;
-        if (!ProtectList.ContainsKey(target.PlayerId)) return true;
+        if (!ProtectList.ContainsKey(target.PlayerId) || ProtectList[target.PlayerId]<=0) return true;
 
         ProtectList[target.PlayerId]--;
         AmberMaxNum++;
@@ -190,6 +190,6 @@ public sealed class Amber : RoleBase, IKiller
     {
         seen ??= seer;
         if (!InProtect(seen.PlayerId)) return "";
-        return (seer.Is(CustomRoles.Amber)) ? Utils.ColorString(RoleInfo.RoleColor, $"{ProtectList[seen.PlayerId]}") : "";
+        return (seer.Is(CustomRoles.Amber)) ? Utils.ColorString(RoleInfo.RoleColor, $"({ProtectList[seen.PlayerId]})") : "";
     }
 }

@@ -102,21 +102,16 @@ public sealed class EvilTimeStops : RoleBase, IImpostor
             pc.Notify(GetString("NiceTimeStopsOnGuard"));
         foreach (var player in Main.AllAlivePlayerControls)
         {
-            if (Player == player || player.IsImpTeam() || player.Is(CustomRoles.Madmate)) continue;
+            if (Player == player) continue;
             if (!player.IsAlive() || Pelican.IsEaten(player.PlayerId)) continue;
             NameNotifyManager.Notify(player, Utils.ColorString(Utils.GetRoleColor(CustomRoles.NiceTimeStops), GetString("ForNiceTimeStops")));
-            var tmpSpeed1 = Main.AllPlayerSpeed[player.PlayerId];
             EvilTimeStopsstop.Add(player.PlayerId);
-            Main.AllPlayerSpeed[player.PlayerId] = Main.MinSpeed;
-            Main.CantDoActList.Add(player.PlayerId);
-            ExtendedPlayerControl.SendCantDoActPlayer(true);
-            player.MarkDirtySettings();
+            player.DisableAct(ExtendedPlayerControl.PlayerActionType.Move | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Meeting);
+
+
             new LateTask(() =>
             {
-                Main.AllPlayerSpeed[player.PlayerId] = Main.AllPlayerSpeed[player.PlayerId] - Main.MinSpeed + tmpSpeed1;
-                Main.CantDoActList.Remove(player.PlayerId);
-                ExtendedPlayerControl.SendCantDoActPlayer(false);
-                player.MarkDirtySettings();
+                player.EnableAct(ExtendedPlayerControl.PlayerActionType.Move | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Meeting);
                 EvilTimeStopsstop.Remove(player.PlayerId);
                 RPC.PlaySoundRPC(player.PlayerId, Sounds.TaskComplete);
             }, OptionSkillDuration.GetFloat(), "Time Stop");
@@ -157,21 +152,16 @@ public sealed class EvilTimeStops : RoleBase, IImpostor
             pc.Notify(GetString("NiceTimeStopsOnGuard"));
         foreach (var player in Main.AllAlivePlayerControls)
         {
-            if (Player == player || player.IsImpTeam()) continue;
+            if (Player == player) continue;
             if (!player.IsAlive() || Pelican.IsEaten(player.PlayerId)) continue;
             NameNotifyManager.Notify(player, Utils.ColorString(Utils.GetRoleColor(CustomRoles.NiceTimeStops), GetString("ForNiceTimeStops")));
-            var tmpSpeed1 = Main.AllPlayerSpeed[player.PlayerId];
             EvilTimeStopsstop.Add(player.PlayerId);
-            Main.AllPlayerSpeed[player.PlayerId] = Main.MinSpeed;
-            Main.CantDoActList.Add(player.PlayerId);
-            ExtendedPlayerControl.SendCantDoActPlayer(true);
-            player.MarkDirtySettings();
+            player.DisableAct(ExtendedPlayerControl.PlayerActionType.Move | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Meeting);
+
+
             new LateTask(() =>
             {
-                Main.AllPlayerSpeed[player.PlayerId] = Main.AllPlayerSpeed[player.PlayerId] - Main.MinSpeed + tmpSpeed1;
-                Main.CantDoActList.Remove(player.PlayerId);
-                ExtendedPlayerControl.SendCantDoActPlayer(false);
-                player.MarkDirtySettings();
+                player.EnableAct(ExtendedPlayerControl.PlayerActionType.Move | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Meeting);
                 EvilTimeStopsstop.Remove(player.PlayerId);
                 RPC.PlaySoundRPC(player.PlayerId, Sounds.TaskComplete);
             }, OptionSkillDuration.GetFloat(), "Time Stop");

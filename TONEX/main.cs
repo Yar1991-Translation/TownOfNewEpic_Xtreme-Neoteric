@@ -39,8 +39,8 @@ public class Main : BasePlugin
     // == 版本相关设定 / Version Config ==
     public const string LowestSupportedVersion = "2024.3.5";
     public static readonly bool IsPublicAvailableOnThisVersion = false;
-    public const string PluginVersion = "1.1.21";
-    public const string PluginShowVersion = "1.2_20240413_Canary_2";
+    public const string PluginVersion = "1.1.25";
+    public const string PluginShowVersion = "1.2_20240420_Canary_6";
     public const int PluginCreation = 1;
     // == 链接相关设定 / Link Config ==
     public static readonly bool ShowWebsiteButton = true;
@@ -105,8 +105,6 @@ public class Main : BasePlugin
 
     public static Dictionary<byte, float> AllPlayerKillCooldown = new();
     public static Dictionary<byte, List<string>> SetRolesList = new();
-    public static List<byte> CantUseSkillList = new();
-    public static List<byte> CantDoActList = new();
     /// <summary>
     /// 基本的に速度の代入は禁止.スピードは増減で対応してください.
     /// </summary>

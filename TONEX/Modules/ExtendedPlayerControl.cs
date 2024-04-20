@@ -17,6 +17,7 @@ using TONEX.Roles.Neutral;
 using UnityEngine;
 using static TONEX.Translator;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
+using Rewired.Utils.Platforms.Windows;
 
 namespace TONEX;
 
@@ -529,39 +530,490 @@ static class ExtendedPlayerControl
         killer.MurderPlayer(target, SucceededFlags);
     }
     public const MurderResultFlags SucceededFlags = MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost;
-    public static bool CanUseSkill(this PlayerControl pc)
+
+    [Flags]
+    public enum PlayerActionType
     {
-        if (Main.CantUseSkillList.Count <= 0) return true;
-        if (Main.CantUseSkillList.Contains(pc.PlayerId))
-            return false;
-        return true;
+        None = 0,
+        Kill = 1 << 0,
+        EnterVent = 1 << 1,
+        ExitVent = 1 << 2,
+        Shapeshift = 1 << 3,
+        Sabotage = 1 << 4,
+        Report = 1 << 5,
+        Meeting = 1 << 6,
+        Pet = 1 << 7,
+        Move = 1 << 8,
+        All = ~0
     }
-    public static bool CantDoAnyAct(this PlayerControl pc)
+    public enum PlayerActionInUse : int
     {
-        if (Main.CantDoActList.Count <= 0) return false;
-        if (Main.CantDoActList.Contains(pc.PlayerId))
-            return true;
-        return false;
+        None = 0,
+        Skill = 1,
+
+        All = 255
     }
-    public static void SendCantDoActPlayer(bool isadd)
+
+
+    public static Dictionary<byte, int> DisableKill = new();
+    public static Dictionary<byte, int> DisableEnterVent = new();
+    public static Dictionary<byte, int> DisableExitVent = new();
+    public static Dictionary<byte, int> DisableShapeshift = new();
+    public static Dictionary<byte, int> DisableSabotage = new();
+    public static Dictionary<byte, int> DisableReport = new();
+    public static Dictionary<byte, int> DisableMeeting = new();
+    public static Dictionary<byte, int> DisablePet = new();
+    public static Dictionary<byte, int> DisableMove = new();
+
+    public static Dictionary<byte, float> PlayerSpeedRecord = new();
+
+    public static void EnableActAll(this PlayerControl pc)
     {
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.CantDoAnyActPlayer, SendOption.Reliable, -1);
-        writer.Write(Main.CantDoActList.Count);
-        writer.Write(isadd);
-        foreach (var pc in Main.CantDoActList)
-            writer.Write(pc);
+        // 移除禁用 Kill 动作的记录
+        DisableKill.Remove(pc.PlayerId);
+
+        // 移除禁用 EnterVent 动作的记录
+        DisableEnterVent.Remove(pc.PlayerId);
+
+        // 移除禁用 ExitVent 动作的记录
+        DisableExitVent.Remove(pc.PlayerId);
+
+        // 移除禁用 Shapeshift 动作的记录
+        DisableShapeshift.Remove(pc.PlayerId);
+
+        // 移除禁用 Sabotage 动作的记录
+        DisableSabotage.Remove(pc.PlayerId);
+
+        // 移除禁用 Report 动作的记录
+        DisableReport.Remove(pc.PlayerId);
+
+        // 移除禁用 Meeting 动作的记录
+        DisableMeeting.Remove(pc.PlayerId);
+
+        // 移除禁用 Pet 动作的记录
+        DisablePet.Remove(pc.PlayerId);
+
+        // 移除禁用 Move 动作的记录
+        DisableMove.Remove(pc.PlayerId);
+
+        SendDisableAct();
+    }
+
+    public static bool IsDisabledAct(this PlayerControl pc, PlayerActionType actionTypes = PlayerActionType.None, PlayerActionInUse actionInUses = PlayerActionInUse.All)
+    {
+        if (actionInUses == PlayerActionInUse.All)
+            switch (actionTypes)
+            {
+                // 懒得写注释了，自己看
+                case PlayerActionType.Kill:
+                    return DisableKill.ContainsKey(pc.PlayerId);
+
+                case PlayerActionType.EnterVent:
+                    return DisableEnterVent.ContainsKey(pc.PlayerId);
+
+                case PlayerActionType.ExitVent:
+                    return DisableExitVent.ContainsKey(pc.PlayerId);
+
+                case PlayerActionType.Shapeshift:
+                    return DisableShapeshift.ContainsKey(pc.PlayerId);
+
+                case PlayerActionType.Sabotage:
+                    return DisableSabotage.ContainsKey(pc.PlayerId);
+
+                case PlayerActionType.Report:
+                    return DisableReport.ContainsKey(pc.PlayerId);
+
+                case PlayerActionType.Meeting:
+                    return DisableMeeting.ContainsKey(pc.PlayerId);
+
+                case PlayerActionType.Pet:
+                    return DisablePet.ContainsKey(pc.PlayerId);
+                default:
+                    return false;
+            }
+        else
+            switch (actionTypes)
+            {
+                case PlayerActionType.Kill:
+                    return DisableKill.ContainsKey(pc.PlayerId) && DisableKill[pc.PlayerId] == (int)actionInUses;
+
+                case PlayerActionType.EnterVent:
+                    return DisableEnterVent.ContainsKey(pc.PlayerId) && DisableEnterVent[pc.PlayerId] == (int)actionInUses;
+
+                case PlayerActionType.ExitVent:
+                    return DisableExitVent.ContainsKey(pc.PlayerId) && DisableExitVent[pc.PlayerId] == (int)actionInUses;
+
+                case PlayerActionType.Shapeshift:
+                    return DisableShapeshift.ContainsKey(pc.PlayerId) && DisableShapeshift[pc.PlayerId] == (int)actionInUses;
+
+                case PlayerActionType.Sabotage:
+                    return DisableSabotage.ContainsKey(pc.PlayerId) && DisableSabotage[pc.PlayerId] == (int)actionInUses;
+
+                case PlayerActionType.Report:
+                    return DisableReport.ContainsKey(pc.PlayerId) && DisableReport[pc.PlayerId] == (int)actionInUses;
+
+                case PlayerActionType.Meeting:
+                    return DisableMeeting.ContainsKey(pc.PlayerId) && DisableMeeting[pc.PlayerId] == (int)actionInUses;
+
+                case PlayerActionType.Pet:
+                    return DisablePet.ContainsKey(pc.PlayerId) && DisablePet[pc.PlayerId] == (int)actionInUses;
+                default:
+                    return false;
+            }
+    }
+
+    /// <summary>
+    /// 禁用玩家行为
+    /// </summary>
+    /// <param name="actionTypes">禁用行为，可输入多个:
+    /// Kill:击杀;
+    /// EnterVent:进入通风管;
+    /// ExitVent:退出通风管;
+    /// Shapeshift:变形;
+    /// Sabotage:破坏;
+    /// Report:报告尸体;
+    /// Meeting:开启会议;
+    /// Pet:摸宠物;
+    /// Move:移动;
+    /// All:以上所有行为.
+    /// </param>
+    /// <param name="actionInUses">禁用类别:
+    /// PlayerActionType.All:全部类型行为;
+    /// PlayerActionType.Skill:技能类型行为.
+    /// </param>
+    /// <param name="isIntentional">这是玩家自愿限制行为吗</param>
+    public static void DisableAct(this PlayerControl pc, PlayerActionType actionTypes = PlayerActionType.None, PlayerActionInUse actionInUses = PlayerActionInUse.All, bool isIntentional = false)
+    {
+        // 瘟疫之源处理
+        if (CustomRoles.Plaguebearer.IsExist() && !isIntentional)
+        {
+            foreach (var player in Main.AllAlivePlayerControls.Where(p => p.Is(CustomRoles.Plaguebearer)))
+            {
+                var role = (player.GetRoleClass() as Plaguebearer);
+                role.PlaguePlayers.Remove(pc.PlayerId);
+                role.PlaguePlayers.Add(pc.PlayerId);
+                role.SendRPC();
+            }
+        }
+        if (actionTypes == PlayerActionType.None)
+        {
+            // 处理空情况
+            return;
+        }
+        pc.EnableActAll();
+
+        // 处理包含 Kill 的情况
+        if ((actionTypes & PlayerActionType.Kill) != PlayerActionType.None)
+        {
+
+            DisableKill.Add(pc.PlayerId, (int)actionInUses);
+
+        }
+
+        // 处理包含 EnterVent 的情况
+        if ((actionTypes & PlayerActionType.EnterVent) != PlayerActionType.None)
+        {
+
+            DisableEnterVent.Add(pc.PlayerId, (int)actionInUses);
+
+        }
+
+        // 处理包含 ExitVent 的情况
+        if ((actionTypes & PlayerActionType.ExitVent) != PlayerActionType.None)
+        {
+
+            DisableExitVent.Add(pc.PlayerId, (int)actionInUses);
+
+        }
+
+        // 处理包含 Shapeshift 的情况
+        if ((actionTypes & PlayerActionType.Shapeshift) != PlayerActionType.None)
+        {
+
+            DisableShapeshift.Add(pc.PlayerId, (int)actionInUses);
+
+        }
+
+        // 处理包含 Sabotage 的情况
+        if ((actionTypes & PlayerActionType.Sabotage) != PlayerActionType.None)
+        {
+
+            DisableSabotage.Add(pc.PlayerId, (int)actionInUses);
+
+        }
+
+        // 处理包含 Report 的情况
+        if ((actionTypes & PlayerActionType.Report) != PlayerActionType.None)
+        {
+
+            DisableReport.Add(pc.PlayerId, (int)actionInUses);
+
+        }
+
+        // 处理包含 Meeting 的情况
+        if ((actionTypes & PlayerActionType.Meeting) != PlayerActionType.None)
+        {
+
+            DisableMeeting.Add(pc.PlayerId, (int)actionInUses);
+
+        }
+
+        // 处理包含 Pet 的情况
+        if ((actionTypes & PlayerActionType.Pet) != PlayerActionType.None)
+        {
+            
+            
+            DisablePet.Add(pc.PlayerId, (int)actionInUses);
+
+        }
+
+        // 处理包含 Move 的情况
+        if ((actionTypes & PlayerActionType.Move) != PlayerActionType.None)
+        {
+            PlayerSpeedRecord.Remove(pc.PlayerId);
+            PlayerSpeedRecord.Add(pc.PlayerId, Main.AllPlayerSpeed[pc.PlayerId]);
+            Main.AllPlayerSpeed[pc.PlayerId] = Main.MinSpeed;
+            DisableMove.Add(pc.PlayerId, (int)actionInUses);
+            pc.MarkDirtySettings();
+
+        }
+
+        SendDisableAct();
+    }
+    /// <summary>
+    /// 启用玩家行为
+    /// </summary>
+    /// <param name="actionTypes">禁用行为，可输入多个:
+    /// Kill:击杀;
+    /// EnterVent:进入通风管;
+    /// ExitVent:退出通风管;
+    /// Shapeshift:变形;
+    /// Sabotage:破坏;
+    /// Report:报告尸体;
+    /// Meeting:开启会议;
+    /// Pet:摸宠物;
+    /// Move:移动;
+    /// All:以上所有行为.
+    /// </param>
+    public static void EnableAct(this PlayerControl pc, PlayerActionType actionTypes = PlayerActionType.None)
+    {
+        if (actionTypes == PlayerActionType.None)
+        {
+            // 处理空情况
+            return;
+        }
+
+        // 处理包含 Kill 的情况
+        if ((actionTypes & PlayerActionType.Kill) != PlayerActionType.None)
+        {
+            DisableKill.Remove(pc.PlayerId);
+        }
+
+        // 处理包含 EnterVent 的情况
+        if ((actionTypes & PlayerActionType.EnterVent) != PlayerActionType.None)
+        {
+            DisableEnterVent.Remove(pc.PlayerId);
+        }
+
+        // 处理包含 ExitVent 的情况
+        if ((actionTypes & PlayerActionType.ExitVent) != PlayerActionType.None)
+        {
+            DisableExitVent.Remove(pc.PlayerId);
+        }
+
+        // 处理包含 Shapeshift 的情况
+        if ((actionTypes & PlayerActionType.Shapeshift) != PlayerActionType.None)
+        {
+            DisableShapeshift.Remove(pc.PlayerId);
+        }
+
+        // 处理包含 Sabotage 的情况
+        if ((actionTypes & PlayerActionType.Sabotage) != PlayerActionType.None)
+        {
+            DisableSabotage.Remove(pc.PlayerId);
+        }
+
+        // 处理包含 Report 的情况
+        if ((actionTypes & PlayerActionType.Report) != PlayerActionType.None)
+        {
+            DisableReport.Remove(pc.PlayerId);
+        }
+
+        // 处理包含 Meeting 的情况
+        if ((actionTypes & PlayerActionType.Meeting) != PlayerActionType.None)
+        {
+            DisableMeeting.Remove(pc.PlayerId);
+        }
+
+        // 处理包含 Pet 的情况
+        if ((actionTypes & PlayerActionType.Pet) != PlayerActionType.None)
+        {
+            DisablePet.Remove(pc.PlayerId);
+        }
+
+        // 处理包含 Move 的情况
+        if ((actionTypes & PlayerActionType.Move) != PlayerActionType.None)
+        {
+            Main.AllPlayerSpeed[pc.PlayerId] = Main.AllPlayerSpeed[pc.PlayerId] - Main.MinSpeed + PlayerSpeedRecord[pc.PlayerId];
+            PlayerSpeedRecord.Remove(pc.PlayerId);    
+            DisableMove.Remove(pc.PlayerId);
+            pc.MarkDirtySettings();
+        }
+        SendDisableAct();
+    }
+
+    public static void SendDisableAct()
+    {
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.DisableAct, SendOption.Reliable, -1);
+        // 写入禁用 Kill 动作的记录
+        writer.Write(DisableKill.Count);
+        foreach (var pc in DisableKill)
+        {
+            writer.Write(pc.Key);
+            writer.Write(pc.Value);
+        }
+
+        // 写入禁用 EnterVent 动作的记录
+        writer.Write(DisableEnterVent.Count);
+        foreach (var pc in DisableEnterVent)
+        {
+            writer.Write(pc.Key);
+            writer.Write(pc.Value);
+        }
+
+        // 写入禁用 ExitVent 动作的记录
+        writer.Write(DisableExitVent.Count);
+        foreach (var pc in DisableExitVent)
+        {
+            writer.Write(pc.Key);
+            writer.Write(pc.Value);
+        }
+
+        // 写入禁用 Shapeshift 动作的记录
+        writer.Write(DisableShapeshift.Count);
+        foreach (var pc in DisableShapeshift)
+        {
+            writer.Write(pc.Key);
+            writer.Write(pc.Value);
+        }
+
+        // 写入禁用 Sabotage 动作的记录
+        writer.Write(DisableSabotage.Count);
+        foreach (var pc in DisableSabotage)
+        {
+            writer.Write(pc.Key);
+            writer.Write(pc.Value);
+        }
+
+        // 写入禁用 Report 动作的记录
+        writer.Write(DisableReport.Count);
+        foreach (var pc in DisableReport)
+        {
+            writer.Write(pc.Key);
+            writer.Write(pc.Value);
+        }
+
+        // 写入禁用 Meeting 动作的记录
+        writer.Write(DisableMeeting.Count);
+        foreach (var pc in DisableMeeting)
+        {
+            writer.Write(pc.Key);
+            writer.Write(pc.Value);
+        }
+
+        // 写入禁用 Pet 动作的记录
+        writer.Write(DisablePet.Count);
+        foreach (var pc in DisablePet)
+        {
+            writer.Write(pc.Key);
+            writer.Write(pc.Value);
+        }
+
+        // 写入禁用 Move 动作的记录
+        writer.Write(DisableMove.Count);
+        foreach (var pc in DisableMove)
+        {
+            writer.Write(pc.Key);
+            writer.Write(pc.Value);
+        }
+
         AmongUsClient.Instance.FinishRpcImmediately(writer);
+    }
+    public static void ReceiveDisableAct(MessageReader reader)
+    {
+        DisableKill = new();
+        var disableKillCount = reader.ReadInt32();
+        for (var i = 0; i < disableKillCount; i++)
+        {
+            DisableKill.Add(reader.ReadByte(), reader.ReadInt32());
+        }
+
+        DisableEnterVent = new();
+        var disableEnterVentCount = reader.ReadInt32();
+        for (var i = 0; i < disableEnterVentCount; i++)
+        {
+            DisableEnterVent.Add(reader.ReadByte(), reader.ReadInt32());
+        }
+
+        DisableExitVent = new();
+        var disableExitVentCount = reader.ReadInt32();
+        for (var i = 0; i < disableExitVentCount; i++)
+        {
+            DisableExitVent.Add(reader.ReadByte(), reader.ReadInt32());
+        }
+
+        DisableShapeshift = new();
+        var disableShapeshiftCount = reader.ReadInt32();
+        for (var i = 0; i < disableShapeshiftCount; i++)
+        {
+            DisableShapeshift.Add(reader.ReadByte(), reader.ReadInt32());
+        }
+
+        DisableSabotage = new();
+        var disableSabotageCount = reader.ReadInt32();
+        for (var i = 0; i < disableSabotageCount; i++)
+        {
+            DisableSabotage.Add(reader.ReadByte(), reader.ReadInt32());
+        }
+
+        DisableReport = new();
+        var disableReportCount = reader.ReadInt32();
+        for (var i = 0; i < disableReportCount; i++)
+        {
+            DisableReport.Add(reader.ReadByte(), reader.ReadInt32());
+        }
+
+        DisableMeeting = new();
+        var disableMeetingCount = reader.ReadInt32();
+        for (var i = 0; i < disableMeetingCount; i++)
+        {
+            DisableMeeting.Add(reader.ReadByte(), reader.ReadInt32());
+        }
+
+        DisablePet = new();
+        var disablePetCount = reader.ReadInt32();
+        for (var i = 0; i < disablePetCount; i++)
+        {
+            DisablePet.Add(reader.ReadByte(), reader.ReadInt32());
+        }
+
+        DisableMove = new();
+        var disableMoveCount = reader.ReadInt32();
+        for (var i = 0; i < disableMoveCount; i++)
+        {
+            DisableMove.Add(reader.ReadByte(), reader.ReadInt32());
+        }
     }
 
     public static void RpcMurderPlayer(this PlayerControl killer, PlayerControl target)
     {
-        if (killer.CantDoAnyAct()) return;
+        if (killer.IsDisabledAct(PlayerActionType.Kill)) return;
         killer.RpcMurderPlayer(target, true);
     }
     public static void RpcMurderPlayerV2(this PlayerControl killer, PlayerControl target)
     {
         if (target == null) target = killer;
-        if (killer.CantDoAnyAct()) return;
+        if (killer.IsDisabledAct(PlayerActionType.Kill)) return;
         if (AmongUsClient.Instance.AmClient)
         {
             killer.MurderPlayer(target);

@@ -13,7 +13,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 
 ## Base
 - Based on AmongUs v2024.3.5
-- Based on Town Of Host v5.1.5 & Town Of Next v3.0.1Of Next v3.0.1
+- Based on Town Of Host v5.1.5 & Town Of Next v3.0.1
 
 ## Warning
 - Create/join public lobbies is temporarily unavailable
@@ -21,7 +21,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Currently, this change is NOT permanent.
 
 ## Summary of Updates
-- Fixed 37 bugs
+- Fixed 38 bugs
 - Implemented 12 optimizations
 - Made changes to 21 elements
 - Added 28 New/Remake features (including roles, settings, etc.)
@@ -101,6 +101,8 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Fixed the bug of the Lawyer's client quitting the game would not change the Lawyer's role
 (Fixed By Slok)
 - Fixed the bug of the Lover and other addon roles might not being displayed in the last result
+(Fixed By Slok)
+- Fixed the bug of can not use private server
 (Fixed By Slok)
 
 ## Optimization

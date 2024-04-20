@@ -53,9 +53,9 @@ public sealed class Unyielding : RoleBase, IKiller
     public bool CanUseSabotageButton() => false;
     public bool CanUseImpostorVentButton() => false;
     public override void ApplyGameOptions(IGameOptions opt) => opt.SetVision(false);
-    public override bool SkillEffects(SkillReleaseType type, PlayerControl user = null, List<PlayerControl> effectTargetList = null, MurderInfo info = null)
+    public override bool OnCheckMurderAsTargetBefore(MurderInfo info)
     {
-        if (info.IsSuicide || (int)type != 1) return true;
+        if (info.IsSuicide) return true;
         var (killer, target) = info.AttemptTuple;
         if (Player.IsAlive() && Player.PlayerId == target.PlayerId)
         {

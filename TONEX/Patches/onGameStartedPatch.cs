@@ -72,8 +72,16 @@ internal class ChangeRoleSettings
 
             Main.PlayerColors = new();
 
-            Main.CantUseSkillList = new();
-            Main.CantDoActList = new();
+            ExtendedPlayerControl.PlayerSpeedRecord = new();
+            ExtendedPlayerControl.DisableKill = new();
+            ExtendedPlayerControl.DisableEnterVent = new();
+            ExtendedPlayerControl.DisableExitVent = new();
+            ExtendedPlayerControl.DisableShapeshift = new();
+            ExtendedPlayerControl.DisableSabotage = new();
+            ExtendedPlayerControl.DisableReport = new();
+            ExtendedPlayerControl.DisableMeeting = new();
+            ExtendedPlayerControl.DisablePet = new();
+            ExtendedPlayerControl.DisableMove = new();
             //名前の記録
             RPC.SyncAllPlayerNames();
             HudSpritePatch.IsEnd = false ;
@@ -97,10 +105,11 @@ internal class ChangeRoleSettings
                     var pair = (target.PlayerId, seer.PlayerId);
                     Main.LastNotifyNames[pair] = target.name;
                 }
-               target.RpcSetScanner(false);
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(target.NetId, (byte)RpcCalls.SetScanner, SendOption.Reliable, -1);
+
+                target.RpcSetScanner(false);
+                /*MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(target.NetId, (byte)RpcCalls.SetScanner, SendOption.Reliable, -1);
                 writer.Write(false);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);*/
             }
             foreach (var pc in Main.AllPlayerControls)
             {
@@ -135,11 +144,11 @@ internal class ChangeRoleSettings
             MeetingStates.MeetingCalled = false;
             MeetingStates.FirstMeeting = true;
             GameStates.AlreadyDied = false;
-                foreach (var pc in Main.AllAlivePlayerControls)
+            foreach (var pc in Main.AllAlivePlayerControls)
+            {
+                if (!pc.Is(CustomRoles.GM))
                 {
-                    if (!pc.Is(CustomRoles.GM))
-                    {
-                        var sender = CustomRpcSender.Create(name: $"PetsPatch.RpcSetPet)");
+                    var sender = CustomRpcSender.Create(name: $"PetsPatch.RpcSetPet)");
                     if (pc.Data.DefaultOutfit.PetId == null)
                     {
                         pc.SetPet("pet_Crewmate");
@@ -148,10 +157,10 @@ internal class ChangeRoleSettings
                         .EndRpc();
                         sender.SendMessage();
                     }
-                        pc.CanPet();
-                        
-                    }
+                    pc.CanPet();
+
                 }
+            }
         }
         catch (Exception ex)
         {
