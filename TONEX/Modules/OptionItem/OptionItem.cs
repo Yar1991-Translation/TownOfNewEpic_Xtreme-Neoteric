@@ -175,7 +175,14 @@ public abstract class OptionItem
     // 旧IsHidden関数
     public virtual bool IsHiddenOn(CustomGameMode mode)
     {
-        return IsHidden || (GameMode != CustomGameMode.All && GameMode != mode) || GameMode == CustomGameMode.AllCrewMod && mode == CustomGameMode.Standard;
+        var result = true;
+
+        if ((GameMode & mode) != 0)
+        {
+            result = false;
+        }
+
+        return IsHidden || result;
     }
 
     public string ApplyFormat(string value)

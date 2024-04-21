@@ -146,6 +146,7 @@ internal static class CustomRoleSelector
         // 抽取优先职业（内鬼）
         while (ImpOnList.Count > 0)
         {
+            if (readyRoleNum >= optImpNum) break;
             var select = ImpOnList[rd.Next(0, ImpOnList.Count)];
             ImpOnList.Remove(select);
             
@@ -166,6 +167,7 @@ internal static class CustomRoleSelector
         {
             while (ImpRateList.Count > 0)
             {
+                if (readyRoleNum >= optImpNum) break;
                 var select = ImpRateList[rd.Next(0, ImpRateList.Count)];
                 ImpRateList.Remove(select);
                 rolesToAssign.Add(select);

@@ -681,15 +681,16 @@ static class ExtendedPlayerControl
     /// PlayerActionType.All:全部类型行为;
     /// PlayerActionType.Skill:技能类型行为.
     /// </param>
-    /// <param name="isIntentional">这是玩家自愿限制行为吗</param>
-    public static void DisableAct(this PlayerControl pc, PlayerActionType actionTypes = PlayerActionType.None, PlayerActionInUse actionInUses = PlayerActionInUse.All, bool isIntentional = false)
+    /// <param name="isIntentional">这是玩家自愿禁用行为吗</param>
+    public static void DisableAct(this PlayerControl player, PlayerControl pc, PlayerActionType actionTypes = PlayerActionType.None, PlayerActionInUse actionInUses = PlayerActionInUse.All, bool isIntentional = false)
     {
         // 瘟疫之源处理
         if (CustomRoles.Plaguebearer.IsExist() && !isIntentional)
         {
-            foreach (var player in Main.AllAlivePlayerControls.Where(p => p.Is(CustomRoles.Plaguebearer)))
+            foreach (var plague in Main.AllAlivePlayerControls.Where(p => p.Is(CustomRoles.Plaguebearer)))
             {
-                var role = (player.GetRoleClass() as Plaguebearer);
+                var role = (plague.GetRoleClass() as Plaguebearer);
+                if (!role.PlaguePlayers.Contains(player.PlayerId)) continue;
                 role.PlaguePlayers.Remove(pc.PlayerId);
                 role.PlaguePlayers.Add(pc.PlayerId);
                 role.SendRPC();
@@ -795,8 +796,20 @@ static class ExtendedPlayerControl
     /// Move:移动;
     /// All:以上所有行为.
     /// </param>
-    public static void EnableAct(this PlayerControl pc, PlayerActionType actionTypes = PlayerActionType.None)
+    /// /// <param name="isIntentional">这是玩家自愿启用行为吗</param>
+    public static void EnableAct(this PlayerControl player, PlayerControl pc, PlayerActionType actionTypes = PlayerActionType.None, bool isIntentional = false)
     {
+        if (CustomRoles.Plaguebearer.IsExist() && !isIntentional)
+        {
+            foreach (var plague in Main.AllAlivePlayerControls.Where(p => p.Is(CustomRoles.Plaguebearer)))
+            {
+                var role = (plague.GetRoleClass() as Plaguebearer);
+                if (!role.PlaguePlayers.Contains(player.PlayerId)) continue;
+                role.PlaguePlayers.Remove(pc.PlayerId);
+                role.PlaguePlayers.Add(pc.PlayerId);
+                role.SendRPC();
+            }
+        }
         if (actionTypes == PlayerActionType.None)
         {
             // 处理空情况

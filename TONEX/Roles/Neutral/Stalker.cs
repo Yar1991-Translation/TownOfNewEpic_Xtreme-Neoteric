@@ -6,10 +6,11 @@ using InnerNet;
 using static TONEX.Options;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
+using TONEX.Roles.Core.Interfaces;
 
 namespace TONEX.Roles.Neutral
 {
-    public sealed class Stalker : RoleBase, INeutralKiller
+    public sealed class Stalker : RoleBase, INeutralKiller, IOverrideWinner
     {
         public static readonly SimpleRoleInfo RoleInfo =
             SimpleRoleInfo.Create(
@@ -84,7 +85,15 @@ namespace TONEX.Roles.Neutral
                 }
             }
         }
-
+        public void CheckWin(ref CustomWinner WinnerTeam, ref HashSet<byte> WinnerIds)
+        {
+            if (Player.IsAlive() && WinnerTeam != CustomWinner.Stalker && IsWinKill)
+            {
+                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Stalker);
+                CustomWinnerHolder.WinnerRoles.Add(CustomRoles.Stalker);
+            }
+             
+        }
         public float CalculateKillCooldown() => KillCooldown;
         public override void ApplyGameOptions(IGameOptions opt) => opt.SetVision(HasImpostorVision);
         public bool CanUseImpostorVentButton() => false;

@@ -324,6 +324,7 @@ internal class SelectRolesPatch
             switch (Options.CurrentGameMode)
             {
                 case CustomGameMode.Standard:
+                case CustomGameMode.AllCrewModMode:
                     GameEndChecker.SetPredicateToNormal();
                     break;
                 case CustomGameMode.HotPotato:

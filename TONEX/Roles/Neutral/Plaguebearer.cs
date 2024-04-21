@@ -109,6 +109,15 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
     }
     public override void OnFixedUpdate(PlayerControl player)
     {
+        List<byte> remove = new();
+        foreach (var pc in PlaguePlayers.Where(p=>!Utils.GetPlayerById(p).IsAlive()))
+        {
+            remove.Add(pc);
+        }
+        foreach(var pc in remove)
+        {
+            PlaguePlayers.Remove(pc);
+        }
         if (Main.AllAlivePlayerControls.ToList().Count - 1 == PlaguePlayers.Count)
         {
             Player.RpcSetCustomRole(CustomRoles.GodOfPlagues);

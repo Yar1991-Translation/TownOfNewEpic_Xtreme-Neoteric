@@ -67,7 +67,10 @@ public static class CustomRoleManager
         // 首先凶手确实是击杀类型的职业
         if (killerRole is IKiller killer)
         {
-            if (attemptKiller.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Kill, ExtendedPlayerControl.PlayerActionInUse.Skill)) return false;
+
+            if (attemptKiller.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Kill, ExtendedPlayerControl.PlayerActionInUse.Skill)&& !killer.IsKiller) return false;
+            attemptKiller.DisableAct(attemptTarget);
+            attemptTarget.DisableAct(attemptKiller);
             // 其他职业类对击杀事件的事先检查
             if (!killer.IsKiller)
             {

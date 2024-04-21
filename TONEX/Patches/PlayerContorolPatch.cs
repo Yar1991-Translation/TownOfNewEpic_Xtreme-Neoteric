@@ -247,6 +247,8 @@ public static class PlayerControlCheckShapeshiftPatch
         // 役職の処理
         if (!__instance.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.Skill))
         {
+            __instance.DisableAct(target);
+            target.DisableAct(__instance);
             var role = __instance.GetRoleClass();
             if (role?.OnCheckShapeshift(target, ref shouldAnimate) == false)
             {
@@ -782,13 +784,13 @@ class CoExitVentPatch
              && !user.CanUseImpostorVentButton()) //也不能使用内鬼管道
          )
         {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, -1);
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.EnterVent, SendOption.Reliable, -1);
             writer.WritePacked(127);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             _ = new LateTask(() =>
             {
                 int clientId = user.GetClientId();
-                MessageWriter writer2 = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, clientId);
+                MessageWriter writer2 = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.EnterVent, SendOption.Reliable, clientId);
                 writer2.Write(id);
                 AmongUsClient.Instance.FinishRpcImmediately(writer2);
             }, 0.5f, "Fix DesyncImpostor Stuck");

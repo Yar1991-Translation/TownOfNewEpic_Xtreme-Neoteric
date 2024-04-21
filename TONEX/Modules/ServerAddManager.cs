@@ -23,13 +23,17 @@ public static class ServerAddManager
             regionInfos.Add(CreateHttp("au.3q.fan", "小猫354[北京]", 22020, false));
             regionInfos.Add(CreateHttp("45yun.cn", "小猫服[北京]", 22000, false));
             regionInfos.Add(CreateHttp("au.3q.fan", "方块服[北京]", 22000, false));
+            regionInfos.Add(CreateHttp("aucn.233466.xyz", "Nikocat233(CN)", 443, true));
+            
         }
         regionInfos.Add(CreateHttp("au-as.duikbo.at", "Modded Asia (MAS)", 443, true));
         regionInfos.Add(CreateHttp("www.aumods.xyz", "Modded NA (MNA)", 443, true));
         regionInfos.Add(CreateHttp("au-eu.duikbo.at", "Modded EU (MEU)", 443, true));
-   
-    
-     
+        regionInfos.Add(CreateHttp("au-us.233466.xyz", "Nikocat233(US)", 443, true));
+        regionInfos.Add(CreateHttp("154.21.201.164", $"XtremeWave(HongKong)", 22023, false));
+
+
+
 
         var defaultRegion = serverManager.CurrentRegion;
         regionInfos.Where(x => !serverManager.AvailableRegions.Contains(x)).Do(serverManager.AddOrUpdateRegion);

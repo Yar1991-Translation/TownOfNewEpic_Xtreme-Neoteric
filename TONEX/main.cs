@@ -38,9 +38,9 @@ public class Main : BasePlugin
     public static ConfigEntry<string> DebugKeyInput { get; private set; }
     // == 版本相关设定 / Version Config ==
     public const string LowestSupportedVersion = "2024.3.5";
-    public static readonly bool IsPublicAvailableOnThisVersion = false;
-    public const string PluginVersion = "1.1.25";
-    public const string PluginShowVersion = "1.2_20240420_Canary_6";
+    public static readonly bool IsPublicAvailableOnThisVersion = true;
+    public const string PluginVersion = "1.1.30";
+    public const string PluginShowVersion = "1.2_20240421_Canary_10";
     public const int PluginCreation = 1;
     // == 链接相关设定 / Link Config ==
     public static readonly bool ShowWebsiteButton = true;
@@ -67,7 +67,7 @@ public class Main : BasePlugin
     public static ConfigEntry<int> MessageWait { get; private set; }
     public static ConfigEntry<bool> ShowResults { get; private set; }
     public static ConfigEntry<bool> UnlockFPS { get; private set; }
-    //public static ConfigEntry<bool> CanPublic { get; private set; }
+    public static ConfigEntry<bool> CanPublic { get; private set; }
     public static ConfigEntry<bool> HorseMode { get; private set; }
     public static ConfigEntry<bool> AutoStartGame { get; private set; }
     public static ConfigEntry<bool> AutoEndGame { get; private set; }
@@ -160,7 +160,7 @@ public class Main : BasePlugin
         DebugKeyInput = Config.Bind("Authentication", "Debug Key", "");
         ShowResults = Config.Bind("Result", "Show Results", true);
         UnlockFPS = Config.Bind("Client Options", "UnlockFPS", false);
-        //CanPublic = Config.Bind("Client Options", "CanPublic", true);
+        CanPublic = Config.Bind("Client Options", "CanPublic", true);
         HorseMode = Config.Bind("Client Options", "HorseMode", false);
         AutoStartGame = Config.Bind("Client Options", "AutoStartGame", false);
         AutoEndGame = Config.Bind("Client Options", "AutoEndGame", false);
@@ -203,11 +203,6 @@ public class Main : BasePlugin
             //TONEX.Logger.Disable("SetScanner");
             TONEX.Logger.Disable("test");
             TONEX.Logger.Disable("ver");
-            TONEX.Logger.Disable("ForNVBeKilled");
-            TONEX.Logger.Disable("ForNVCAAList");
-            TONEX.Logger.Disable("ForNVDFList");
-            TONEX.Logger.Disable("ForNvFarAheadList");
-            TONEX.Logger.Disable("ForNVMoney");
             TONEX.Logger.Disable("RpcTeleport");
         }
         //TONEX.Logger.isDetail = true;

@@ -1459,7 +1459,7 @@ public static class Utils
             builder.AppendFormat("<pos={0}em>", pos).Append(GetProgressText(id)).Append("</pos>");
             // "(00/00) " = 4em
             pos += 4f;
-            builder.AppendFormat("<pos={0}em>", pos).Append(GetVitalText(id)).Append("</pos>");
+            builder.AppendFormat("<pos={0}em>", pos).Append(GetVitalText(id, true, true)).Append("</pos>");
             // "Lover's Suicide " = 8em
             // "回線切断 " = 4.5em
             pos += DestroyableSingleton<TranslationController>.Instance.currentLanguage.languageID == SupportedLangs.English ? 8f : 4.5f;

@@ -156,7 +156,7 @@ public sealed class Amber : RoleBase, IKiller
         if (info.IsSuicide) return true;
         var (killer, target) = info.AttemptTuple;
         if (!ProtectList.ContainsKey(target.PlayerId) || ProtectList[target.PlayerId]<=0) return true;
-
+        
         ProtectList[target.PlayerId]--;
         AmberMaxNum++;
         AmberPercent = AmberMaxNum * AmberAdd.GetFloat();
@@ -172,6 +172,9 @@ public sealed class Amber : RoleBase, IKiller
     }
     public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
+        var (killer, target) = info.AttemptTuple;
+        killer.DisableAct(target);
+        target.DisableAct(killer);
         if (ProtectList[Player.PlayerId] > 0)
         {
             ProtectList[Player.PlayerId]--;

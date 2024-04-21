@@ -202,6 +202,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
                 var diss = Vector2.Distance(posi, pc.transform.position);
                 if (pc != Player && diss <= 2.5f)
                 {
+                    Player.DisableAct(pc);
                     if (Feeble.Contains(pc.PlayerId) && !feb)
                     {
                         killsucceed += killsucceed * 1.5f;
@@ -244,6 +245,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
                 {
                     if (diss < 5f)
                     {
+                        Player.DisableAct(pc);
                         if (Feeble.Contains(pc.PlayerId) && !feb)
                         {
                             killsucceed += killsucceed * 1.5f;
@@ -304,7 +306,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
     }
     public static string GetMarkOthers(PlayerControl seer, PlayerControl seen, bool isForMeeting = false)
     {
-
+        if (! seer.Is(CustomRoles.Vagator))return "";
         if (Feeble != null)
         {
             if (Feeble.Contains(seen.PlayerId))
@@ -313,7 +315,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
             }
         }
         else if (seer == seen)
-            return Utils.ColorString(RoleInfo.RoleColor, $"({(seer.GetRoleClass() as Vagator).ShieldsCount})");
+            return Utils.ColorString(RoleInfo.RoleColor, $"({(seer.GetRoleClass() as Vagator)?.ShieldsCount ?? null})");
         return "";
     }
     public override bool GetPetButtonText(out string text)
@@ -357,6 +359,6 @@ public sealed class Vagator : RoleBase, INeutralKiller
     {
         seen ??= seer;
         //seeおよびseenが自分である場合以外は関係なし
-        return $"\n<color=#e6adoa>{GetString("VagatorKillTimesTotalCount")}:{KillTimesTotalCount},{GetString("VagatorSkillTimesTotalCount")}:{SkillTimesTotalCount},{GetString("VagatorElementPowerCount")}:{ElementPowerCount}</color>";
+        return $"<color=#E6AD0A>{GetString("VagatorKillTimesTotalCount")}:{KillTimesTotalCount},{GetString("VagatorSkillTimesTotalCount")}:{SkillTimesTotalCount},{GetString("VagatorElementPowerCount")}:{ElementPowerCount}</color>";
     }
 }

@@ -21,8 +21,8 @@ public enum CustomGameMode
 {
     Standard = 0x01,
     HotPotato = 0x02,
-    AllCrewMod = 0x03,
-    All = int.MaxValue,
+    AllCrewModMode = Standard | 0x04,
+    All = Standard | HotPotato | AllCrewModMode
 }
 
 [HarmonyPatch]
@@ -55,13 +55,19 @@ public static class Options
         => GameMode.GetInt() switch
         {    
             1 => CustomGameMode.HotPotato,
-            //2 => CustomGameMode.AllCrewMod,
+#if DEBUG
+            2 => CustomGameMode.AllCrewModMode,
+#endif
             _ => CustomGameMode.Standard
         };
 
     public static readonly string[] gameModes =
     {
-        "Standard","HotPotatoMode",//"AllCrewMode"
+        "Standard",
+        "HotPotatoMode",
+#if DEBUG
+        "AllCrewModMode"
+#endif
     };
 
     // 地图启用
@@ -72,7 +78,8 @@ public static class Options
     public static bool IsActiveFungle => AddedTheFungle.GetBool() || Main.NormalOptions.MapId == 5;
 
 
-    public static bool IsAllCrew => CurrentGameMode == (CustomGameMode)0x03;
+    public static bool IsAllCrew => CurrentGameMode == CustomGameMode.AllCrewModMode;
+    public static bool IsStandard => CurrentGameMode == CustomGameMode.Standard || IsAllCrew;
     // 职业数量・生成模式&概率
     public static Dictionary<CustomRoles, OptionItem> CustomRoleCounts;
     public static Dictionary<CustomRoles, StringOptionItem> CustomRoleSpawnChances;
@@ -1123,7 +1130,7 @@ public static class Options
     }
     public static void SetupRoleOptions(SimpleRoleInfo info) =>
         SetupRoleOptions(info.ConfigId, info.Tab, info.RoleName);
-    public static void SetupRoleOptions(int id, TabGroup tab, CustomRoles role, IntegerValueRule assignCountRule = null, CustomGameMode customGameMode = CustomGameMode.Standard)
+    public static void SetupRoleOptions(int id, TabGroup tab, CustomRoles role, IntegerValueRule assignCountRule = null, CustomGameMode customGameMode = CustomGameMode.Standard | CustomGameMode.AllCrewModMode)
     {
         if (role.IsVanilla() || role.IsHidden() || role.IsCanNotOpen()) return;
         assignCountRule ??= new(1, 15, 1);

@@ -21,10 +21,10 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Currently, this change is NOT permanent.
 
 ## Summary of Updates
-- Fixed 38 bugs
+- Fixed 39 bugs
 - Implemented 12 optimizations
-- Made changes to 21 elements
-- Added 28 New/Remake features (including roles, settings, etc.)
+- Made changes to 22 elements
+- Added 34 New/Remake features (including roles, settings, etc.)
 - Temporarily removed 2 elements
 
 ## Fix
@@ -33,7 +33,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Fixed the bug of Martry could not win
 (Fixed By Slok)
 - Fixed the bug of there was no confirmation prompt when ejecting the host
-(Fixed By Slok, Technical Support：Karped)
+(Fixed By Slok, Technical Support：KARPED1EM)
 - Fixed the bug of the Evil Swapper's target and skill usage were behaving abnormally
 (Fixed By Slok)
 - Fixed the bug of players were sometimes kicked out of the modded server due to untrusted RPC
@@ -103,6 +103,8 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Fixed the bug of the Lover and other addon roles might not being displayed in the last result
 (Fixed By Slok)
 - Fixed the bug of can not use private server
+(Fixed By Slok)
+- Fixed the bug of can not pet
 (Fixed By Slok)
 
 ## Optimization
@@ -174,6 +176,8 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Idea&Changed By Slok)
 - Deputy：Render the target powerless before the meeting => Invalidate the target's next kill
 (Idea&Changed By Slok)
+- Last Results：If the player is alive then the deathreason will be empty
+(Idea&Changed By Slok)
 
 ## Deletion
 - Temporarily remove version-restricted role: Martyr
@@ -189,6 +193,8 @@ Impostors：
 (Idea&Made By Slok)
 - New Impostor Role：Assaulter
 (Idea By Zeyan, Made By Slok)
+- Remake Impostor Role：Miner（Experimental）
+(Idea By KARPED1EM, Made By Slok)
 Crewmates：
 - New Crewmate Role：Scout
 (Idea&Made By S)
@@ -206,11 +212,11 @@ Crewmates：
 - Remake Friendly Neutral Role：Provocateur
 (Idea By 法师, Made By Slok)
 - Remake Friendly Neutral Role：？？？
-(Idea By 咔皮呆, Made By Slok)
+(Idea By KARPED1EM, Made By Slok)
 - Remake Evil Neutral Role：Stalker
 (Source：Town Of Host_Y)
 - Remake Evil Neutral Role：Collecter
-(Idea By 咔皮呆, Made By Slok)
+(Idea By KARPED1EM, Made By Slok)
 - New Evil Neutral Role：Akujo
 (Source Of The Idea：The Other Roles GM Haoming Edition, Made By Slok)
 - New Evil Neutral Role：Admirer
@@ -247,10 +253,21 @@ Features：
 - New Command：/ank: Display Active Neutral Killer Role description
 (Idea&Made By Slok)
 
-## Others：
+## New Others：
 - 11 Musics！
 (Idea&Made By Slok)
 - Flashbang Effects
+(Idea&Made By Slok)
+- New Server: NikoCat233(CN)
+(Server By NikoCat233, Added By Slok)
+- New Server: NikoCat233(US)
+(Server By NikoCat233, Added By Slok)
+- New Server: XtremeWave(HongKong)
+(Server By 清风, Added By Slok)
+(You Can Public Room In These Server)
+- Plaguebearer: Can Infect others by skills
+(Idea&Made By Slok)
+- Last Results: Death Reason will show the killer's color
 (Idea&Made By Slok)
 
 ## Supplement

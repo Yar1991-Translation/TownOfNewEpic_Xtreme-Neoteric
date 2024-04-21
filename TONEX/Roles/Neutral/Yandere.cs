@@ -58,7 +58,7 @@ public sealed class Yandere : RoleBase, INeutralKiller
         OptionContactTime = FloatOptionItem.Create(RoleInfo, 11, OptionName.OptionContactTime, new(0, 20, 1), 3, false)
             .SetValueFormat(OptionFormat.Seconds);
         OptionContactRange = FloatOptionItem.Create(RoleInfo, 12, OptionName.OptionContactRange, new(0.5f, 5f, 0.25f), 2.5f, false)
-           .SetValueFormat(OptionFormat.Percent);
+           .SetValueFormat(OptionFormat.Multiplier);
 
     }
       List<byte> NeedKill;

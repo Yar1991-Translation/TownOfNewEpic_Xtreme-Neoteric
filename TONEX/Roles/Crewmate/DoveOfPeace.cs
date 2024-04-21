@@ -88,6 +88,7 @@ public sealed class DoveOfPeace : RoleBase
                 x.ResetKillCooldown();
                 x.SetKillCooldownV2();
                 x.Notify(Utils.ColorString(Utils.GetRoleColor(CustomRoles.DoveOfPeace), GetString("DoveOfPeaceSkillNotify")));
+                Player.DisableAct(x);
             });
             Player.RPCPlayCustomSound("Dove");
             Player.Notify(string.Format(GetString("DoveOfPeaceOnGuard"), SkillLimit));
@@ -123,6 +124,7 @@ public sealed class DoveOfPeace : RoleBase
                 x.ResetKillCooldown();
                 x.SetKillCooldownV2();
                 x.Notify(Utils.ColorString(Utils.GetRoleColor(CustomRoles.DoveOfPeace), GetString("DoveOfPeaceSkillNotify")));
+                Player.DisableAct(x);
             });
             Player.RPCPlayCustomSound("Dove");
             Player.Notify(string.Format(GetString("DoveOfPeaceOnGuard"), SkillLimit));

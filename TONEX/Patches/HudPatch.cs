@@ -303,6 +303,7 @@ class TaskPanelBehaviourPatch
             switch (Options.CurrentGameMode)
             {
                 case CustomGameMode.Standard:
+                case CustomGameMode.AllCrewModMode:
 
                     var lines = taskText.Split("\r\n</color>\n")[0].Split("\r\n\n")[0].Split("\r\n");
                     StringBuilder sb = new();

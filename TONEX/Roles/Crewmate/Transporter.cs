@@ -54,6 +54,7 @@ public sealed class Transporter : RoleBase
         var SelectedTarget = pcList[IRandom.Instance.Next(0, pcList.Count)];
         foreach (var pc in Main.AllAlivePlayerControls)
         {
+            Player.DisableAct(pc);
             if (pc.IsEaten()) continue;
             if (SelectedTarget == null) continue;
                pc.RpcTeleport(SelectedTarget.GetTruePosition());

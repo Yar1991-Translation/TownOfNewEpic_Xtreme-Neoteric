@@ -109,6 +109,7 @@ public sealed class TimeMaster : RoleBase
         Player.Notify(GetString("TimeMasterOnGuard"));
         foreach (var player in Main.AllPlayerControls)
         {
+            Player.DisableAct(player);
             if (TimeMasterbacktrack.ContainsKey(player.PlayerId))
             {
                 player.RPCPlayCustomSound("Teleport");
@@ -159,6 +160,7 @@ public sealed class TimeMaster : RoleBase
         Player.Notify(GetString("TimeMasterOnGuard"));
         foreach (var player in Main.AllPlayerControls)
         {
+            Player.DisableAct(player);
             if (TimeMasterbacktrack.ContainsKey(player.PlayerId))
             {
                 player.RPCPlayCustomSound("Teleport");
@@ -187,6 +189,7 @@ public sealed class TimeMaster : RoleBase
             var (killer, target) = info.AttemptTuple;
             foreach (var player in Main.AllPlayerControls)
             {
+                Player.DisableAct(player);
                 if (TimeMasterbacktrack.ContainsKey(player.PlayerId))
                 {
                     var position = TimeMasterbacktrack[player.PlayerId];

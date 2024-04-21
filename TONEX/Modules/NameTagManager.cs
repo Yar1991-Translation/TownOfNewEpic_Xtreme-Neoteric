@@ -233,8 +233,9 @@ public static class NameTagManager
             switch(Options.CurrentGameMode)
             {
                 case CustomGameMode.HotPotato:
-                    name = $"<color=#87cefa>{GetString("HotPotatoMode")}</color>" +
-                    $"<color=#87cefa>{Main.PluginShowVersion}</color>";
+                    var prefix = $"<size=80%><color=#F39C12>{GetString("HotPotatoMode")}</color>" +
+                    $"<color=#F39C12>{Main.PluginShowVersion}</color>";
+                    name = prefix + "</size>" +"\n"+ name;
                     break;
 
             };
