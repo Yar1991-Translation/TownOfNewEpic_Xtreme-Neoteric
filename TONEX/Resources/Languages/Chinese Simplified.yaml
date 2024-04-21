@@ -18,7 +18,15 @@ TeamNeutral: "中立阵营"
 TeamNNeutral: "友善中立"
 TeamIndependent: "独立阵营"
 TeamCrewmate: "船员阵营"
-ImpostorNum: "我们之中有<color=#ff1919>{0}</color>个伪装者"
+ImpostorNumCrew: "<color=#8cffff>我们之中有</color><color=#ff1919>{0}</color><color=#8cffff>个伪装者</color>"
+ImpostorNumNN: "<color=#fffee2>我们之中有</color><color=#ff1919>{0}</color><color=#fffee2>个伪装者</color>"
+ImpostorNumEN: "<color=#bbbaa1>我们之中有</color><color=#ff1919>{0}</color><color=#bbbaa1>个伪装者</color>"
+
+# 阵营开场
+ImpostorIntroText: "<color=#ff1919>让邪恶笼罩世界</color>"
+CrewmateIntroText: "<color=#8cffff>完成您的任务，共同解决那群坏蛋！</color>"
+NNeutralIntroText: "<color=#fffee2>顺水推舟，正义还是邪恶由您来抉择</color>"
+IndependentIntroText: "<color=#bbbaa1>让我们以全新的力量，征服整个世界！</color>"
 
 # 职业 / Roles
 

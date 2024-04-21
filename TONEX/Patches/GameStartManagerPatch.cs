@@ -79,14 +79,13 @@ public class GameStartManagerPatch
 
             // Make Public Button
             //#if RELEASE
-            if (Main.CanPublic.Value)
-            {
+            
                 if (ModUpdater.isBroken || (ModUpdater.hasUpdate && ModUpdater.forceUpdate) || !Main.AllowPublicRoom || !VersionChecker.IsSupported || !Main.IsPublicAvailableOnThisVersion)
                 {
                     __instance.MakePublicButton.color = Palette.DisabledClear;
                     __instance.privatePublicText.color = Palette.DisabledClear;
                 }
-            }
+            
             //#endif
 
             if (Main.NormalOptions.KillCooldown == 0f)

@@ -14,8 +14,7 @@ internal class MakePublicPatch
     {
         // 定数設定による公開ルームブロック
         //#if RELEASE
-        if (Main.CanPublic.Value)
-        {
+        
             if (!Main.AllowPublicRoom)
             {
                 var message = GetString("DisabledByProgram");
@@ -32,7 +31,7 @@ internal class MakePublicPatch
                 Logger.Info(message, "MakePublicPatch");
                 Logger.SendInGame(message);
                 return false;
-            }
+            
         }
 //#endif
         return true;
@@ -44,39 +43,38 @@ class MMOnlineManagerStartPatch
     public static void Postfix(MMOnlineManager __instance)
     {
         //#if RELEASE
-        if (Main.CanPublic.Value)
+
+        if (!(ModUpdater.hasUpdate || ModUpdater.isBroken || !VersionChecker.IsSupported || !Main.IsPublicAvailableOnThisVersion)) return;
+        var obj = GameObject.Find("FindGameButton");
+        if (obj)
         {
-            if (!(ModUpdater.hasUpdate || ModUpdater.isBroken || !VersionChecker.IsSupported || !Main.IsPublicAvailableOnThisVersion)) return;
-            var obj = GameObject.Find("FindGameButton");
-            if (obj)
+            obj?.SetActive(false);
+            var parentObj = obj.transform.parent.gameObject;
+            var textObj = Object.Instantiate(obj.transform.FindChild("Text_TMP").GetComponent<TMPro.TextMeshPro>());
+            textObj.transform.position = new Vector3(0.5f, -0.4f, 0f);
+            textObj.name = "CanNotJoinPublic";
+            textObj.DestroyTranslator();
+            string message = "";
+            if (ModUpdater.hasUpdate)
             {
-                obj?.SetActive(false);
-                var parentObj = obj.transform.parent.gameObject;
-                var textObj = Object.Instantiate(obj.transform.FindChild("Text_TMP").GetComponent<TMPro.TextMeshPro>());
-                textObj.transform.position = new Vector3(0.5f, -0.4f, 0f);
-                textObj.name = "CanNotJoinPublic";
-                textObj.DestroyTranslator();
-                string message = "";
-                if (ModUpdater.hasUpdate)
-                {
-                    message = GetString("CanNotJoinPublicRoomNoLatest");
-                }
-                else if (ModUpdater.isBroken)
-                {
-                    message = GetString("ModBrokenMessage");
-                }
-                else if (!VersionChecker.IsSupported)
-                {
-                    message = GetString("UnsupportedVersion");
-                }
-                else if (!Main.IsPublicAvailableOnThisVersion)
-                {
-                    message = GetString("PublicNotAvailableOnThisVersion");
-                }
-                textObj.text = $"<size=2>{Utils.ColorString(Color.red, message)}</size>";
+                message = GetString("CanNotJoinPublicRoomNoLatest");
             }
+            else if (ModUpdater.isBroken)
+            {
+                message = GetString("ModBrokenMessage");
+            }
+            else if (!VersionChecker.IsSupported)
+            {
+                message = GetString("UnsupportedVersion");
+            }
+            else if (!Main.AllowPublicRoom)
+            {
+                message = GetString("PublicNotAvailableOnThisVersion");
+            }
+            textObj.text = $"<size=2>{Utils.ColorString(Color.red, message)}</size>";
         }
-//#endif
+
+        //#endif
     }
 
 }

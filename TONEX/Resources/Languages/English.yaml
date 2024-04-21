@@ -18,7 +18,15 @@ TeamNeutral: "Neutral"
 TeamNNeutral: "Nice Neutral"
 TeamIndependent: "Evil Neutral"
 TeamCrewmate: "Crewmate"
-ImpostorNum: "There are <color=#ff1919>{0}</color> Impostors Among Us"
+ImpostorNumCrew: "<color=#8cffff>There Are </color><color=#ff1919>{0}</color><color=#8cffff> Impostors Among Us</color>"
+ImpostorNumNN: "<color=#fffee2>There Are </color><color=#ff1919>{0}</color><color=#fffee2> Impostors Among Us</color>"
+ImpostorNumEN: "<color=#bbbaa1>There Are </color><color=#ff1919>{0}</color><color=#bbbaa1> Impostors Among Us</color>"
+
+# 阵营开场
+ImpostorIntroText: "<color=#ff1919>Let Evil Envelop the World</color>"
+CrewmateIntroText: "<color=#8cffff>Complete Your Tasks, Unite to Solve Those Troublesome Situations!</color>"
+NNeutralIntroText: "<color=#fffee2>Go with the Flow, Whether Justice or Evil, It's Up to You to Decide</color>"
+IndependentIntroText: "<color=#bbbaa1>Let's Conquer the Entire World with Brand New Power!</color>"
 
 #职业 / Roles
 

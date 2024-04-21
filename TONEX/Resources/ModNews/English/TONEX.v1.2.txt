@@ -22,7 +22,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 
 ## Summary of Updates
 - Fixed 39 bugs
-- Implemented 12 optimizations
+- Implemented 13 optimizations
 - Made changes to 22 elements
 - Added 34 New/Remake features (including roles, settings, etc.)
 - Temporarily removed 2 elements
@@ -120,8 +120,6 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Idea&Made By Slok)
 - Lovers：Optimized certain code logic.
 (Idea&Made By Slok)
-- Official Website: Migrated the official website from tonex.cc to www.xtreme.net.cn
-(Idea&Made By 清风)
 - Gusser：Sending /id will now also provide the role list
 (Idea&Made By Slok)
 - Witch：Vent Switch Mode=>Vent/Pet Switch Mode
@@ -132,6 +130,10 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Idea&Made By Slok)
 - Prompt will be displayed when official audio files are missing
 (Idea&Made By Slok)
+- Add text to the opening animation based on different factions.
+(Idea&Made By Slok)
+- Official Website: Migrated the official website from tonex.cc to www.xtreme.net.cn
+(Idea&Made By 清风)
 
 ## Changing
 - Now, the Oblivious will report when they kill a Bait as well.
@@ -193,7 +195,7 @@ Impostors：
 (Idea&Made By Slok)
 - New Impostor Role：Assaulter
 (Idea By Zeyan, Made By Slok)
-- Remake Impostor Role：Miner（Experimental）
+- Remake Impostor Role：Miner
 (Idea By KARPED1EM, Made By Slok)
 Crewmates：
 - New Crewmate Role：Scout

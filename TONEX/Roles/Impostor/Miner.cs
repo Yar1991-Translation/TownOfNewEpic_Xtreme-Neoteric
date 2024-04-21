@@ -17,8 +17,7 @@ public sealed class Miner : RoleBase, IImpostor
             CustomRoleTypes.Impostor,
             1900,
             SetupOptionItem,
-            "mn|礦工",
-            experimental: true
+            "mn|礦工"
         );
     public Miner(PlayerControl player)
     : base(
@@ -102,6 +101,7 @@ public sealed class Miner : RoleBase, IImpostor
             SendRPC();
             player?.MyPhysics?.RpcBootFromVent(VentedId != -1 ? VentedId : Main.LastEnteredVent[player.PlayerId].Id);
             NameNotifyManager.Notify(player, GetString("MinerInvisStateOut"));
+            Player.EnableAct(Player, ExtendedPlayerControl.PlayerActionType.Kill | ExtendedPlayerControl.PlayerActionType.Shapeshift | ExtendedPlayerControl.PlayerActionType.Sabotage | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Meeting | ExtendedPlayerControl.PlayerActionType.Pet, true);
             return;
         }
         else if (remainTime <= 10)
