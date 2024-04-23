@@ -39,8 +39,8 @@ public class Main : BasePlugin
     // == 版本相关设定 / Version Config ==
     public const string LowestSupportedVersion = "2024.3.5";
     public static readonly bool IsPublicAvailableOnThisVersion = true;
-    public const string PluginVersion = "1.1.31";
-    public const string PluginShowVersion = "1.2_20240421_Canary_11";
+    public const string PluginVersion = "1.1.32";
+    public const string PluginShowVersion = "1.2_20240423_Canary_12";
     public const int PluginCreation = 1;
     // == 链接相关设定 / Link Config ==
     public static readonly bool ShowWebsiteButton = true;
