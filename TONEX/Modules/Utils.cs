@@ -1155,8 +1155,10 @@ public static class Utils
                 SelfSuffix.Clear();
 
                 //seer役職が対象のLowerText
+                if (!seer.IsModClient())
                 SelfSuffix.Append(seerRole?.GetLowerText(seer, isForMeeting: isForMeeting));
                 //seerに関わらず発動するLowerText
+
                 SelfSuffix.Append(CustomRoleManager.GetLowerTextOthers(seer, isForMeeting: isForMeeting));
 
                 //seer役職が対象のSuffix
@@ -1217,7 +1219,7 @@ public static class Utils
                     AkujoFakeLovers.TargetMarks(seer, target, ref TargetMark);
                     CupidLovers.TargetMarks(seer, target, ref TargetMark);
                     Neptune.TargetMarks(seer, target, ref TargetMark);
-                    Mini.TargetMarks(seer, target, ref TargetMark);
+                    
 
 
                     //他人の役職とタスクは幽霊が他人の役職を見れるようになっていてかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
@@ -1226,9 +1228,11 @@ public static class Utils
                     var TargetRoleText = targetRoleData.enabled ? $"<size={fontSize}>{targetRoleData.text}</size>\r\n" : "";
 
                     TargetSuffix.Clear();
-                    TargetSuffix.Append(seerRole?.GetLowerText(seer, target, isForMeeting: isForMeeting));
+                    if (!seer.IsModClient())
+                        TargetSuffix.Append(seerRole?.GetLowerText(seer, target, isForMeeting: isForMeeting));
                     //seerに関わらず発動するLowerText
-                    TargetSuffix.Append(CustomRoleManager.GetLowerTextOthers(seer, target, isForMeeting: isForMeeting));
+                    if (!seer.IsModClient())
+                        TargetSuffix.Append(CustomRoleManager.GetLowerTextOthers(seer, target, isForMeeting: isForMeeting));
 
                     //seer役職が対象のSuffix
                     TargetSuffix.Append(seerRole?.GetSuffix(seer, target, isForMeeting: isForMeeting));
@@ -1239,6 +1243,7 @@ public static class Utils
                     {
                         TargetSuffix.Insert(0, "\r\n");
                     }
+                    Mini.TargetSuffixs(seer, target, ref TargetSuffix);
 
                     //RealNameを取得 なければ現在の名前をRealNamesに書き込む
                     string TargetPlayerName = target.GetRealName(isForMeeting);

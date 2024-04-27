@@ -119,7 +119,7 @@ public static class Mini
         if (!playerIdList.Contains(playerId)) return "";
         return Age[playerId] < 18 ? Utils.ColorString(Color.yellow, $"({Age[playerId]})") : "";
     }
-    public static void TargetMarks(PlayerControl seer, PlayerControl target, ref StringBuilder targetMark)
+    public static void TargetSuffixs(PlayerControl seer, PlayerControl target, ref StringBuilder targetMark)
     {
         if (target.Is(CustomRoles.Mini) && seer != target)
         {

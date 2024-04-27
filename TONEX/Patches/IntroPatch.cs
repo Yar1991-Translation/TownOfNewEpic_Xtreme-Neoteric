@@ -141,7 +141,7 @@ class IntroCutscenePatch
     {
         //チーム表示変更
         CustomRoles role = PlayerControl.LocalPlayer.GetCustomRole();
-        //__instance.ImpostorText.gameObject.SetActive(false);
+        __instance.ImpostorText.gameObject.SetActive(true);
         PlayerControl.LocalPlayer.Data.Role.IntroSound = null;
         PlayerControl.LocalPlayer.Data.Role.UseSound = GetIntroSound(RoleTypes.Impostor);
         if (Main.EnableRoleBackGround.Value)
@@ -151,13 +151,13 @@ class IntroCutscenePatch
                 case CustomRoleTypes.Impostor:
                     __instance.TeamTitle.text = GetString("TeamImpostor");
                     __instance.ImpostorText.text = GetString("ImpostorIntroText");
-                    __instance.TeamTitle.color = __instance.BackgroundBar.material.color = __instance.ImpostorText.color = new Color32(255, 25, 25, byte.MaxValue);
+                    __instance.TeamTitle.color = __instance.BackgroundBar.material.color =  new Color32(255, 25, 25, byte.MaxValue);
                     break;
                 case CustomRoleTypes.Crewmate:
                     __instance.TeamTitle.text = $"{GetString("TeamCrewmate")}";
                     __instance.ImpostorText.text = $"{string.Format(GetString("ImpostorNumCrew"), Options.SetImpNum.GetBool() ? Options.ImpNum.GetInt() : Main.RealOptionsData.GetInt(Int32OptionNames.NumImpostors))}";
                     __instance.ImpostorText.text += "\n" + GetString("CrewmateIntroText");
-                    __instance.TeamTitle.color = __instance.ImpostorText.color = new Color32(140, 255, 255, byte.MaxValue);
+                    __instance.TeamTitle.color = new Color32(140, 255, 255, byte.MaxValue);
                     break;
                 case CustomRoleTypes.Neutral:
                     
@@ -167,7 +167,7 @@ class IntroCutscenePatch
                         __instance.TeamTitle.text = GetString("TeamNNeutral");
                         __instance.ImpostorText.text = $"{string.Format(GetString("ImpostorNumNN"), Options.SetImpNum.GetBool() ? Options.ImpNum.GetInt() : Main.RealOptionsData.GetInt(Int32OptionNames.NumImpostors))}";
                         __instance.ImpostorText.text += "\n" + GetString("NNeutralIntroText");
-                        __instance.TeamTitle.color = __instance.ImpostorText.color = new Color32(255, 254, 226, byte.MaxValue);
+                        __instance.TeamTitle.color =  new Color32(255, 254, 226, byte.MaxValue);
                        
                     }
                     else

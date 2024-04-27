@@ -566,7 +566,7 @@ class FixedUpdatePatch
                     if (Main.ForkId != ver.forkId) // フォークIDが違う場合
                         __instance.cosmetics.nameText.text = $"<color=#ff0000><size=1.5>{ver.forkId}</size>\n{__instance?.name}</color>";
                     else if (Main.version.CompareTo(ver.version) == 0)
-                        __instance.cosmetics.nameText.text = ver.tag == $"{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch})" ? $"<color=#C5DBFC>{__instance.name}</color>" : $"<color=#ffff00><size=1.5>{ver.tag}</size>\n{__instance?.name}</color>";
+                        __instance.cosmetics.nameText.text = ver.tag == $"{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch})" ? $"<color=#31D5BA>{__instance.name}</color>" : $"<color=#ffff00><size=1.5>{ver.tag}</size>\n{__instance?.name}</color>";
                     else __instance.cosmetics.nameText.text = $"<color=#ff0000><size=1.5>v{ver.version}</size>\n{__instance?.name}</color>";
                 }
                 else __instance.cosmetics.nameText.text = __instance?.Data?.PlayerName;
@@ -630,10 +630,11 @@ class FixedUpdatePatch
                 CupidLovers.Marks(__instance, ref Mark);
                 Neptune.Marks(__instance, ref Mark);
                 Mini.Marks(__instance, ref Mark);
-
-                Suffix.Append(seerRole?.GetLowerText(seer, target));
+                if (!seer.IsModClient())
+                    Suffix.Append(seerRole?.GetLowerText(seer, target));
                 //seerに関わらず発動するLowerText
-                Suffix.Append(CustomRoleManager.GetLowerTextOthers(seer, target));
+                if (!seer.IsModClient())
+                    Suffix.Append(CustomRoleManager.GetLowerTextOthers(seer, target));
 
                 //seer役職が対象のSuffix
                 Suffix.Append(seerRole?.GetSuffix(seer, target));

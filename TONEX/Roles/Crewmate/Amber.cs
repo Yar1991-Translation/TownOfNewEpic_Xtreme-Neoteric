@@ -35,7 +35,7 @@ public sealed class Amber : RoleBase, IKiller
         ProtectList = new();
         ProtectList.Add(Player.PlayerId, AmberGetmarkStart.GetBool() ?1:0);
         SendRPC_SyncList();
-        CustomRoleManager.MarkOthers.Add(GetMarkOthers);
+        CustomRoleManager.SuffixOthers.Add(GetMarkOthers);
         CustomRoleManager.OnCheckMurderPlayerOthers_Before.Add(OnCheckMurderPlayerOthers_Before);
     }
 
@@ -53,7 +53,7 @@ public sealed class Amber : RoleBase, IKiller
     private static int AmberMaxNum;
     private static float AmberPercent;
     private static Dictionary<byte, int> ProtectList;
-    public bool IsKiller { get; private set; } = false;
+    public bool IsKiller { get; private set; } = AmberMaxNum == AmberMax.GetInt();
     private static void SetupOptionItem()
     {
         AmberCooldown = FloatOptionItem.Create(RoleInfo, 10, OptionName.AmberCooldown, new(2.5f, 180f, 2.5f), 5f, false)
@@ -66,7 +66,7 @@ public sealed class Amber : RoleBase, IKiller
     }
     public override void Add()
     {
-        AmberMaxNum = AmberMax.GetInt();
+        AmberMaxNum = 0;
         AmberPercent = 0;
     }
     private void SendRPC_SyncLimit()
@@ -116,12 +116,11 @@ public sealed class Amber : RoleBase, IKiller
     }
     public float CalculateKillCooldown() => CanUseKillButton() ? AmberCooldown.GetFloat() : 255f;
     public bool CanUseKillButton()
-       => Player.IsAlive()
-       && AmberMaxNum > 0;
+       => Player.IsAlive();
     public bool CanUseSabotageButton() => false;
     public bool CanUseImpostorVentButton() => false;
     public override void ApplyGameOptions(IGameOptions opt) => opt.SetVision(false);
-    public override string GetProgressText(bool comms = false) => Utils.ColorString(CanUseKillButton() ? RoleInfo.RoleColor : Color.gray, $"({AmberMaxNum})");
+    public override string GetProgressText(bool comms = false) => Utils.ColorString(CanUseKillButton() ? RoleInfo.RoleColor : Color.gray, $"({AmberMaxNum}/{AmberMax.GetInt()})");
     public static bool InProtect(byte id) => ProtectList.ContainsKey(id) && !(PlayerState.GetByPlayerId(id)?.IsDead ?? true);
     public override bool GetGameStartSound(out string sound)
     {
@@ -131,8 +130,14 @@ public sealed class Amber : RoleBase, IKiller
     public bool OnCheckMurderAsKiller(MurderInfo info)
     {
         if (info.IsSuicide) return true;
+        
         var (killer, target) = info.AttemptTuple;
-
+        if (AmberMaxNum == AmberMax.GetInt())
+        {
+            AmberMaxNum = 0;
+            SendRPC_SyncList();
+            return true;
+        }
         SendRPC_SyncLimit();
         if ( !ProtectList.ContainsKey(target.PlayerId))
         ProtectList.Add(target.PlayerId,1);
@@ -148,7 +153,6 @@ public sealed class Amber : RoleBase, IKiller
         Utils.NotifyRoles(killer);
 
         Logger.Info($"{killer.GetNameWithRole()} : 将护盾发送给 {target.GetNameWithRole()}", "Amber.OnCheckMurderAsKiller");
-        Logger.Info($"{killer.GetNameWithRole()} : 剩余{AmberMaxNum}个护盾", "Amber.OnCheckMurderAsKiller");
         return false;
     }
     private static bool OnCheckMurderPlayerOthers_Before(MurderInfo info)
@@ -158,7 +162,8 @@ public sealed class Amber : RoleBase, IKiller
         if (!ProtectList.ContainsKey(target.PlayerId) || ProtectList[target.PlayerId]<=0) return true;
         
         ProtectList[target.PlayerId]--;
-        AmberMaxNum++;
+        if (AmberMaxNum < AmberMax.GetInt())
+            AmberMaxNum++;
         AmberPercent = AmberMaxNum * AmberAdd.GetFloat();
         SendRPC_SyncList();
         Logger.Info($"{target.GetNameWithRole()} : 来自医生的盾破碎", "Amber.OnCheckMurderPlayerOthers_Before");
@@ -178,6 +183,7 @@ public sealed class Amber : RoleBase, IKiller
         if (ProtectList[Player.PlayerId] > 0)
         {
             ProtectList[Player.PlayerId]--;
+            if (AmberMaxNum <AmberMax.GetInt())
             AmberMaxNum++;
             AmberPercent = AmberMaxNum * AmberAdd.GetFloat();
             SendRPC_SyncList();
