@@ -113,4 +113,6 @@ public sealed class EvilSwapper : RoleBase, IImpostor, IMeetingButton
         if (cle)
             SwapList.Clear();
     }
+    public override string GetProgressText(bool comms = false)
+     => Utils.ColorString(SwapLimit >= 1 ? Utils.GetRoleColor(CustomRoles.EvilSwapper) : UnityEngine.Color.gray, $"({SwapLimit})");
 }

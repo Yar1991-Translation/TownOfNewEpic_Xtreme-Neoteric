@@ -531,7 +531,9 @@ static class ExtendedPlayerControl
     }
     public const MurderResultFlags SucceededFlags = MurderResultFlags.Succeeded | MurderResultFlags.DecisionByHost;
 
+    #region 玩家行为设置 / Player Action Set
     [Flags]
+    // 玩家行为类型
     public enum PlayerActionType
     {
         None = 0,
@@ -546,6 +548,8 @@ static class ExtendedPlayerControl
         Move = 1 << 8,
         All = ~0
     }
+
+    // 玩家行为执行
     public enum PlayerActionInUse : int
     {
         None = 0,
@@ -554,7 +558,7 @@ static class ExtendedPlayerControl
         All = 255
     }
 
-
+    // 禁用玩家行为的字典记录
     public static Dictionary<byte, int> DisableKill = new();
     public static Dictionary<byte, int> DisableEnterVent = new();
     public static Dictionary<byte, int> DisableExitVent = new();
@@ -565,41 +569,79 @@ static class ExtendedPlayerControl
     public static Dictionary<byte, int> DisablePet = new();
     public static Dictionary<byte, int> DisableMove = new();
 
+    // 曾被禁用行为玩家的列表记录
+    public static List<byte> HasDisabledKill = new();
+    public static List<byte> HasDisabledEnterVent = new();
+    public static List<byte> HasDisabledExitVent = new();
+    public static List<byte> HasDisabledShapeshift = new();
+    public static List<byte> HasDisabledSabotage = new();
+    public static List<byte> HasDisabledReport = new();
+    public static List<byte> HasDisabledMeeting = new();
+    public static List<byte> HasDisabledPet = new();
+    public static List<byte> HasDisabledMove = new();
+
+    // 速度记录
     public static Dictionary<byte, float> PlayerSpeedRecord = new();
 
-    public static void EnableActAll(this PlayerControl pc)
+    public static void EnableActionAll(this PlayerControl pc)
     {
-        // 移除禁用 Kill 动作的记录
+        // 移除禁用 Kill 行为的记录
         DisableKill.Remove(pc.PlayerId);
+        HasDisabledKill.Remove(pc.PlayerId);
+        HasDisabledKill.Add(pc.PlayerId);
 
-        // 移除禁用 EnterVent 动作的记录
+        // 移除禁用 EnterVent 行为的记录
         DisableEnterVent.Remove(pc.PlayerId);
+        HasDisabledEnterVent.Remove(pc.PlayerId);
+        HasDisabledEnterVent.Add(pc.PlayerId);
 
-        // 移除禁用 ExitVent 动作的记录
+        // 移除禁用 ExitVent 行为的记录
         DisableExitVent.Remove(pc.PlayerId);
+        HasDisabledExitVent.Remove(pc.PlayerId);
+        HasDisabledExitVent.Add(pc.PlayerId);
 
-        // 移除禁用 Shapeshift 动作的记录
+        // 移除禁用 Shapeshift 行为的记录
         DisableShapeshift.Remove(pc.PlayerId);
+        HasDisabledShapeshift.Remove(pc.PlayerId);
+        HasDisabledShapeshift.Add(pc.PlayerId);
 
-        // 移除禁用 Sabotage 动作的记录
+        // 移除禁用 Sabotage 行为的记录
         DisableSabotage.Remove(pc.PlayerId);
+        HasDisabledSabotage.Remove(pc.PlayerId);
+        HasDisabledSabotage.Add(pc.PlayerId);
 
-        // 移除禁用 Report 动作的记录
+        // 移除禁用 Report 行为的记录
         DisableReport.Remove(pc.PlayerId);
+        HasDisabledReport.Remove(pc.PlayerId);
+        HasDisabledReport.Add(pc.PlayerId);
 
-        // 移除禁用 Meeting 动作的记录
+        // 移除禁用 Meeting 行为的记录
         DisableMeeting.Remove(pc.PlayerId);
+        HasDisabledMeeting.Remove(pc.PlayerId);
+        HasDisabledMeeting.Add(pc.PlayerId);
 
-        // 移除禁用 Pet 动作的记录
+        // 移除禁用 Pet 行为的记录
         DisablePet.Remove(pc.PlayerId);
+        HasDisabledPet.Remove(pc.PlayerId);
+        HasDisabledPet.Add(pc.PlayerId);
 
-        // 移除禁用 Move 动作的记录
+        // 移除禁用 Move 行为的记录
         DisableMove.Remove(pc.PlayerId);
+        HasDisabledMove.Remove(pc.PlayerId);
+        HasDisabledMove.Add(pc.PlayerId);
+        if (PlayerSpeedRecord.ContainsKey(pc.PlayerId))
+        {
+            Main.AllPlayerSpeed[pc.PlayerId] = Main.AllPlayerSpeed[pc.PlayerId] - Main.MinSpeed + PlayerSpeedRecord[pc.PlayerId];
+            PlayerSpeedRecord.Remove(pc.PlayerId);
+            pc.MarkDirtySettings();
+        }
 
-        SendDisableAct();
+        // 发送设置动作的消息
+        SendSetAction();
+        SendIsDisabledActionion();
+        pc.RpcRejectShapeshift();
     }
-
-    public static bool IsDisabledAct(this PlayerControl pc, PlayerActionType actionTypes = PlayerActionType.None, PlayerActionInUse actionInUses = PlayerActionInUse.All)
+    public static bool IsDisabledAction(this PlayerControl pc, PlayerActionType actionTypes = PlayerActionType.None, PlayerActionInUse actionInUses = PlayerActionInUse.All)
     {
         if (actionInUses == PlayerActionInUse.All)
             switch (actionTypes)
@@ -661,10 +703,86 @@ static class ExtendedPlayerControl
                     return false;
             }
     }
+    public static bool HasDisabledAction(this PlayerControl pc, PlayerActionType actionTypes = PlayerActionType.None)
+    {
+        var HasDisabledd = false;
+        switch (actionTypes)
+        {
+            case PlayerActionType.Kill:
+                if (HasDisabledKill.Contains(pc.PlayerId))
+                {
+                    HasDisabledKill.Remove(pc.PlayerId);
+                    HasDisabledd = true;
+                }
+                break;
+
+            case PlayerActionType.EnterVent:
+                if (HasDisabledEnterVent.Contains(pc.PlayerId))
+                {
+                    HasDisabledEnterVent.Remove(pc.PlayerId);
+                    HasDisabledd = true;
+                }
+                break;
+
+            case PlayerActionType.ExitVent:
+                if (HasDisabledExitVent.Contains(pc.PlayerId))
+                {
+                    HasDisabledExitVent.Remove(pc.PlayerId);
+                    HasDisabledd = true;
+                }
+                break;
+
+            case PlayerActionType.Shapeshift:
+                if (HasDisabledShapeshift.Contains(pc.PlayerId))
+                {
+                    HasDisabledShapeshift.Remove(pc.PlayerId);
+                    HasDisabledd = true;
+                }
+                break;
+
+            case PlayerActionType.Sabotage:
+                if (HasDisabledSabotage.Contains(pc.PlayerId))
+                {
+                    HasDisabledSabotage.Remove(pc.PlayerId);
+                    HasDisabledd = true;
+                }
+                break;
+
+            case PlayerActionType.Report:
+                if (HasDisabledReport.Contains(pc.PlayerId))
+                {
+                    HasDisabledReport.Remove(pc.PlayerId);
+                    HasDisabledd = true;
+                }
+                break;
+
+            case PlayerActionType.Meeting:
+                if (HasDisabledMeeting.Contains(pc.PlayerId))
+                {
+                    HasDisabledMeeting.Remove(pc.PlayerId);
+                    HasDisabledd = true;
+                }
+                break;
+
+            case PlayerActionType.Pet:
+                if (HasDisabledPet.Contains(pc.PlayerId))
+                {
+                    HasDisabledPet.Remove(pc.PlayerId);
+                    HasDisabledd = true;
+                }
+                break;
+        }
+
+        return HasDisabledd;
+    }
 
     /// <summary>
     /// 禁用玩家行为
     /// </summary>
+    /// <param name="player">禁用者
+    /// </param>
+    /// <param name="pc">被禁用者
+    /// </param>
     /// <param name="actionTypes">禁用行为，可输入多个:
     /// Kill:击杀;
     /// EnterVent:进入通风管;
@@ -682,7 +800,12 @@ static class ExtendedPlayerControl
     /// PlayerActionType.Skill:技能类型行为.
     /// </param>
     /// <param name="isIntentional">这是玩家自愿禁用行为吗</param>
-    public static void DisableAct(this PlayerControl player, PlayerControl pc, PlayerActionType actionTypes = PlayerActionType.None, PlayerActionInUse actionInUses = PlayerActionInUse.All, bool isIntentional = false)
+    public static void DisableAction(
+        this PlayerControl player, 
+        PlayerControl pc, 
+        PlayerActionType actionTypes = PlayerActionType.None, 
+        PlayerActionInUse actionInUses = PlayerActionInUse.All, 
+        bool isIntentional = false)
     {
         // 瘟疫之源处理
         if (CustomRoles.Plaguebearer.IsExist() && !isIntentional)
@@ -701,7 +824,7 @@ static class ExtendedPlayerControl
             // 处理空情况
             return;
         }
-        pc.EnableActAll();
+        pc.EnableActionAll();
 
         // 处理包含 Kill 的情况
         if ((actionTypes & PlayerActionType.Kill) != PlayerActionType.None)
@@ -779,7 +902,7 @@ static class ExtendedPlayerControl
 
         }
 
-        SendDisableAct();
+        SendSetAction();
     }
     /// <summary>
     /// 启用玩家行为
@@ -797,7 +920,11 @@ static class ExtendedPlayerControl
     /// All:以上所有行为.
     /// </param>
     /// /// <param name="isIntentional">这是玩家自愿启用行为吗</param>
-    public static void EnableAct(this PlayerControl player, PlayerControl pc, PlayerActionType actionTypes = PlayerActionType.None, bool isIntentional = false)
+    public static void EnableAction(
+        this PlayerControl player, 
+        PlayerControl pc, 
+        PlayerActionType actionTypes = PlayerActionType.None, 
+        bool isIntentional = false)
     {
         if (CustomRoles.Plaguebearer.IsExist() && !isIntentional)
         {
@@ -820,65 +947,90 @@ static class ExtendedPlayerControl
         if ((actionTypes & PlayerActionType.Kill) != PlayerActionType.None)
         {
             DisableKill.Remove(pc.PlayerId);
+            HasDisabledKill.Remove(pc.PlayerId);
+            HasDisabledKill.Add(pc.PlayerId);
         }
 
         // 处理包含 EnterVent 的情况
         if ((actionTypes & PlayerActionType.EnterVent) != PlayerActionType.None)
         {
             DisableEnterVent.Remove(pc.PlayerId);
+            HasDisabledEnterVent.Remove(pc.PlayerId);
+            HasDisabledEnterVent.Add(pc.PlayerId);
         }
 
         // 处理包含 ExitVent 的情况
         if ((actionTypes & PlayerActionType.ExitVent) != PlayerActionType.None)
         {
             DisableExitVent.Remove(pc.PlayerId);
+            HasDisabledExitVent.Remove(pc.PlayerId);
+            HasDisabledExitVent.Add(pc.PlayerId);
         }
 
         // 处理包含 Shapeshift 的情况
         if ((actionTypes & PlayerActionType.Shapeshift) != PlayerActionType.None)
         {
             DisableShapeshift.Remove(pc.PlayerId);
+            HasDisabledShapeshift.Remove(pc.PlayerId);
+            HasDisabledShapeshift.Add(pc.PlayerId);
         }
 
         // 处理包含 Sabotage 的情况
         if ((actionTypes & PlayerActionType.Sabotage) != PlayerActionType.None)
         {
             DisableSabotage.Remove(pc.PlayerId);
+            HasDisabledSabotage.Remove(pc.PlayerId);
+            HasDisabledSabotage.Add(pc.PlayerId);
         }
 
         // 处理包含 Report 的情况
         if ((actionTypes & PlayerActionType.Report) != PlayerActionType.None)
         {
             DisableReport.Remove(pc.PlayerId);
+            HasDisabledReport.Remove(pc.PlayerId);
+            HasDisabledReport.Add(pc.PlayerId);
         }
 
         // 处理包含 Meeting 的情况
         if ((actionTypes & PlayerActionType.Meeting) != PlayerActionType.None)
         {
             DisableMeeting.Remove(pc.PlayerId);
+            HasDisabledMeeting.Remove(pc.PlayerId);
+            HasDisabledMeeting.Add(pc.PlayerId);
         }
 
         // 处理包含 Pet 的情况
         if ((actionTypes & PlayerActionType.Pet) != PlayerActionType.None)
         {
             DisablePet.Remove(pc.PlayerId);
+            HasDisabledPet.Remove(pc.PlayerId);
+            HasDisabledPet.Add(pc.PlayerId);
         }
 
         // 处理包含 Move 的情况
         if ((actionTypes & PlayerActionType.Move) != PlayerActionType.None)
         {
-            Main.AllPlayerSpeed[pc.PlayerId] = Main.AllPlayerSpeed[pc.PlayerId] - Main.MinSpeed + PlayerSpeedRecord[pc.PlayerId];
-            PlayerSpeedRecord.Remove(pc.PlayerId);    
             DisableMove.Remove(pc.PlayerId);
-            pc.MarkDirtySettings();
+            HasDisabledMove.Remove(pc.PlayerId);
+            HasDisabledMove.Add(pc.PlayerId);
+            if (PlayerSpeedRecord.ContainsKey(pc.PlayerId))
+            {
+                Main.AllPlayerSpeed[pc.PlayerId] = Main.AllPlayerSpeed[pc.PlayerId] - Main.MinSpeed + PlayerSpeedRecord[pc.PlayerId];
+                PlayerSpeedRecord.Remove(pc.PlayerId);
+                pc.MarkDirtySettings();
+            }
         }
-        SendDisableAct();
+        SendIsDisabledActionion();
+        SendSetAction();
+        pc.RpcRejectShapeshift();
     }
 
-    public static void SendDisableAct()
+    // 曾被禁用行为玩家RPC
+    public static void SendSetAction()
     {
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.DisableAct, SendOption.Reliable, -1);
-        // 写入禁用 Kill 动作的记录
+        if (!PlayerControl.LocalPlayer.AmOwner) return;
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetAction, SendOption.Reliable, -1);
+        // 写入禁用 Kill 行为的记录
         writer.Write(DisableKill.Count);
         foreach (var pc in DisableKill)
         {
@@ -886,7 +1038,7 @@ static class ExtendedPlayerControl
             writer.Write(pc.Value);
         }
 
-        // 写入禁用 EnterVent 动作的记录
+        // 写入禁用 EnterVent 行为的记录
         writer.Write(DisableEnterVent.Count);
         foreach (var pc in DisableEnterVent)
         {
@@ -894,7 +1046,7 @@ static class ExtendedPlayerControl
             writer.Write(pc.Value);
         }
 
-        // 写入禁用 ExitVent 动作的记录
+        // 写入禁用 ExitVent 行为的记录
         writer.Write(DisableExitVent.Count);
         foreach (var pc in DisableExitVent)
         {
@@ -902,7 +1054,7 @@ static class ExtendedPlayerControl
             writer.Write(pc.Value);
         }
 
-        // 写入禁用 Shapeshift 动作的记录
+        // 写入禁用 Shapeshift 行为的记录
         writer.Write(DisableShapeshift.Count);
         foreach (var pc in DisableShapeshift)
         {
@@ -910,7 +1062,7 @@ static class ExtendedPlayerControl
             writer.Write(pc.Value);
         }
 
-        // 写入禁用 Sabotage 动作的记录
+        // 写入禁用 Sabotage 行为的记录
         writer.Write(DisableSabotage.Count);
         foreach (var pc in DisableSabotage)
         {
@@ -918,7 +1070,7 @@ static class ExtendedPlayerControl
             writer.Write(pc.Value);
         }
 
-        // 写入禁用 Report 动作的记录
+        // 写入禁用 Report 行为的记录
         writer.Write(DisableReport.Count);
         foreach (var pc in DisableReport)
         {
@@ -926,7 +1078,7 @@ static class ExtendedPlayerControl
             writer.Write(pc.Value);
         }
 
-        // 写入禁用 Meeting 动作的记录
+        // 写入禁用 Meeting 行为的记录
         writer.Write(DisableMeeting.Count);
         foreach (var pc in DisableMeeting)
         {
@@ -934,7 +1086,7 @@ static class ExtendedPlayerControl
             writer.Write(pc.Value);
         }
 
-        // 写入禁用 Pet 动作的记录
+        // 写入禁用 Pet 行为的记录
         writer.Write(DisablePet.Count);
         foreach (var pc in DisablePet)
         {
@@ -942,7 +1094,15 @@ static class ExtendedPlayerControl
             writer.Write(pc.Value);
         }
 
-        // 写入禁用 Move 动作的记录
+        // 写入玩家速度记录
+        writer.Write(PlayerSpeedRecord.Count);
+        foreach (var pc in PlayerSpeedRecord)
+        {
+            writer.Write(pc.Key);
+            writer.Write(pc.Value);
+        }
+
+        // 写入禁用 Move 行为的记录
         writer.Write(DisableMove.Count);
         foreach (var pc in DisableMove)
         {
@@ -952,7 +1112,7 @@ static class ExtendedPlayerControl
 
         AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
-    public static void ReceiveDisableAct(MessageReader reader)
+    public static void ReceiveSetAction(MessageReader reader)
     {
         DisableKill = new();
         var disableKillCount = reader.ReadInt32();
@@ -1010,23 +1170,177 @@ static class ExtendedPlayerControl
             DisablePet.Add(reader.ReadByte(), reader.ReadInt32());
         }
 
+        PlayerSpeedRecord = new();
+        var playerSpeedRecord = reader.ReadInt32();
+        for (var i = 0; i < playerSpeedRecord; i++)
+        {
+            PlayerSpeedRecord.Add(reader.ReadByte(), reader.ReadInt32());
+        }
+
         DisableMove = new();
         var disableMoveCount = reader.ReadInt32();
         for (var i = 0; i < disableMoveCount; i++)
         {
             DisableMove.Add(reader.ReadByte(), reader.ReadInt32());
         }
+
     }
+
+    // 禁用玩家行为RPC
+    public static void SendIsDisabledActionion()
+    {
+        if (!PlayerControl.LocalPlayer.AmOwner) return;
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.IsDisabledAction, SendOption.Reliable, -1);
+        // 写入禁用 Kill 行为的记录
+        writer.Write(HasDisabledKill.Count);
+        foreach (var pc in HasDisabledKill)
+        {
+            writer.Write(pc);
+            
+        }
+
+        // 写入禁用 EnterVent 行为的记录
+        writer.Write(HasDisabledEnterVent.Count);
+        foreach (var pc in HasDisabledEnterVent)
+        {
+            writer.Write(pc);
+            
+        }
+
+        // 写入禁用 ExitVent 行为的记录
+        writer.Write(HasDisabledExitVent.Count);
+        foreach (var pc in HasDisabledExitVent)
+        {
+            writer.Write(pc);
+            
+        }
+
+        // 写入禁用 Shapeshift 行为的记录
+        writer.Write(HasDisabledShapeshift.Count);
+        foreach (var pc in HasDisabledShapeshift)
+        {
+            writer.Write(pc);
+            
+        }
+
+        // 写入禁用 Sabotage 行为的记录
+        writer.Write(HasDisabledSabotage.Count);
+        foreach (var pc in HasDisabledSabotage)
+        {
+            writer.Write(pc);
+            
+        }
+
+        // 写入禁用 Report 行为的记录
+        writer.Write(HasDisabledReport.Count);
+        foreach (var pc in HasDisabledReport)
+        {
+            writer.Write(pc);
+            
+        }
+
+        // 写入禁用 Meeting 行为的记录
+        writer.Write(HasDisabledMeeting.Count);
+        foreach (var pc in HasDisabledMeeting)
+        {
+            writer.Write(pc);
+            
+        }
+
+        // 写入禁用 Pet 行为的记录
+        writer.Write(HasDisabledPet.Count);
+        foreach (var pc in HasDisabledPet)
+        {
+            writer.Write(pc);
+            
+        }
+
+        // 写入禁用 Move 行为的记录
+        writer.Write(HasDisabledMove.Count);
+        foreach (var pc in HasDisabledMove)
+        {
+            writer.Write(pc);
+            
+        }
+
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+    }
+    public static void ReceiveIsDisabledActionion(MessageReader reader)
+    {
+        HasDisabledKill = new();
+        var HasDisabledKillCount = reader.ReadInt32();
+        for (var i = 0; i < HasDisabledKillCount; i++)
+        {
+            HasDisabledKill.Add(reader.ReadByte());
+        }
+
+        HasDisabledEnterVent = new();
+        var HasDisabledEnterVentCount = reader.ReadInt32();
+        for (var i = 0; i < HasDisabledEnterVentCount; i++)
+        {
+            HasDisabledEnterVent.Add(reader.ReadByte());
+        }
+
+        HasDisabledExitVent = new();
+        var HasDisabledExitVentCount = reader.ReadInt32();
+        for (var i = 0; i < HasDisabledExitVentCount; i++)
+        {
+            HasDisabledExitVent.Add(reader.ReadByte());
+        }
+
+        HasDisabledShapeshift = new();
+        var HasDisabledShapeshiftCount = reader.ReadInt32();
+        for (var i = 0; i < HasDisabledShapeshiftCount; i++)
+        {
+            HasDisabledShapeshift.Add(reader.ReadByte());
+        }
+
+        HasDisabledSabotage = new();
+        var HasDisabledSabotageCount = reader.ReadInt32();
+        for (var i = 0; i < HasDisabledSabotageCount; i++)
+        {
+            HasDisabledSabotage.Add(reader.ReadByte());
+        }
+
+        HasDisabledReport = new();
+        var HasDisabledReportCount = reader.ReadInt32();
+        for (var i = 0; i < HasDisabledReportCount; i++)
+        {
+            HasDisabledReport.Add(reader.ReadByte());
+        }
+
+        HasDisabledMeeting = new();
+        var HasDisabledMeetingCount = reader.ReadInt32();
+        for (var i = 0; i < HasDisabledMeetingCount; i++)
+        {
+            HasDisabledMeeting.Add(reader.ReadByte());
+        }
+
+        HasDisabledPet = new();
+        var HasDisabledPetCount = reader.ReadInt32();
+        for (var i = 0; i < HasDisabledPetCount; i++)
+        {
+            HasDisabledPet.Add(reader.ReadByte());
+        }
+
+        HasDisabledMove = new();
+        var HasDisabledMoveCount = reader.ReadInt32();
+        for (var i = 0; i < HasDisabledMoveCount; i++)
+        {
+            HasDisabledMove.Add(reader.ReadByte());
+        }
+    }
+    #endregion
 
     public static void RpcMurderPlayer(this PlayerControl killer, PlayerControl target)
     {
-        if (killer.IsDisabledAct(PlayerActionType.Kill)) return;
+        if (killer.IsDisabledAction(PlayerActionType.Kill)) return;
         killer.RpcMurderPlayer(target, true);
     }
     public static void RpcMurderPlayerV2(this PlayerControl killer, PlayerControl target)
     {
         if (target == null) target = killer;
-        if (killer.IsDisabledAct(PlayerActionType.Kill)) return;
+        if (killer.IsDisabledAction(PlayerActionType.Kill)) return;
         if (AmongUsClient.Instance.AmClient)
         {
             killer.MurderPlayer(target);

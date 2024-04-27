@@ -21,10 +21,10 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Currently, this change is NOT permanent.
 
 ## Summary of Updates
-- Fixed 39 bugs
-- Implemented 13 optimizations
-- Made changes to 22 elements
-- Added 34 New/Remake features (including roles, settings, etc.)
+- Fixed 46 bugs
+- Implemented 14 optimizations
+- Made changes to 24 elements
+- Added 34 New/Remade features (including roles, settings, etc.)
 - Temporarily removed 2 elements
 
 ## Fix
@@ -84,17 +84,17 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Fixed By Slok)
 - Fixed the bug of the number of Wolf's tasks was not being overridden
 (Fixed By Slok)
-- Fixed the bug of Madmates were sometimes not being assigned at the beginning of the game.
+- Fixed the bug of Madmates were sometimes not being assigned at the beginning of the game
 (Fixed By Slok)
-- Fixed the bug of some roles using shapeshift button did not have cooldown times for their skills.
+- Fixed the bug of some roles using shapeshift button did not have cooldown times for their skills
 (Fixed By Slok)
-- Fixed the bug of the Vigilante would lose attempts upon failing to kill a Superstar.
+- Fixed the bug of the Vigilante would lose attempts upon failing to kill a Superstar
 (Fixed By Slok)
 - Fixed the bug of the Hunter would cause linked targets to die without dying themselves in some cases
 (Fixed By Slok)
 - Fixed the bug of the Blackmailer's targets' mark may be displayed wrong
 (Fixed By Slok)
-- Fixed the bug of the Medic's shield breaking still made them immune to kills.
+- Fixed the bug of the Medic's shield breaking still made them immune to kills
 (Fixed By Slok)
 - Fixed the bug of the Executioner's target quitting the game would not change the Executioner's role
 (Fixed By Slok)
@@ -105,6 +105,20 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Fixed the bug of can not use private server
 (Fixed By Slok)
 - Fixed the bug of can not pet
+(Fixed By Slok)
+- Fixed the bug of the Evil Invisibler didn't show the skill countdown in vanilla clients
+(Fixed By Slok)
+- Fixed the bug of kill icon remained as 'recruit' despite not allowing recruitment for Jackals
+(Fixed By Slok)
+- Fixed the bug of the remaining quantity wasn't refreshing after using handcuffs as a Deputy
+(Fixed By Slok)
+- Fixed the bug of the remaining quantity wasn't refreshing after using blank as a Prosecutor
+(Fixed By Slok)
+- Fixed the bug of the NiceSwapper wasn't displaying the remaining skill uses
+(Fixed By Slok)
+- Fixed the bug of the EvilSwapper wasn't displaying the remaining skill uses
+(Fixed By Slok)
+- Fixed the bug of players affected by Time Stop were unable to use vents in vanilla clients
 (Fixed By Slok)
 
 ## Optimization
@@ -131,6 +145,8 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Prompt will be displayed when official audio files are missing
 (Idea&Made By Slok)
 - Add text to the opening animation based on different factions.
+(Idea&Made By Slok)
+- Game start logs have been hidden to optimize loading speed
 (Idea&Made By Slok)
 - Official Website: Migrated the official website from tonex.cc to www.xtreme.net.cn
 (Idea&Made By 清风)
@@ -180,6 +196,10 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Idea&Changed By Slok)
 - Last Results：If the player is alive then the deathreason will be empty
 (Idea&Changed By Slok)
+- Command /id：Now it will be spamed
+(Idea&Changed By Slok)
+- Currently, when lovers are enabled, lovers are always assigned
+(Idea&Changed By Slok)
 
 ## Deletion
 - Temporarily remove version-restricted role: Martyr
@@ -187,7 +207,7 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Nice Grenadier：Vision impaired by flash grenade
 (Decided By Slok)
 
-## New/Remake Roles
+## New/Remade Roles
 Impostors：
 - New Impostor Role：Evil Grenadier
 (Source Of The Idea：Town Of Us, Made By Slok)
@@ -195,7 +215,7 @@ Impostors：
 (Idea&Made By Slok)
 - New Impostor Role：Assaulter
 (Idea By Zeyan, Made By Slok)
-- Remake Impostor Role：Miner
+- Remade Impostor Role：Miner
 (Idea By KARPED1EM, Made By Slok)
 Crewmates：
 - New Crewmate Role：Scout
@@ -209,15 +229,15 @@ Crewmates：
 (Idea&Made By Slok)
 - New Evil Neutral Role：Sharp Shooter
 (Source Of The Idea：Town Of Host:The Other Roles, Made By 喜)
-- Remake Evil Neutral Role：Innocent
+- Remade Evil Neutral Role：Innocent
 (Source Of The Idea：Super New Roles, Made By Slok)
-- Remake Friendly Neutral Role：Provocateur
+- Remade Friendly Neutral Role：Provocateur
 (Idea By 法师, Made By Slok)
-- Remake Friendly Neutral Role：？？？
+- Remade Friendly Neutral Role：？？？
 (Idea By KARPED1EM, Made By Slok)
-- Remake Evil Neutral Role：Stalker
+- Remade Evil Neutral Role：Stalker
 (Source：Town Of Host_Y)
-- Remake Evil Neutral Role：Collecter
+- Remade Evil Neutral Role：Collecter
 (Idea By KARPED1EM, Made By Slok)
 - New Evil Neutral Role：Akujo
 (Source Of The Idea：The Other Roles GM Haoming Edition, Made By Slok)
@@ -235,7 +255,7 @@ Addons：
 - New Impostor Addon Role：Public Opinion Shaper
 (Idea By ㍿, Made By Slok)
 
-## New/Remake Feature
+## New/Remade Feature
 Setting：
 Impostors：
 - New Impostor Team Setting：Override The Amount Of Impostors

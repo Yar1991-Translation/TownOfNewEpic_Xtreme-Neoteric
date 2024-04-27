@@ -110,7 +110,7 @@ class GameEndChecker
 
                 case CustomWinner.Martyr:
                     Main.AllPlayerControls
-                     .Where(pc => pc.Is(CustomRoles.Martyr) || pc == Martyr.TargetId)
+                     .Where(pc => pc.Is(CustomRoles.Martyr) || pc.PlayerId == Martyr.TargetId)
                      .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
                     break;
                 case CustomWinner.NightWolf:

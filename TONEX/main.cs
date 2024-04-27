@@ -179,6 +179,7 @@ public class Main : BasePlugin
         TONEX.Logger.Disable("SwitchSystem");
         TONEX.Logger.Disable("ModNews");
         TONEX.Logger.Disable("CustomRpcSender");
+        TONEX.Logger.Disable("CoBegin");
         if (!DebugModeManager.AmDebugger)
         {
             TONEX.Logger.Disable("CheckRelease");

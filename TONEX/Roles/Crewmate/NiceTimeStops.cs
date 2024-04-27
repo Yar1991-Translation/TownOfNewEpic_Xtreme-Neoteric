@@ -120,12 +120,12 @@ public sealed class NiceTimeStops : RoleBase
             if (!player.IsAlive() || Pelican.IsEaten(player.PlayerId)) continue;
             NameNotifyManager.Notify(player, Utils.ColorString(Utils.GetRoleColor(CustomRoles.NiceTimeStops), GetString("ForNiceTimeStops")));
             NiceTimeStopsstop.Add(player.PlayerId);
-            Player.DisableAct(player, ExtendedPlayerControl.PlayerActionType.All);
+            Player.DisableAction(player, ExtendedPlayerControl.PlayerActionType.All);
 
 
             new LateTask(() =>
             {
-                Player.EnableAct(player, ExtendedPlayerControl.PlayerActionType.All);
+                Player.EnableAction(player, ExtendedPlayerControl.PlayerActionType.All);
                 NiceTimeStopsstop.Remove(player.PlayerId);
                 RPC.PlaySoundRPC(player.PlayerId, Sounds.TaskComplete);
             }, OptionSkillDuration.GetFloat(), "Time Stop");
@@ -171,12 +171,12 @@ public sealed class NiceTimeStops : RoleBase
             if (!player.IsAlive() || Pelican.IsEaten(player.PlayerId)) continue;
             NameNotifyManager.Notify(player, Utils.ColorString(Utils.GetRoleColor(CustomRoles.NiceTimeStops), GetString("ForNiceTimeStops")));
             NiceTimeStopsstop.Add(player.PlayerId);
-            Player.DisableAct(player, ExtendedPlayerControl.PlayerActionType.All);
+            Player.DisableAction(player, ExtendedPlayerControl.PlayerActionType.All);
 
 
             new LateTask(() =>
             {
-                Player.EnableAct(player, ExtendedPlayerControl.PlayerActionType.All);
+                Player.EnableAction(player, ExtendedPlayerControl.PlayerActionType.All);
                 NiceTimeStopsstop.Remove(player.PlayerId);
                 RPC.PlaySoundRPC(player.PlayerId, Sounds.TaskComplete);
             }, OptionSkillDuration.GetFloat(), "Time Stop");

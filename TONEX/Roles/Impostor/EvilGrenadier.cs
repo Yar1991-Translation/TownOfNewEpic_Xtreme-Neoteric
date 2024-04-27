@@ -128,7 +128,7 @@ public sealed class EvilGrenadier : RoleBase, IImpostor
 
             }
             Blinds.Add(pc.PlayerId);
-            Player.DisableAct(pc);
+            Player.DisableAction(pc);
 
             //pc.Notify("<size=1000><color=#ffffff>●</color></size>", OptionSkillDuration.GetInt());
         }

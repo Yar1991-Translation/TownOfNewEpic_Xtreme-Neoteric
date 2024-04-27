@@ -87,6 +87,7 @@ public sealed class Prosecutors : RoleBase, INeutralKiller,IAdditionalWinner
             SendRPC();
             ForProsecutors.Add(target.PlayerId);
             SendRPC_SyncList();
+            Utils.NotifyRoles(killer);
         }
         info.CanKill = false;
         killer.RpcProtectedMurderPlayer(target);

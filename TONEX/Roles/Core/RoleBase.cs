@@ -498,7 +498,7 @@ public abstract class RoleBase : IDisposable
     /// <returns>组合后的全部 LowerText</returns>
     public virtual string GetLowerText(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false, bool isForHud = false) => "";
     /// <summary>
-    /// 作为 seer 时获取 LowerTex 的函数
+    /// 作为 seer 时获取 Suffix 的函数
     /// 如果您想在 seer,seen 都不是您时进行处理，请使用相同的参数将其实现为静态
     /// 并注册为 CustomRoleManager.SuffixOthers
     /// </summary>

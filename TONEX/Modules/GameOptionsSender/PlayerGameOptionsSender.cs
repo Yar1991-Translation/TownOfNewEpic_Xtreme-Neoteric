@@ -144,8 +144,7 @@ public class PlayerGameOptionsSender : GameOptionsSender
         if (Main.AllPlayerControls.Any(x => x.Is(CustomRoles.Diseased) && !x.IsAlive() && x.GetRealKiller()?.PlayerId == player.PlayerId && !x.Is(CustomRoles.Hangman) && !Diseased.DisList.Contains(player.PlayerId)))
         {
             Diseased.DisList.Add(player.PlayerId);
-            float KILL = (player.GetRoleClass() as IKiller)?.CalculateKillCooldown() ?? Options.DefaultKillCooldown;
-            opt.SetFloat(FloatOptionNames.KillCooldown, KILL * Diseased.OptionVistion.GetFloat());
+            Main.AllPlayerKillCooldown[player.PlayerId] *= Diseased.OptionVistion.GetFloat();
             player.ResetKillCooldown();
             player.SyncSettings();
             

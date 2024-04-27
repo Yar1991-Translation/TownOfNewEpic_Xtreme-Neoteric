@@ -83,6 +83,7 @@ public sealed class Deputy : RoleBase, IKiller
             ForDeputy.Add(target.PlayerId);
             SendRPC();
             SendRPC_SyncList();
+            Utils.NotifyRoles(killer);
         }
         info.CanKill = false;
         killer.RpcProtectedMurderPlayer(target);

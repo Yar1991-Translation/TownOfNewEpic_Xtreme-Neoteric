@@ -149,6 +149,9 @@ public sealed class Demon : RoleBase, INeutralKiller
 
         RPC.PlaySoundRPC(target.PlayerId, Sounds.KillSound);
         killer.SetKillCooldownV2(target: target, forceAnime: true);
+
+        Utils.NotifyRoles(target);
+        Utils.NotifyRoles(target);
         Utils.NotifyRoles(target);
 
         Logger.Info($"{killer.GetNameWithRole()} 对玩家 {target.GetNameWithRole()} 造成了 {OptionSelfDamage.GetInt()} 点伤害", "Demon");
@@ -159,7 +162,7 @@ public sealed class Demon : RoleBase, INeutralKiller
         if (!Player.IsAlive()) return "";
         int max = OptionSelfHealthMax.GetInt();
         int now = DemonHP;
-        if (seen != null)
+        if (seen != null && seen != Player)
         {
             max = OptionHealthMax.GetInt();
             now = Math.Max(1, PlayerHP.TryGetValue(seen.PlayerId, out var hp) ? hp : 1);

@@ -72,7 +72,7 @@ class ExternalRpcPetPatch
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls)
                     AmongUsClient.Instance.FinishRpcImmediately(AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, 50, SendOption.None, player.GetClientId()));
             }
-            if (!(pc.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Pet, ExtendedPlayerControl.PlayerActionInUse.Skill) && pc.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Pet)))
+            if (!(pc.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Pet, ExtendedPlayerControl.PlayerActionInUse.Skill) && pc.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Pet)))
                 pc.GetRoleClass()?.OnUsePet();
         }
     }

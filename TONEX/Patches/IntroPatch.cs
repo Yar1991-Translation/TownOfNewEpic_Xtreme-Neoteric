@@ -62,18 +62,18 @@ class IntroCutscenePatch
     public static void CoBegin_Prefix()
     {
         var logger = Logger.Handler("Info");
-        logger.Info("------------显示名称------------");
+        Logger.Info("------------显示名称------------", "CoBegin");
         foreach (var pc in Main.AllPlayerControls)
         {
-            logger.Info($"{(pc.AmOwner ? "[*]" : ""),-3}{pc.PlayerId,-2}:{pc.name.PadRightV2(20)}:{pc.cosmetics.nameText.text}({Palette.ColorNames[pc.Data.DefaultOutfit.ColorId].ToString().Replace("Color", "")})");
+            Logger.Info($"{(pc.AmOwner ? "[*]" : ""),-3}{pc.PlayerId,-2}:{pc.name.PadRightV2(20)}:{pc.cosmetics.nameText.text}({Palette.ColorNames[pc.Data.DefaultOutfit.ColorId].ToString().Replace("Color", "")})", "CoBegin");
             pc.cosmetics.nameText.text = pc.name;
         }
-        logger.Info("------------职业分配------------");
+        Logger.Info("------------职业分配------------", "CoBegin");
         foreach (var pc in Main.AllPlayerControls)
         {
-            logger.Info($"{(pc.AmOwner ? "[*]" : ""),-3}{pc.PlayerId,-2}:{pc?.Data?.PlayerName?.PadRightV2(20)}:{pc.GetAllRoleName().RemoveHtmlTags()}");
+            Logger.Info($"{(pc.AmOwner ? "[*]" : ""),-3}{pc.PlayerId,-2}:{pc?.Data?.PlayerName?.PadRightV2(20)}:{pc.GetAllRoleName().RemoveHtmlTags()}", "CoBegin");
         }
-        logger.Info("------------运行环境------------");
+        Logger.Info("------------运行环境------------", "CoBegin");
         foreach (var pc in Main.AllPlayerControls)
         {
             try
@@ -83,24 +83,24 @@ class IntroCutscenePatch
                 if (Main.playerVersion.TryGetValue(pc.PlayerId, out PlayerVersion pv))
                     text += $":Mod({pv.forkId}/{pv.version}:{pv.tag})";
                 else text += ":Vanilla";
-                logger.Info(text);
+                Logger.Info(text, "CoBegin");
             }
             catch (Exception ex)
             {
                 Logger.Exception(ex, "Platform");
             }
         }
-        logger.Info("------------基本设置------------");
+        Logger.Info("------------基本设置------------", "CoBegin");
         var tmp = GameOptionsManager.Instance.CurrentGameOptions.ToHudString(GameData.Instance ? GameData.Instance.PlayerCount : 10).Split("\r\n").Skip(1);
-        foreach (var t in tmp) logger.Info(t);
-        logger.Info("------------详细设置------------");
+        foreach (var t in tmp) Logger.Info(t, "CoBegin");
+        Logger.Info("------------详细设置------------", "CoBegin");
         foreach (var o in OptionItem.AllOptions)
             if (!o.IsHiddenOn(Options.CurrentGameMode) && (o.Parent == null ? !o.GetString().Equals("0%") : o.Parent.GetBool()))
-                logger.Info(
+                Logger.Info(
                     $"{(o.Parent == null ? o.GetName(true, true).RemoveHtmlTags().PadRightV2(40) : $"┗ {o.GetName(true, true).RemoveHtmlTags()}".PadRightV2(41))}:{o.GetString().RemoveHtmlTags()}"
-                    );
-        logger.Info("-------------其它信息-------------");
-        logger.Info($"玩家人数: {Main.AllPlayerControls.Count()}");
+                    , "CoBegin");
+        Logger.Info("-------------其它信息-------------", "CoBegin");
+        Logger.Info($"玩家人数: {Main.AllPlayerControls.Count()}", "CoBegin");
         Main.AllPlayerControls.Do(x => PlayerState.GetByPlayerId(x.PlayerId).InitTask(x));
         GameData.Instance.RecomputeTaskCounts();
         TaskState.InitialTotalTasks = GameData.Instance.TotalTasks;

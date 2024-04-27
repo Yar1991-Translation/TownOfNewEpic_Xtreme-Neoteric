@@ -93,6 +93,7 @@ public static class GuesserHelper
 
         if (operate == 1)
         {
+            spam = true;
             Utils.ShowActiveRoles(pc.PlayerId, pc.GetCustomRole() ==CustomRoles.NiceGuesser && NiceGuesser.OptionJustShowExist.GetBool()|| pc.GetCustomRole() == CustomRoles.EvilGuesser && EvilGuesser.OptionJustShowExist.GetBool());
             Utils.SendMessage(GetFormatString(), pc.PlayerId);
             return true;

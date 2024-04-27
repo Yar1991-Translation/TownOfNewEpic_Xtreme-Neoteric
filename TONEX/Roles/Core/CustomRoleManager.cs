@@ -48,7 +48,7 @@ public static class CustomRoleManager
         if (appearanceKiller != attemptKiller || appearanceTarget != attemptTarget)
             Logger.Info($"Apperance：{appearanceKiller.GetNameWithRole()} => {appearanceTarget.GetNameWithRole()}", "CheckMurder");
 
-        if (attemptKiller.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Kill)) return false;
+
 
         var info = new MurderInfo(attemptKiller, attemptTarget, appearanceKiller, appearanceTarget);
 
@@ -63,14 +63,14 @@ public static class CustomRoleManager
 
         var killerRole = attemptKiller.GetRoleClass();
         var targetRole = attemptTarget.GetRoleClass();
-        
+        if (attemptKiller.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Kill)) return false;
         // 首先凶手确实是击杀类型的职业
         if (killerRole is IKiller killer)
         {
 
-            if (attemptKiller.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Kill, ExtendedPlayerControl.PlayerActionInUse.Skill)&& !killer.IsKiller) return false;
-            attemptKiller.DisableAct(attemptTarget);
-            attemptTarget.DisableAct(attemptKiller);
+            if (attemptKiller.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Kill, ExtendedPlayerControl.PlayerActionInUse.Skill)&& !killer.IsKiller) return false;
+            attemptKiller.DisableAction(attemptTarget);
+            attemptTarget.DisableAction(attemptKiller);
             // 其他职业类对击杀事件的事先检查
             if (!killer.IsKiller)
             {

@@ -90,6 +90,7 @@ public static class SwapperHelper
 
         if (operate == 1)
         {
+            spam = true;
             Utils.SendMessage(GetFormatString(), pc.PlayerId);
             return true;
         }

@@ -13,6 +13,7 @@ using TONEX.Roles.Core.Interfaces;
 using System.Linq;
 using TONEX.Roles.Crewmate;
 using TONEX.Modules.SoundInterface;
+using System.Drawing;
 
 namespace TONEX.Roles.Neutral;
 
@@ -32,10 +33,6 @@ public sealed class Vagator : RoleBase, INeutralKiller
             true,
             true,
             countType: CountTypes.FAFL
-#if RELEASE
-,
-            Hidden: true
-#endif
         );
     public Vagator(PlayerControl player)
     : base(
@@ -202,7 +199,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
                 var diss = Vector2.Distance(posi, pc.transform.position);
                 if (pc != Player && diss <= 2.5f)
                 {
-                    Player.DisableAct(pc);
+                    Player.DisableAction(pc);
                     if (Feeble.Contains(pc.PlayerId) && !feb)
                     {
                         killsucceed += killsucceed * 1.5f;
@@ -245,7 +242,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
                 {
                     if (diss < 5f)
                     {
-                        Player.DisableAct(pc);
+                        Player.DisableAction(pc);
                         if (Feeble.Contains(pc.PlayerId) && !feb)
                         {
                             killsucceed += killsucceed * 1.5f;
@@ -306,7 +303,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
     }
     public static string GetMarkOthers(PlayerControl seer, PlayerControl seen, bool isForMeeting = false)
     {
-        if (! seer.Is(CustomRoles.Vagator))return "";
+        if (!seer.Is(CustomRoles.Vagator)) return "";
         if (Feeble != null)
         {
             if (Feeble.Contains(seen.PlayerId))
@@ -315,7 +312,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
             }
         }
         else if (seer == seen)
-            return Utils.ColorString(RoleInfo.RoleColor, $"({(seer.GetRoleClass() as Vagator)?.ShieldsCount ?? null})");
+            return Utils.ColorString(RoleInfo.RoleColor, $"({(seer.GetRoleClass() as Vagator).ShieldsCount})");
         return "";
     }
     public override bool GetPetButtonText(out string text)
@@ -355,10 +352,15 @@ public sealed class Vagator : RoleBase, INeutralKiller
         buttonName = "RainOfGeo";
         return true;
     }
-    public override string GetSuffix(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false)
+    public override string GetLowerText(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false, bool isForHud = false)
     {
         seen ??= seer;
+        if (isForMeeting) return "";
+        
+        var text = isForHud ?  $"<color=#E6AD0A>" : "";
+        text += $"{GetString("VagatorKillTimesTotalCount")}:{KillTimesTotalCount},{GetString("VagatorSkillTimesTotalCount")}:{SkillTimesTotalCount},{GetString("VagatorElementPowerCount")}:{ElementPowerCount}";
+        text += isForHud ? $"</color>" : "";
         //seeおよびseenが自分である場合以外は関係なし
-        return $"<color=#E6AD0A>{GetString("VagatorKillTimesTotalCount")}:{KillTimesTotalCount},{GetString("VagatorSkillTimesTotalCount")}:{SkillTimesTotalCount},{GetString("VagatorElementPowerCount")}:{ElementPowerCount}</color>";
+        return text;
     }
 }

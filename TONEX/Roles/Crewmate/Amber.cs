@@ -173,8 +173,8 @@ public sealed class Amber : RoleBase, IKiller
     public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         var (killer, target) = info.AttemptTuple;
-        killer.DisableAct(target);
-        target.DisableAct(killer);
+        killer.DisableAction(target);
+        target.DisableAction(killer);
         if (ProtectList[Player.PlayerId] > 0)
         {
             ProtectList[Player.PlayerId]--;

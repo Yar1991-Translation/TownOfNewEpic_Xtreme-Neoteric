@@ -139,13 +139,13 @@ public sealed class Jackal : RoleBase, INeutralKiller
     }
     public bool OverrideKillButtonText(out string text)
     {
-        text = GetString("GangsterButtonText");
-        return SidekickLimit  >= 1;
+        text =  GetString("GangsterButtonText");
+        return SidekickLimit  >= 1 || OptionItemCanSidekick.GetBool();
     }
     public bool OverrideKillButtonSprite(out string buttonName)
     {
         buttonName = "Sidekick";
-        return SidekickLimit >= 1;
+        return SidekickLimit >= 1 || OptionItemCanSidekick.GetBool();
     }
     public bool CanUseSabotageButton() => CanUseSabotage;
     public bool CanUseImpostorVentButton() => CanVent;
@@ -174,6 +174,7 @@ public sealed class Jackal : RoleBase, INeutralKiller
                 {
                     GameData.Instance.RpcSetTasks(target.PlayerId, Array.Empty<byte>());
                     target.SyncSettings();
+                    Utils.NotifyRoles();
                 }
             }
         }

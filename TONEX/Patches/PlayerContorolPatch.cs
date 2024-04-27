@@ -236,7 +236,7 @@ public static class PlayerControlCheckShapeshiftPatch
         {
             return false;
         }
-        if (__instance.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.All)) return false;
+        if (__instance.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.All)) return false;
 
         // 無効な変身を弾く．これより前に役職等の処理をしてはいけない
         if (!CheckInvalidShapeshifting(__instance, target, shouldAnimate))
@@ -245,10 +245,10 @@ public static class PlayerControlCheckShapeshiftPatch
             return false;
         }
         // 役職の処理
-        if (!__instance.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.Skill))
+        if (!__instance.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.Skill))
         {
-            __instance.DisableAct(target);
-            target.DisableAct(__instance);
+            __instance.DisableAction(target);
+            target.DisableAction(__instance);
             var role = __instance.GetRoleClass();
             if (role?.OnCheckShapeshift(target, ref shouldAnimate) == false)
             {
@@ -316,9 +316,9 @@ class ShapeshiftPatch
         var shapeshifter = __instance;
         var shapeshifting = shapeshifter.PlayerId != target.PlayerId;
 
-        if (shapeshifter.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.All)) return;
+        if (shapeshifter.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.All)) return;
 
-        if (!(shapeshifter.IsEaten() && shapeshifter.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.Skill)))
+        if (!(shapeshifter.IsEaten() && shapeshifter.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.Skill)))
             if (Main.CheckShapeshift.TryGetValue(shapeshifter.PlayerId, out var last) && last == shapeshifting)
             {
                 Logger.Info($"{__instance?.GetNameWithRole()}:Cancel Shapeshift.Prefix", "Shapeshift");
@@ -328,7 +328,7 @@ class ShapeshiftPatch
         Main.CheckShapeshift[shapeshifter.PlayerId] = shapeshifting;
         Main.ShapeshiftTarget[shapeshifter.PlayerId] = target.PlayerId;
 
-        if (!(shapeshifter.IsEaten() && shapeshifter.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.Skill)))
+        if (!(shapeshifter.IsEaten() && shapeshifter.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.Skill)))
             shapeshifter.GetRoleClass()?.OnShapeshift(target);
 
         if (!AmongUsClient.Instance.AmHost) return;
@@ -357,7 +357,7 @@ class ReportDeadBodyPatch
         Logger.Info("1", "test");
         if (Options.DisableMeeting.GetBool()) return false;
         if (Options.CurrentGameMode == CustomGameMode.HotPotato) return false;
-        if (__instance.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Report, ExtendedPlayerControl.PlayerActionInUse.All))
+        if (__instance.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Report, ExtendedPlayerControl.PlayerActionInUse.All))
         {
             WaitReport[__instance.PlayerId].Add(target);
             Logger.Warn($"{__instance.GetNameWithRole()}:通報禁止中のため可能になるまで待機します", "ReportDeadBody");
@@ -394,7 +394,7 @@ class ReportDeadBodyPatch
 
         foreach (var role in CustomRoleManager.AllActiveRoles.Values)
         {
-            if (!__instance.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.Report, ExtendedPlayerControl.PlayerActionInUse.Skill))
+            if (!__instance.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Report, ExtendedPlayerControl.PlayerActionInUse.Skill))
             {
                 if (role.OnCheckReportDeadBody(__instance, target) == false)
                 {
@@ -630,6 +630,7 @@ class FixedUpdatePatch
                 CupidLovers.Marks(__instance, ref Mark);
                 Neptune.Marks(__instance, ref Mark);
                 Mini.Marks(__instance, ref Mark);
+
                 Suffix.Append(seerRole?.GetLowerText(seer, target));
                 //seerに関わらず発動するLowerText
                 Suffix.Append(CustomRoleManager.GetLowerTextOthers(seer, target));
@@ -721,7 +722,11 @@ class CoEnterVentPatch
         Logger.Info($"{__instance.myPlayer.GetNameWithRole()} CoEnterVent: {id}", "CoEnterVent");
 
         var user = __instance.myPlayer;
-        if (user.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.EnterVent) || user.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.EnterVent, ExtendedPlayerControl.PlayerActionInUse.Skill) && user.GetCustomRole() is CustomRoles.EvilInvisibler or CustomRoles.Arsonist or CustomRoles.Veteran or CustomRoles.NiceTimeStops or CustomRoles.TimeMaster or CustomRoles.Instigator or CustomRoles.Paranoia or CustomRoles.Mayor or CustomRoles.DoveOfPeace or CustomRoles.NiceGrenadier)
+        if (user.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.EnterVent) 
+            || user.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.EnterVent, ExtendedPlayerControl.PlayerActionInUse.Skill) 
+            && user.GetCustomRole() is CustomRoles.EvilInvisibler or CustomRoles.Arsonist or CustomRoles.Veteran or CustomRoles.NiceTimeStops
+            or CustomRoles.TimeMaster or CustomRoles.Instigator or CustomRoles.Paranoia or CustomRoles.Mayor or CustomRoles.DoveOfPeace
+            or CustomRoles.NiceGrenadier or CustomRoles.Akujo or CustomRoles.Miner)
         {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, -1);
             writer.WritePacked(127);
@@ -735,6 +740,7 @@ class CoEnterVentPatch
             }, 0.5f, "Fix DesyncImpostor Stuck");
             return false;
         }
+
         if ((!user.GetRoleClass()?.OnEnterVent(__instance, id) ?? false) 
             || (user.Data.Role.Role != RoleTypes.Engineer //非工程师
             && !user.CanUseImpostorVentButton()) //也不能使用内鬼管道
@@ -762,10 +768,11 @@ class CoExitVentPatch
     {
         if (!AmongUsClient.Instance.AmHost) return true;
 
-        Logger.Info($"{__instance.myPlayer.GetNameWithRole()} CoExitVent: {id}", "CoEnterVent");
-
+        Logger.Info($"{__instance.myPlayer.GetNameWithRole()} CoExitVent: {id}", "CoExitVent");
+        
         var user = __instance.myPlayer;
-        if (user.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.ExitVent) || user.IsDisabledAct(ExtendedPlayerControl.PlayerActionType.ExitVent, ExtendedPlayerControl.PlayerActionInUse.Skill))
+        if (user.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.ExitVent) 
+            || user.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.ExitVent, ExtendedPlayerControl.PlayerActionInUse.Skill))
         {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, -1);
             writer.WritePacked(127);

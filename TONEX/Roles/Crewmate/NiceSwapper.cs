@@ -119,5 +119,6 @@ public sealed class NiceSwapper : RoleBase, IMeetingButton
         if (cle)
             SwapList.Clear();
     }
-    
+    public override string GetProgressText(bool comms = false)
+     => Utils.ColorString(SwapLimit >= 1 ? Utils.GetRoleColor(CustomRoles.NiceSwapper) : UnityEngine.Color.gray, $"({SwapLimit})");
 }

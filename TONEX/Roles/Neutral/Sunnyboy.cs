@@ -22,9 +22,12 @@ public sealed class Sunnyboy : RoleBase,  INeutral, IAdditionalWinner
             null,
             "sb|Ñô¹â|Ñô¹â¿ªÀÊ",
             "#ff9902",
-           true,
-           Hidden:true
-           
+           true
+           #if RELEASE
+,
+            Hidden: true
+#endif
+
         );
     public Sunnyboy(PlayerControl player)
     : base(

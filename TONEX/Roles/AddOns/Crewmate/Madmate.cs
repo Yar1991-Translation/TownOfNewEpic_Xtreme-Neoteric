@@ -140,6 +140,7 @@ public static class Madmate
                     {
                         GameData.Instance.RpcSetTasks(voter.PlayerId, Array.Empty<byte>());
                         voter.SyncSettings();
+                        Utils.NotifyRoles();
                     }
                 }
                 Logger.Info($"注册附加职业：{voter.GetNameWithRole()} => {CustomRoles.Madmate}", "AssignCustomSubRoles");
@@ -167,16 +168,20 @@ public static class Madmate
             var player = allPlayers[IRandom.Instance.Next(0, allPlayers.Count)];
             allPlayers.Remove(player);
             PlayerState.GetByPlayerId(player.PlayerId).SetSubRole(CustomRoles.Madmate);
-            if (player.Is(CustomRoles.Snitch))
+            new LateTask(() =>
             {
-                var taskState = player.GetPlayerTaskState();
-                taskState.AllTasksCount = Madmate.MadSnitchTasks.GetInt();
-                if (AmongUsClient.Instance.AmHost)
+                if (player.Is(CustomRoles.Snitch))
                 {
-                    GameData.Instance.RpcSetTasks(player.PlayerId, Array.Empty<byte>());
-                    player.SyncSettings();
+                    var taskState = player.GetPlayerTaskState();
+                    taskState.AllTasksCount = Madmate.MadSnitchTasks.GetInt();
+                    if (AmongUsClient.Instance.AmHost)
+                    {
+                        GameData.Instance.RpcSetTasks(player.PlayerId, Array.Empty<byte>());
+                        player.SyncSettings();
+                        Utils.NotifyRoles();
+                    }
                 }
-            }
+            }, 2F, "MadMate");
             Logger.Info($"注册附加职业：{player?.Data?.PlayerName}（{player.GetCustomRole()}）=> {CustomRoles.Madmate}", "AssignCustomSubRoles");
         }
     }

@@ -8,6 +8,8 @@ using TONEX.Roles.Core.Interfaces;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
 using static TONEX.Translator;
 using TONEX.Roles.Crewmate;
+using MS.Internal.Xml.XPath;
+using static UnityEngine.GraphicsBuffer;
 
 namespace TONEX.Roles.Neutral;
 public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
@@ -51,7 +53,7 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
         MartryCanUseKillButtonOnGameStart,
     }
 
-    public static PlayerControl TargetId;
+    public static byte TargetId;
     public static bool CanKill = false;
     public bool HasProtect;
     public bool IsNK { get; private set; } = CanKill;
@@ -82,7 +84,7 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
             targetList.Add(target);
         }
         var SelectedTarget = targetList[rand.Next(targetList.Count)];
-        TargetId = SelectedTarget;
+        TargetId = SelectedTarget.PlayerId;
         SendRPC();
     }
     public float CalculateKillCooldown() => OptionKillCooldown.GetFloat();
@@ -95,46 +97,50 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
 
         using var sender = CreateSender();
         sender.Writer.Write(TargetId);
+        sender.Writer.Write(HasProtect);
+        sender.Writer.Write(CanKill);
     }
     public override void ReceiveRPC(MessageReader reader)
     {
         byte targetId = reader.ReadByte();
-        TargetId.PlayerId = targetId;
+        TargetId = targetId;
+        HasProtect = reader.ReadBoolean();
+        CanKill = reader.ReadBoolean();
     }
+    public override void OnPlayerDeath(PlayerControl player, CustomDeathReason deathReason, bool isOnMeeting = false)
+    {
+        if (player.PlayerId == TargetId)
+        {
+            HasProtect = false;
+            SendRPC();
+        }
+    }
+
     private static bool OnCheckMurderPlayerOthers_After(MurderInfo info)
     {
         var (killer, target) = info.AttemptTuple;
         if (info.IsSuicide) return true;
-        if (target.PlayerId == TargetId.PlayerId)
+        if (target.PlayerId == TargetId)
         {
-            foreach (var pc in Main.AllPlayerControls.Where(x => x.PlayerId != target.PlayerId && player.Contains(x)))
+            foreach (var pc in Main.AllPlayerControls.Where(x => x.PlayerId != target.PlayerId && player.Contains(x) && x.IsAlive()))
             {
-                if (pc.IsAlive())
-                {
                     if ((pc.GetRoleClass() as Martyr).HasProtect)
-                    {
-                        pc.RpcTeleport(target.transform.position);
-                        killer.RpcTeleport(pc.transform.position);
-                        killer.RpcMurderPlayerV2(pc);
-                        killer.ResetKillCooldown();
-                        killer.SetKillCooldownV2();
-                        return false;
-                    }
-                    else
-                    {
-                        CanKill = true;
-                        pc.ResetKillCooldown();
-                        pc.SetKillCooldownV2();
-                    }
+                {
+                    pc.RpcTeleport(target.transform.position);
+                    killer.RpcTeleport(pc.transform.position);
+                    killer.RpcMurderPlayerV2(pc);
+                    killer.ResetKillCooldown();
+                    killer.SetKillCooldownV2();
+                    return false;
                 }
                 else
                 {
-                    if ((pc.GetRoleClass() as Martyr).HasProtect)
-                    {
-                        (pc.GetRoleClass() as Martyr).HasProtect = false;
-                        return false;
-                    }
+                    CanKill = true;
+                    pc.ResetKillCooldown();
+                    pc.SetKillCooldownV2();
+                    (pc.GetRoleClass() as Martyr).SendRPC();
                 }
+
 
             }
         }
@@ -146,7 +152,7 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
         //seenが省略の場合seer
         seen ??= seer;
 
-        return TargetId.PlayerId == seen.PlayerId ? Utils.ColorString(RoleInfo.RoleColor, "♦") : "";
+        return TargetId == seen.PlayerId ? Utils.ColorString(RoleInfo.RoleColor, "♦") : "";
     }
     public override bool OnEnterVent(PlayerPhysics physics, int ventId)
     {
@@ -163,7 +169,7 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
     }
     public bool CheckWin(ref CustomRoles winnerRole, ref CountTypes winnerCountType)
     {
-        if (winnerRole == TargetId.GetCustomRole() && !CanKill)
+        if (CustomWinnerHolder.WinnerIds.Contains(TargetId))
         {
             return true;
         }

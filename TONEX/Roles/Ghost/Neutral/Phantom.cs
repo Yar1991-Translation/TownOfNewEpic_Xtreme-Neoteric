@@ -46,6 +46,7 @@ public sealed class Phantom : RoleBase, INeutral
     }
     public override bool OnCompleteTask(out bool cancel)
     {
+        if (IsTaskFinished)
         Win();
         cancel = false;
         return false;

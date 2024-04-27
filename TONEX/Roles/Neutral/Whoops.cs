@@ -69,7 +69,8 @@ public sealed class Whoops : RoleBase, INeutral
                 {
                     GameData.Instance.RpcSetTasks(votedFor.PlayerId, Array.Empty<byte>());
                     votedFor.SyncSettings();
-                   
+                    Utils.NotifyRoles();
+
                 }
             }
         }

@@ -132,7 +132,7 @@ public sealed class EvilInvisibler : RoleBase, IImpostor
     }
     public override string GetLowerText(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false, bool isForHud = false)
     {
-        if (!isForHud || isForMeeting) return "";
+        if (isForMeeting) return "";
 
         var str = new StringBuilder();
         if (IsInvis())

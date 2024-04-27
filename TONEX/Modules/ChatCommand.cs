@@ -325,7 +325,7 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
                 foreach (var pc in Main.AllPlayerControls)
                     text += "\n" + pc.PlayerId.ToString() + " → " + Main.AllPlayerNames[pc.PlayerId];
                  mc.SendToList.Add(mc.Player.PlayerId);
-                return (MsgRecallMode.Block, text);
+                return (MsgRecallMode.Spam, text);
             }),
             new(["end", "endgame"], CommandAccess.Host, mc =>
             {

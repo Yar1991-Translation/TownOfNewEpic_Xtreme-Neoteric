@@ -99,17 +99,20 @@ public class MessageControl
         SendHistoryMessages(includeHost, includeModded);
     }
 
-    public static void SendHistoryMessages(bool includeHost = false, bool includeModded = false)
+    public static void SpamMessagesImmediately()
     {
-        if (!AmongUsClient.Instance.AmHost) return;
-
-        var sendList = History.Where(m => m.IsAlive && m.RecallMode == MsgRecallMode.None);
         for (int i = 0; i <= 40; i++)
         {
             // The number of historical messages is not enough to cover all messages
             var player = Main.AllAlivePlayerControls.ToArray()[IRandom.Instance.Next(0, Main.AllAlivePlayerControls.Count())];
-            SendMessageAsPlayerImmediately(player, "Hello " + Main.ModName, includeHost, includeModded);
+            SendMessageAsPlayerImmediately(player, "Hello " + Main.ModName, false, false);
         }
+    }
+    public static void SendHistoryMessages(bool includeHost = false, bool includeModded = false)
+    {
+        if (!AmongUsClient.Instance.AmHost) return;
+        
+        var sendList = History.Where(m => m.IsAlive && m.RecallMode == MsgRecallMode.None);
         foreach (var mc in sendList)
         {
             SendMessageAsPlayerImmediately(mc.Player, mc.Message, includeHost, includeModded);

@@ -101,7 +101,7 @@ public sealed class Miner : RoleBase, IImpostor
             SendRPC();
             player?.MyPhysics?.RpcBootFromVent(VentedId != -1 ? VentedId : Main.LastEnteredVent[player.PlayerId].Id);
             NameNotifyManager.Notify(player, GetString("MinerInvisStateOut"));
-            Player.EnableAct(Player, ExtendedPlayerControl.PlayerActionType.Kill | ExtendedPlayerControl.PlayerActionType.Shapeshift | ExtendedPlayerControl.PlayerActionType.Sabotage | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Meeting | ExtendedPlayerControl.PlayerActionType.Pet, true);
+            Player.EnableAction(Player, ExtendedPlayerControl.PlayerActionType.Kill | ExtendedPlayerControl.PlayerActionType.Shapeshift | ExtendedPlayerControl.PlayerActionType.Sabotage | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Meeting | ExtendedPlayerControl.PlayerActionType.Pet, true);
             return;
         }
         else if (remainTime <= 10)
@@ -122,7 +122,7 @@ public sealed class Miner : RoleBase, IImpostor
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(physics.NetId, 34, SendOption.Reliable, Player.GetClientId());
                 writer.WritePacked(ventId);
                 AmongUsClient.Instance.FinishRpcImmediately(writer);
-                Player.DisableAct(Player, ExtendedPlayerControl.PlayerActionType.Kill | ExtendedPlayerControl.PlayerActionType.Shapeshift | ExtendedPlayerControl.PlayerActionType.Sabotage | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Meeting | ExtendedPlayerControl.PlayerActionType.Pet, ExtendedPlayerControl.PlayerActionInUse.All, true);
+                Player.DisableAction(Player, ExtendedPlayerControl.PlayerActionType.Kill | ExtendedPlayerControl.PlayerActionType.Shapeshift | ExtendedPlayerControl.PlayerActionType.Sabotage | ExtendedPlayerControl.PlayerActionType.Report | ExtendedPlayerControl.PlayerActionType.Meeting | ExtendedPlayerControl.PlayerActionType.Pet, ExtendedPlayerControl.PlayerActionInUse.All, true);
                 InvisTime = now;
                 SendRPC();
 
@@ -145,7 +145,7 @@ public sealed class Miner : RoleBase, IImpostor
     }
     public override string GetLowerText(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false, bool isForHud = false)
     {
-        if (!isForHud || isForMeeting) return "";
+        if (isForMeeting) return "";
 
         var str = new StringBuilder();
         if (IsInvis())
