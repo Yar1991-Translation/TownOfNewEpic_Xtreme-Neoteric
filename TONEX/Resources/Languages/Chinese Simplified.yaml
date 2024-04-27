@@ -1940,6 +1940,7 @@ AkujoFakeButtonText: "备胎"
 AkujoRealButtonText: "真爱"
 CupidKillButtonText: "爱情之箭"
 ProsecutorsButtonText: "空包弹"
+AmberButtonText: "存护"
 
 # 作弊 / EAC
 EAC.CheatDetected.HighLevel: "警告：EAC正在抵御炸房外挂"

@@ -35,7 +35,7 @@ public sealed class Amber : RoleBase, IKiller
         ProtectList = new();
         ProtectList.Add(Player.PlayerId, AmberGetmarkStart.GetBool() ?1:0);
         SendRPC_SyncList();
-        CustomRoleManager.SuffixOthers.Add(GetMarkOthers);
+        CustomRoleManager.MarkOthers.Add(GetMarkOthers);
         CustomRoleManager.OnCheckMurderPlayerOthers_Before.Add(OnCheckMurderPlayerOthers_Before);
     }
 
@@ -199,6 +199,6 @@ public sealed class Amber : RoleBase, IKiller
     {
         seen ??= seer;
         if (!InProtect(seen.PlayerId)) return "";
-        return (seer.Is(CustomRoles.Amber)) ? Utils.ColorString(RoleInfo.RoleColor, $"({ProtectList[seen.PlayerId]})") : "";
+        return seer.Is(CustomRoles.Amber) ? Utils.ColorString(RoleInfo.RoleColor, $"({ProtectList[seen.PlayerId]})") : "";
     }
 }

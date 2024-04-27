@@ -1926,6 +1926,7 @@ AkujoFakeButtonText: "Backup"
 AkujoRealButtonText: "True Love"
 CupidKillButtonText: "Arrow of Love"
 ProsecutorsButtonText: "Blank"
+AmberButtonText: "Preservation"
 
 # 作弊 / EAC
 EAC.CheatDetected.HighLevel: "Warning: EAC detected High Level of cheats."
