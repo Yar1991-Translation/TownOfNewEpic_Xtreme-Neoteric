@@ -6,11 +6,12 @@ using System.Linq;
 using TONEX.Modules.SoundInterface;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
+using TONEX.Roles.Neutral;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
 namespace TONEX.Roles.Crewmate;
-public sealed class Amber : RoleBase, IKiller
+public sealed class Amber : RoleBase, IKiller, ISchrodingerCatOwner
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
@@ -38,6 +39,7 @@ public sealed class Amber : RoleBase, IKiller
         CustomRoleManager.MarkOthers.Add(GetMarkOthers);
         CustomRoleManager.OnCheckMurderPlayerOthers_Before.Add(OnCheckMurderPlayerOthers_Before);
     }
+    public SchrodingerCat.TeamType SchrodingerCatChangeTo => SchrodingerCat.TeamType.Crew;
 
     static OptionItem AmberMax;
     static OptionItem AmberGetmarkStart;

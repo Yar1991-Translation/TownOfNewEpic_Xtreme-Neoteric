@@ -308,12 +308,8 @@ public sealed class PlagueDoctor : RoleBase, INeutralKiller
     {
         if (seen == Player) return "";
         int max = 100;
-        var now = 0f;
-        if (seen != null)
-        {
-            now = InfectInfos[seen.PlayerId];
-        }
-        return now ==100?(Utils.ColorString(GetColor(now, seen == null), $"【{GetString("Infected")}】")):(Utils.ColorString(GetColor(now, seen == null), $"【{now:F1}/{max}】"));
+        InfectInfos.TryGetValue(seen.PlayerId, out var rate);
+        return rate == 100?(Utils.ColorString(GetColor(rate, seen == null), $"【{GetString("Infected")}】")):(Utils.ColorString(GetColor(rate, seen == null), $"【{rate:F1}/{max}】"));
     }
     private static Color32 GetColor(float Health, bool self = false)
     {

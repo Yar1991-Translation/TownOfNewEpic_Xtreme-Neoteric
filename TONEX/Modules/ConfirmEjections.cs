@@ -39,12 +39,14 @@ public static class ConfirmEjections
             neutralNum = Main.AllAlivePlayerControls.Count(p => p.IsNeutralEvil());
             neutralkillNum = Main.AllAlivePlayerControls.Count(p => p.IsNeutralKiller() || p.Is(CustomRoles.Charmed) || p.Is(CustomRoles.Wolfmate));
         }
-
+        var text2 = "";
         if (CustomRoles.Bard.IsExist()) // 吟游诗人创作
         {
             try { text = ModUpdater.Get("https://v1.hitokoto.cn/?encode=text"); }
             catch { text = GetString("ByBardGetFailed"); }
+            text2 = text;
             text += "\n\t\t——" + GetString("ByBard");
+            text2 += "\n——" + GetString("ByBard");
             goto EndOfSession;
         }
         else if (decidedWinner) // 已经决定胜利者
@@ -71,27 +73,51 @@ public static class ConfirmEjections
                     break;
             }
         }
-
+        
+        text2 = text;
         if (Options.ShowImpRemainOnEject.GetBool())
         {
-            string comma = neutralNum > 0 || neutralkillNum > 0 ? "，\n" : "";
-            string comma2 = neutralkillNum > 0 ? "，\n" : "";
-            if (impNum == 0) text += GetString("NoImpRemain") + comma;
-            else text += string.Format(GetString("ImpRemain"), impNum) + comma;
+            string comma = neutralNum > 0 || neutralkillNum > 0 ? "，\r\n" : "";
+            string comma2 = neutralkillNum > 0 ? "，\r\n" : "";
+            string comma3 = neutralNum > 0 || neutralkillNum > 0 ? "，\n" : "";
+            string comma4 = neutralkillNum > 0 ? "，\n" : "";
+
+            if (impNum == 0) 
+            { 
+                text += GetString("NoImpRemain") + comma;
+                text2 += GetString("NoImpRemain") + comma3; 
+            }
+            else 
+            {
+                text += string.Format(GetString("ImpRemain"), impNum) + comma;
+                text2 += string.Format(GetString("ImpRemain"), impNum) + comma3;
+            }
 
             if (Options.ShowNERemainOnEject.GetBool() && neutralNum > 0)
+            {
                 text += string.Format(GetString("NeutralEvilRemain"), neutralNum) + comma2;
+                text2 += string.Format(GetString("NeutralEvilRemain"), neutralNum) + comma4;
+            }
             else if (Options.ShowNERemainOnEject.GetBool() && neutralNum == 0)
+            {
                 text += GetString("NoNeutralEvilRemain") + comma2;
+                text2 += GetString("NoNeutralEvilRemain") + comma4;
+            }
 
             if (Options.ShowNKRemainOnEject.GetBool() && neutralkillNum > 0)
+            {
                 text += string.Format(GetString("NeutralKillerRemain"), neutralkillNum);
+                text2 += string.Format(GetString("NeutralKillerRemain"), neutralkillNum);
+            }
             else if (Options.ShowNKRemainOnEject.GetBool() && neutralkillNum == 0)
+            {
                 text += GetString("NoNeutralKillerRemain");
+                text2 += GetString("NoNeutralKillerRemain");
+            }
         }
 
     EndOfSession:
-        LatestEjec = text;
+        LatestEjec = text2;
         text += "<size=0>";
         _ = new LateTask(() =>
         {
@@ -138,8 +164,8 @@ public static class ConfirmEjections
         Logger.Info("2", "test");
         if (Options.ShowImpRemainOnEject.GetBool())
         {
-            string comma = neutralNum > 0 || neutralkillNum > 0 ? "，" : "";
-            string comma2 = neutralkillNum > 0 ? "，" : "";
+            string comma = neutralNum > 0 || neutralkillNum > 0 ? "，\b" : "";
+            string comma2 = neutralkillNum > 0 ? "，\n" : "";
             if (impNum == 0) text += GetString("NoImpRemain") + comma;
             else text += string.Format(GetString("ImpRemain"), impNum) + comma;
 

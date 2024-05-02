@@ -2,41 +2,41 @@
 using Il2CppSystem;
 using Il2CppSystem.Collections.Generic;
 using InnerNet;
-//using UnityEngine;
+using UnityEngine;
 
 namespace TONEX;
+/*
+[HarmonyPatch(typeof(FindAGameManager), nameof(FindAGameManager.Update))]
+public static class FindAGameManagerUpdatePatch
+{
+    private static int buffer = 80;
+    private static GameObject RefreshButton;
+    private static GameObject InputDisplayGlyph;
+    public static void Postfix(FindAGameManager __instance)
+    {
+        if ((RefreshButton = GameObject.Find("RefreshButton")) != null)
+            RefreshButton.transform.localPosition = new Vector3(100f, 100f, 100f);
+        if ((InputDisplayGlyph = GameObject.Find("InputDisplayGlyph")) != null)
+            InputDisplayGlyph.transform.localPosition = new Vector3(100f, 100f, 100f);
 
-//[HarmonyPatch(typeof(FindAGameManager), nameof(FindAGameManager.Update))]
-//public static class FindAGameManagerUpdatePatch
-//{
-//    private static int buffer = 80;
-//    private static GameObject RefreshButton;
-//    private static GameObject InputDisplayGlyph;
-//    public static void Postfix(FindAGameManager __instance)
-//    {
-//        if ((RefreshButton = GameObject.Find("RefreshButton")) != null)
-//            RefreshButton.transform.localPosition = new Vector3(100f, 100f, 100f);
-//        if ((InputDisplayGlyph = GameObject.Find("InputDisplayGlyph")) != null)
-//            InputDisplayGlyph.transform.localPosition = new Vector3(100f, 100f, 100f);
-
-//        buffer--; if (buffer > 0) return; buffer = 80;
-//        __instance.RefreshList();
-//    }
-//}
+        buffer--; if (buffer > 0) return; buffer = 80;
+        __instance.RefreshList();
+    }
+}*/
 
 [HarmonyPatch(typeof(FindAGameManager), nameof(FindAGameManager.HandleList))]
 public static class FindAGameManagerHandleListPatch
 {
     public static void Prefix(FindAGameManager __instance, [HarmonyArgument(0)] InnerNetClient.TotalGameData totalGames, [HarmonyArgument(1)] ref List<GameListing> games)
     {
-        List<GameListing> newList = new();
-
         var nameList = TranslationController.Instance.currentLanguage.languageID is SupportedLangs.SChinese or SupportedLangs.TChinese ? Main.TName_Snacks_CN : Main.TName_Snacks_EN;
-
-        foreach (var game in games)
+        Logger.Info("0", "test");
+        for (int i = 0; i < games.Count; i++)
         {
-            if (game.Language.ToString().Length > 9) continue;
+            var game = games[i];
 
+            if (game.Language.ToString().Length > 9) continue;
+            Logger.Info("1", "test");
             var color = game.Platform switch
             {
                 Platforms.StandaloneItch or
@@ -54,15 +54,22 @@ public static class FindAGameManagerHandleListPatch
                 Platforms.Unknown or
                 _ => "#ffffff"
             };
-
+            Logger.Info("2", "test");
             string str = Math.Abs(game.GameId).ToString();
             int id = Math.Min(Math.Max(int.Parse(str.Substring(str.Length - 2, 2)), 1) * nameList.Count / 100, nameList.Count);
-
-            game.HostName = $"<size=80%><color={color}>{nameList[id]}</color></size>";
+            Logger.Info("3", "test");
+            game.HostName = $"" +
+                $"<size=80%>" +
+                $"<color={color}>" +
+                $"{nameList[id]}" +
+                $"</color>" +
+                $"</size>"
+                ;
             game.HostName += $"<size=30%> ({Math.Max(0, 100 - game.Age / 100)}%)</size>";
-
-            newList.Add(game);
+            Logger.Info("4", "test");
         }
-        games = newList;
+        Logger.Info("5", "test");
+        Logger.Info("6", "test");
+
     }
 }

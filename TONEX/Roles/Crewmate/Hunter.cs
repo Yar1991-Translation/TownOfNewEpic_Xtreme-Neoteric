@@ -108,15 +108,14 @@ public sealed class Hunter : RoleBase, IKiller, ISchrodingerCatOwner
             SendRPC_SyncList();
             killer.SetKillCooldownV2(target: target);
         }
+        Utils.NotifyRoles();
         info.CanKill = false;
         return false;
     }
     public override void BeforeMurderPlayerAsTarget(MurderInfo info)
     {
         var (killer, target) = info.AttemptTuple;
-        if (!info.IsSuicide) return;
-        if (target.Is(CustomRoles.Hunter))
-        {
+
         foreach (var pc in ForHunter)
         {
             var player = Utils.GetPlayerById(pc);
@@ -132,7 +131,7 @@ public sealed class Hunter : RoleBase, IKiller, ISchrodingerCatOwner
             player.RpcMurderPlayerV2(player);
             player.SetRealKiller(target);
         }
-        }
+        
     }
     public override void AfterMeetingTasks()
     {
@@ -143,6 +142,6 @@ public sealed class Hunter : RoleBase, IKiller, ISchrodingerCatOwner
     {
         //seenが省略の場合seer
         seen ??= seer;
-        return ForHunter.Contains(seen.PlayerId) ? "+" : "";
+        return ForHunter.Contains(seen.PlayerId) ? $"<color={Utils.GetRoleColorCode(RoleInfo.RoleName)}>+</color>" : "";
     }
 }

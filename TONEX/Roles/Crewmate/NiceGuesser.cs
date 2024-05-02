@@ -2,10 +2,12 @@
 using TONEX.Modules;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces;
+using TONEX.Roles.Core.Interfaces.GroupAndRole;
+using TONEX.Roles.Neutral;
 using static TONEX.GuesserHelper;
 
 namespace TONEX.Roles.Crewmate;
-public sealed class NiceGuesser : RoleBase, IMeetingButton
+public sealed class NiceGuesser : RoleBase, IMeetingButton, ISchrodingerCatOwner
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
@@ -83,4 +85,6 @@ public sealed class NiceGuesser : RoleBase, IMeetingButton
         ShowGuessPanel(target.PlayerId, MeetingHud.Instance);
         return false;
     }
+    public SchrodingerCat.TeamType SchrodingerCatChangeTo => SchrodingerCat.TeamType.Crew;
+
 }

@@ -396,11 +396,18 @@ class GameEndChecker
                 reason = GameOverReason.ImpostorByKill;
                 CustomWinnerHolder.ResetAndSetWinner(CustomWinner.None);
             }
+
             CustomRoles[] loverRoles = { CustomRoles.Lovers, CustomRoles.AdmirerLovers, CustomRoles.AkujoLovers, CustomRoles.CupidLovers };
 
             foreach (var loverRole in loverRoles)// 多种恋人判断胜利
             {
-                if (Main.AllAlivePlayerControls.Count(p => p.Is(loverRole)) >= playerCount / 2 && !Main.AllAlivePlayerControls.Where(p => !p.Is(loverRole)).Any(p => playerTypeCounts.ContainsKey(p.GetCountTypes()) && !p.IsCrew() || ForLover(p, loverRole)))
+                if (!loverRole.IsExist()) continue;
+                if (Main.AllAlivePlayerControls.Count(p => p.Is(loverRole)) >= (playerCount / 2) 
+                    && !Main.AllAlivePlayerControls
+                    .Where(p => !p.Is(loverRole))// 不是恋人
+                    .Any(p => playerTypeCounts.ContainsKey(p.GetCountTypes()) // 被计数包含
+                    && !p.IsCrew() // 不是船员
+                    || ForLover(p, loverRole))) //或者是恋人
                 {
                     skip = true;
                     reason = GameOverReason.ImpostorByKill;
