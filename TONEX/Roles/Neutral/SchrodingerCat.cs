@@ -311,4 +311,31 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
         }
         return color.Value;
     }
+    public static CountTypes GetCatTeam(TeamType catType)
+    {
+        CountTypes? color = catType switch
+        {
+            TeamType.None => CountTypes.None,
+            TeamType.Mad => CountTypes.Impostor,
+            TeamType.Crew => CountTypes.Crew,
+            TeamType.Jackal => CountTypes.Jackal,
+            TeamType.Pelican => CountTypes.Pelican,
+            TeamType.BloodKnight => CountTypes.BloodKnight,
+            TeamType.Demon => CountTypes.Demon,
+            TeamType.Hater => CountTypes.Crew,
+            TeamType.GodOfPlagues => CountTypes.GodOfPlagues,
+            TeamType.Opportunist => CountTypes.Crew,
+            TeamType.NightWolf => CountTypes.NightWolf,
+            TeamType.RewardOfficer => CountTypes.Crew,
+            TeamType.SharpShooter => CountTypes.SharpShooter,
+            TeamType.Stalker => CountTypes.Crew,
+            _ => null,
+        };
+        if (!color.HasValue)
+        {
+            logger.Warn($"阵营不明: {catType}");
+            return CountTypes.None;
+        }
+        return color.Value;
+    }
 }

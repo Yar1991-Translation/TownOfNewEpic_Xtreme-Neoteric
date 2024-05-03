@@ -26,8 +26,9 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
             "#fffcbe",
             true,
             true,
-            countType:CountTypes.GodOfPlagues
-            
+            countType:CountTypes.GodOfPlagues,
+            assignCountRule: new(1, 1, 1)
+
         );
     public Plaguebearer(PlayerControl player)
     : base(

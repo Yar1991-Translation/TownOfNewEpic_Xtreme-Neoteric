@@ -21,7 +21,8 @@ public sealed class BloodKnight : RoleBase, INeutralKiller
            "#630000",
            true,
            true,
-           countType: CountTypes.BloodKnight
+           countType: CountTypes.BloodKnight,
+            assignCountRule: new(1, 1, 1)
        );
     public BloodKnight(PlayerControl player)
     : base(

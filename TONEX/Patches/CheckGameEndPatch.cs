@@ -365,6 +365,12 @@ class GameEndChecker
                     }
                     if (Player.Is(CustomRoles.Schizophrenic))// 双重人格独立判断
                         playerTypeCounts[playerType]++;
+                    if (Player.Is(CustomRoles.SchrodingerCat))// 猫独立判断
+                    {
+
+                        playerType = SchrodingerCat.GetCatTeam((Player.GetRoleClass() as SchrodingerCat).Team);
+                        playerTypeCounts[playerType]++;
+                    }
                 }
             }
 

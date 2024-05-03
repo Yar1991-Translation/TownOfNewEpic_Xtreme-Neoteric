@@ -13,6 +13,7 @@ public static class OptionsMenuBehaviourStartPatch
     private static ClientOptionItem UnlockFPS;
     //private static ClientOptionItem CanPublic;
     private static ClientOptionItem HorseMode;
+    private static ClientOptionItem LongMode;
     private static ClientOptionItem AutoStartGame;
     private static ClientOptionItem AutoEndGame;
     private static ClientOptionItem ForceOwnLanguage;
@@ -62,6 +63,10 @@ public static class OptionsMenuBehaviourStartPatch
         if (HorseMode == null || HorseMode.ToggleButton == null)
         {
             HorseMode = ClientOptionItem.Create("HorseMode", Main.HorseMode, __instance);
+        }
+        if (LongMode == null || LongMode.ToggleButton == null)
+        {
+            LongMode = ClientOptionItem.Create("LongMode", Main.LongMode, __instance);
         }
         if (AutoStartGame == null || AutoStartGame.ToggleButton == null)
         {

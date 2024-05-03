@@ -1133,7 +1133,8 @@ public static class Options
     public static void SetupRoleOptions(int id, TabGroup tab, CustomRoles role, IntegerValueRule assignCountRule = null, CustomGameMode customGameMode = CustomGameMode.Standard | CustomGameMode.AllCrewModMode)
     {
         if (role.IsVanilla() || role.IsHidden() || role.IsCanNotOpen()) return;
-        assignCountRule ??= new(1, 15, 1);
+        
+        assignCountRule ??= role.GetRoleInfo()?.AssignCountRule??new(1, 15, 1);
 
         bool broken = role.GetRoleInfo()?.Broken ?? false;
 

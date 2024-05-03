@@ -21,10 +21,10 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Currently, this change is NOT permanent.
 
 ## Summary of Updates
-- Fixed 46 bugs
+- Fixed 49 bugs
 - Implemented 14 optimizations
 - Made changes to 24 elements
-- Added 34 New/Remade features (including roles, settings, etc.)
+- Added 35 New/Remade features (including roles, settings, etc.)
 - Temporarily removed 2 elements
 
 ## Fix
@@ -120,6 +120,12 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Fixed By Slok)
 - Fixed the bug of players affected by Time Stop were unable to use vents in vanilla clients
 (Fixed By Slok)
+- Fixed the bug of April Fools' horse mode would cause the game to crash.
+(Fixed by Slok)
+- Fixed the bug of search room would cause the game to crash.
+(Fixed by Slok)
+- Fixed the bug of the Neutral Killer role, which was win by numbers, could be activated multiple times.
+(Fixed by Slok)
 
 ## Optimization
 - Rewrote game end judgment for optimization
@@ -170,6 +176,8 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Idea&Changed By Slok)
 - Schrödinger's Cat will not be counted as a separate team for victory purposes when victorious
 (Idea&Changed By Slok)
+- Schrödinger's Cat will be counted as target's team
+(Idea&Changed By Slok)
 - Plague Doctor can now see the infection progress after player names
 (Idea&Changed By Slok)
 - The color of the Plague Doctor has been changed
@@ -182,8 +190,6 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Idea&Changed By Slok)
 - Lovers: When the number of lovers equals the total number of players on the field, and there are no Impostors or any other team winning by numbers except lovers, the lovers win.
 (Source Of The Idea：The Other Roles, Changed By Slok)
-- Horse Mode => LongMode
-(Idea&Changed By Slok)
 - Version Text Amendment (version-restricted)
 (Idea&Changed By Slok)
 - Merge With TOHv5.1.6
@@ -274,6 +280,8 @@ Addons：
 Features：
 - New Command：/ank: Display Active Neutral Killer Role description
 (Idea&Made By Slok)
+- Setting：Long Mode
+(Source：Town Of Host:Enhanced)
 
 ## New Others：
 - 11 Musics！

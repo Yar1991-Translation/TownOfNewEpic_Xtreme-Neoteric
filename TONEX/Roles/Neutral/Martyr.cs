@@ -28,7 +28,8 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
             true,
             CanKill,
             countType: CountTypes.Martyr,
-            introSound: () => GetIntroSound(RoleTypes.Crewmate)
+            introSound: () => GetIntroSound(RoleTypes.Crewmate),
+            assignCountRule: new(1, 1, 1)
 #if RELEASE
             ,ctop: true
 #endif
@@ -90,6 +91,7 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
     public float CalculateKillCooldown() => OptionKillCooldown.GetFloat();
     public bool CanUseSabotageButton() => false;
     public bool CanUseKillButton() => CanKill && Player.IsAlive();
+    public bool CanUseImpostorVentButton() => !HasProtect;
     public override void ApplyGameOptions(IGameOptions opt) => opt.SetVision(OptionHasImpostorVision.GetBool());
     public void SendRPC()
     {
@@ -163,7 +165,7 @@ public sealed class Martyr : RoleBase, IAdditionalWinner, INeutralKiller
     }
     public override void OnUsePet()
     {
-       if(Options.UsePets.GetBool()) return;
+        if(!Options.UsePets.GetBool()) return;
         if (HasProtect) Player.Notify(GetString("HasProtect"));
         HasProtect = true;
     }

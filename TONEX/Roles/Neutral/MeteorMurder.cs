@@ -26,11 +26,12 @@ public sealed class MeteorMurderer : RoleBase, INeutralKiller
             CustomRoleTypes.Neutral,
             75_1_2_0200,
             null,
-            "Frisk|MeteorMurderer|SFBF!Frisk",
+            "Frisk|MeteorMurderer|USF!Frisk",
              "#ff0000",
             true,
             true,
-            countType: CountTypes.MeteorMurderer
+            countType: CountTypes.MeteorMurderer,
+            assignCountRule: new(1, 1, 1)
         );
     public MeteorMurderer(PlayerControl player)
     : base(

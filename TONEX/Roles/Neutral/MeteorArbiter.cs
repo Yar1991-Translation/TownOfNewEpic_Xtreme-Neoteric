@@ -26,11 +26,12 @@ public sealed class MeteorArbiter : RoleBase, INeutralKiller, IAdditionalWinner
             CustomRoleTypes.Neutral,
             75_1_2_0100,
             null,
-            "Sans|MeteorArbiter|SFBF!Sans",
+            "Sans|MeteorArbiter|USF!Sans",
              "#C0EAFF",
             true,
             true,
-            countType: CountTypes.MeteorArbiter
+            countType: CountTypes.MeteorArbiter,
+            assignCountRule: new(1, 1, 1)
         );
     public MeteorArbiter(PlayerControl player)
     : base(

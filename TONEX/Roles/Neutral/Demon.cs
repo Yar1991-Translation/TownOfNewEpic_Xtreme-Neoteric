@@ -24,7 +24,8 @@ public sealed class Demon : RoleBase, INeutralKiller
             "#68bc71",
             true,
             true,
-            countType: CountTypes.Demon
+            countType: CountTypes.Demon,
+            assignCountRule: new(1, 1, 1)
         );
     public Demon(PlayerControl player)
     : base(

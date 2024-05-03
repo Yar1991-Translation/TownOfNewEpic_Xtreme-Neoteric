@@ -39,8 +39,8 @@ public class Main : BasePlugin
     // == 版本相关设定 / Version Config ==
     public const string LowestSupportedVersion = "2024.3.5";
     public static readonly bool IsPublicAvailableOnThisVersion = true;
-    public const string PluginVersion = "1.1.35";
-    public const string PluginShowVersion = "1.2_20240427_Canary_15";
+    public const string PluginVersion = "1.1.40";
+    public const string PluginShowVersion = "1.2_20240503_Canary_20";
     public const int PluginCreation = 1;
     // == 链接相关设定 / Link Config ==
     public static readonly bool ShowWebsiteButton = true;
@@ -69,6 +69,7 @@ public class Main : BasePlugin
     public static ConfigEntry<bool> UnlockFPS { get; private set; }
     //public static ConfigEntry<bool> CanPublic { get; private set; }
     public static ConfigEntry<bool> HorseMode { get; private set; }
+    public static ConfigEntry<bool> LongMode { get; private set; }
     public static ConfigEntry<bool> AutoStartGame { get; private set; }
     public static ConfigEntry<bool> AutoEndGame { get; private set; }
     public static ConfigEntry<bool> ForceOwnLanguage { get; private set; }
@@ -162,6 +163,7 @@ public class Main : BasePlugin
         UnlockFPS = Config.Bind("Client Options", "UnlockFPS", false);
         //CanPublic = Config.Bind("Client Options", "CanPublic", true);
         HorseMode = Config.Bind("Client Options", "HorseMode", false);
+        LongMode = Config.Bind("Client Options", "LongMode", false);
         AutoStartGame = Config.Bind("Client Options", "AutoStartGame", false);
         AutoEndGame = Config.Bind("Client Options", "AutoEndGame", false);
         ForceOwnLanguage = Config.Bind("Client Options", "ForceOwnLanguage", false);
