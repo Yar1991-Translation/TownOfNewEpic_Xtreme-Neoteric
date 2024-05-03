@@ -509,8 +509,20 @@ public static class InternalNameTags
             {
                 UpperText = new()
                 {
-                    Text = $"碧落天上全",
+                    Text = $"碧落天上泉",
                     TextColor = new Color32(152, 255, 255, 255),
+                    SizePercentage = 80
+                }
+            }
+        },
+        {
+            "dotshort#5936", //小黑，TONEX
+            new()
+            {
+                UpperText = new()
+                {
+                    Text = $"小黑&小红",
+                    Gradient = new(new Color32(211,211,211,255), new Color32(255,105,97,255)),
                     SizePercentage = 80
                 }
             }

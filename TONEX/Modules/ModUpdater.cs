@@ -33,7 +33,7 @@ public class ModUpdater
         "https://raw.githubusercontent.com/XtremeWave/TownOfNewEpic_Xtreme/_develop_v1.3/info.json",
         "https://raw.githubusercontent.com/XtremeWave/TownOfNewEpic_Xtreme/_develop_v1.4/info.json",
         "https://raw.githubusercontent.com/XtremeWave/TownOfNewEpic_Xtreme/_develop_v1.5/info.json",
-        "https://cdn.jsdelivr.net/gh/XtremeWave/TownOfNewEpic_Xtreme/info.json",
+        //"https://cdn.jsdelivr.net/gh/XtremeWave/TownOfNewEpic_Xtreme/info.json",
          //"https://tonx-1301425958.cos.ap-shanghai.myqcloud.com/info.json",
         "https://tohex.club/Resource/info.json",
         "https://www.xtreme.net.cn/Resource/info.json",
