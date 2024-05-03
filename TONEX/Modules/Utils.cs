@@ -84,6 +84,9 @@ public static class Utils
         foreach (PlayerControl pc in Main.AllAlivePlayerControls)
             pc.RpcTeleport(location);
     }
+
+    public static Vector2 LocalPlayerLastTp;
+    public static bool LocationLocked = false;
     public static void RpcTeleport(this PlayerControl player, Vector2 location)
     {
         Logger.Info($" {player.GetNameWithRole().RemoveHtmlTags()} => {location}", "RpcTeleport");
@@ -100,6 +103,8 @@ public static class Utils
             Logger.Warn($"Teleporting canceled - Target: ({player.GetNameWithRole().RemoveHtmlTags()}) is in on Ladder", "RpcTeleport");
             return;
         }
+
+        
 
         var net = player.NetTransform;
         var numHost = (ushort)(net.lastSequenceId + 2);
@@ -132,6 +137,9 @@ public static class Utils
         NetHelpers.WriteVector2(location, globalMessageWriter);
         globalMessageWriter.Write(numClient);
         AmongUsClient.Instance.FinishRpcImmediately(globalMessageWriter);
+
+        if (PlayerControl.LocalPlayer == player)
+            LocalPlayerLastTp = location;
     }
     public static void TP(CustomNetworkTransform nt, Vector2 location)
     {
@@ -818,19 +826,25 @@ public static class Utils
             if (role.IsImpostor() && headCount == 0)
             {
                 sb.Append(ColorString(GetRoleTeamColor(role), "\n\n● " + GetString("TabGroup.ImpostorRoles")));
+#if DEBUG
                 sb.AppendFormat("\n{0}:{1}", ColorString(GetRoleColor(CustomRoles.EvilAngle), GetRoleName(CustomRoles.EvilAngle)), EvilAngle.EnableEvilAngle.GetString().RemoveHtmlTags());
+#endif
             }
             else if (role.IsCrewmate() && headCount == 1)
             {
                 sb1.Append(ColorString(GetRoleTeamColor(role), "\n\n● " + GetString("TabGroup.CrewmateRoles")));
+#if DEBUG
                 sb1.AppendFormat("\n{0}:{1}", ColorString(GetRoleColor(CustomRoles.InjusticeSpirit), GetRoleName(CustomRoles.InjusticeSpirit)), InjusticeSpirit.EnableInjusticeSpirit.GetString().RemoveHtmlTags());
+#endif
             }
-        
+
+
             else if (role.IsNeutral() && headCount == 2) 
             {
                 sb2.Append(ColorString(GetRoleTeamColor(role), "\n\n● " + GetString("TabGroup.NeutralRoles")));
+#if DEBUG
                 sb2.AppendFormat("\n{0}:{1}", ColorString(GetRoleColor(CustomRoles.Phantom), GetRoleName(CustomRoles.Phantom)), Phantom.EnablePhantom.GetString().RemoveHtmlTags());
-
+#endif
             }
             else if (role.IsAddon() && headCount == 3) sb3.Append(ColorString(GetRoleTeamColor(role), "\n\n● " + GetString("TabGroup.Addons")));
             else headCount--;
@@ -1290,6 +1304,7 @@ public static class Utils
             roleClass.AfterMeetingTasks();
         Signal.AfterMeet();
 
+#if DEBUG
         if (InjusticeSpirit.SetPlayer != null)
         {
            
@@ -1326,6 +1341,7 @@ public static class Utils
 
         }
 
+#endif
         if (Options.AirShipVariableElectrical.GetBool())
             AirShipElectricalDoors.Initialize();
         DoorsReset.ResetDoors();

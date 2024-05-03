@@ -54,7 +54,7 @@
 > - 开发者：[tukasa0001](https://github.com/tukasa0001)
 > - 一切都基于Town Of Host
 >
->### :star: [Town Of Host Edited & Town Of Next](https://github.com/KARPED1EM/TownOfHostEdited) :
+>### :star: [Town Of Next(原Town Of Host Edited)](https://github.com/KARPED1EM/TownOfNext) :
 > 
 > - 开发者：[KARPED1EM](https://github.com/KARPED1EM)
 > - 梦开始的地方
@@ -78,7 +78,7 @@
 > 
 > - 开发者：[ykundesu](https://github.com/ykundesu)
 > - 参考: TOHEX中的制作者名单(v2023.7.11前)
-> - 参考: 切换马模式
+> - 参考: 愚人节牧马模式(v2024.3.5前)
 > - 参考: 寻找模组游戏
 > - 参考: TOHEX中的自定义按钮
 >
@@ -113,6 +113,7 @@
 > 
 > - 开发者：[Moe](https://github.com/0xDrMoe)
 > - 许多职业想法
+> - 参考: 愚人节牧马模式(v2024.3.5后)
 >
 	
   </br></br>

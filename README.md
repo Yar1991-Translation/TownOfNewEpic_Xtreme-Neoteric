@@ -57,7 +57,7 @@
 > - Developer：[tukasa0001](https://github.com/tukasa0001)
 > - Everything is based on Town Of Host
 >
->### :star: [Town Of Host Edited & Town Of Next](https://github.com/KARPED1EM/TownOfHostEdited) :
+>### :star: [Town Of Next(Formerly Town Of Host Edited)](https://github.com/KARPED1EM/TownOfHostEdited) :
 > 
 > - Developer：[KARPED1EM](https://github.com/KARPED1EM)
 > - The beginning of our Dream
@@ -81,7 +81,7 @@
 > 
 > - Developer：[ykundesu](https://github.com/ykundesu)
 > - Reference: Credentials menu In TOHEX(Before v2023.7.11)
-> - Reference: Switch Horse Mode
+> - Reference: Switch Horse Mode(Before v2024.3.5)
 > - Reference: Search Mod Game
 > - Reference: Custom Button In TOHEX
 >
@@ -116,6 +116,7 @@
 > 
 > - Developer：[Moe](https://github.com/0xDrMoe)
 > - Many role ideas
+> - Reference: Switch Horse Mode(v2024.3.5后)
 >
 	
   </br></br>

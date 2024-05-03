@@ -256,17 +256,12 @@ public sealed class Vagator : RoleBase, INeutralKiller
                         List<byte> NiceTimeStopsstop = new();
                         if (!pc.IsAlive() || Pelican.IsEaten(pc.PlayerId)) continue;
                         NameNotifyManager.Notify(pc, Utils.ColorString(Utils.GetRoleColor(CustomRoles.Vagator), GetString("ForZhongLi")));
-                        var tmpSpeed1 = Main.AllPlayerSpeed[pc.PlayerId];
-                        NiceTimeStopsstop.Add(pc.PlayerId);
-                        Main.AllPlayerSpeed[pc.PlayerId] = Main.MinSpeed;
-                        ReportDeadBodyPatch.CanReport[pc.PlayerId] = false;
-                        pc.MarkDirtySettings();
+                        Player.DisableAction(pc, ExtendedPlayerControl.PlayerActionType.All, ExtendedPlayerControl.PlayerActionInUse.All);
+
                         new LateTask(() =>
                         {
-                            Main.AllPlayerSpeed[pc.PlayerId] = Main.AllPlayerSpeed[pc.PlayerId] - Main.MinSpeed + tmpSpeed1;
-                            ReportDeadBodyPatch.CanReport[pc.PlayerId] = true;
-                            pc.MarkDirtySettings();
-                            NiceTimeStopsstop.Remove(pc.PlayerId);
+                            Player.EnableAction(pc, ExtendedPlayerControl.PlayerActionType.All);
+
                             RPC.PlaySoundRPC(pc.PlayerId, Sounds.TaskComplete);
                         }, 5f, "ZhongLi ");
                     }

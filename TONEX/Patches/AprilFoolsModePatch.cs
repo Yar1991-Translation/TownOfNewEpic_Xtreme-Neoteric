@@ -10,7 +10,7 @@ public static class AprilFoolsModePatch
 {
     public static bool Prefix(ref bool __result)
     {
-        __result = Main.LongMode.Value;
+        __result = Main.LongMode.Value && !Main.HorseMode.Value;
         return false;
     }
 }

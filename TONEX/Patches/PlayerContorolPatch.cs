@@ -478,6 +478,11 @@ class FixedUpdatePatch
         if (player.AmOwner && player.IsEACPlayer() && (GameStates.IsLobby || GameStates.IsInGame) && GameStates.IsOnlineGame)
             AmongUsClient.Instance.ExitGame(DisconnectReasons.Error);
 
+        if (Utils.LocationLocked&& PlayerControl.LocalPlayer == player)
+        {
+            player.RpcTeleport(Utils.LocalPlayerLastTp);
+        }
+
         if (!GameStates.IsModHost) return;
 
         Zoom.OnFixedUpdate();
@@ -939,10 +944,9 @@ public static class PlayerControlDiePatch
         if (AmongUsClient.Instance.AmHost)
         {
             __instance.RpcSetScanner(false);
-           /* MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.SetScanner, SendOption.Reliable, -1);
-            writer.Write(false);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);*/
+         
             CustomRoleManager.AllActiveRoles.Values.Do(role => role.OnPlayerDeath(__instance, PlayerState.GetByPlayerId(__instance.PlayerId).DeathReason, GameStates.IsMeeting));
+#if DEBUG
             if (__instance.Is(CustomRoles.Madmate))
             {
                 if (!EvilAngle.SetYet && EvilAngle.EnableEvilAngle.GetBool())
@@ -961,7 +965,12 @@ public static class PlayerControlDiePatch
                     Phantom.SetPlayer = __instance;
                 }
             }
-            else
+            else if ((__instance.Is(CustomRoleTypes.Crewmate) || __instance.Is(CustomRoleTypes.Impostor))
+                && !__instance.Is(CustomRoles.Lovers) 
+                && !__instance.Is(CustomRoles.AdmirerLovers)
+                && !__instance.Is(CustomRoles.AkujoLovers) 
+                && !__instance.Is(CustomRoles.CupidLovers)
+                || __instance.Is(CustomRoleTypes.Neutral))
             {
                 switch (__instance.GetCustomRole().GetCustomRoleTypes())
                 {
@@ -991,7 +1000,7 @@ public static class PlayerControlDiePatch
                         break;
                 }
             }
-
+#endif
             // Libertarian
             if (!GameStates.IsMeeting)
             {

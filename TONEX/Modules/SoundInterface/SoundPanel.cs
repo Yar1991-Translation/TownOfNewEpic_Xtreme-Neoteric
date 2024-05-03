@@ -23,6 +23,11 @@ public static class SoundPanel
     {
         if (CustomBackground != null)
             CustomBackground?.gameObject?.SetActive(false);
+        if (!GameStates.IsNotJoined)
+        {
+            Utils.LocationLocked = false;
+            PlayerControl.LocalPlayer.EnableAction(PlayerControl.LocalPlayer, ExtendedPlayerControl.PlayerActionType.Move, true);
+        }
     }
     public static void Init(OptionsMenuBehaviour optionsMenuBehaviour)
     {
@@ -48,7 +53,13 @@ public static class SoundPanel
             closePassiveButton.OnClick = new();
             closePassiveButton.OnClick.AddListener(new Action(() =>
             {
+                
                 CustomBackground.gameObject.SetActive(false);
+                if (!GameStates.IsNotJoined)
+                {
+                    Utils.LocationLocked = false;
+                    PlayerControl.LocalPlayer.EnableAction(PlayerControl.LocalPlayer, ExtendedPlayerControl.PlayerActionType.Move, true);
+                }
             }));
             /*var changeButton = Object.Instantiate(mouseMoveToggle, CustomBackground.transform);
             changeButton.transform.localPosition = new(0.65f, -1.88f, -15f);
@@ -83,7 +94,7 @@ public static class SoundPanel
             stopPassiveButton.OnClick = new();
             stopPassiveButton.OnClick.AddListener(new Action(() =>
             {
-                CustomSoundsManager.StopPlay();
+                                CustomSoundsManager.StopPlay();
             }));
             Logger.Info("c", "test");
             if (GameStates.IsNotJoined)
@@ -158,10 +169,10 @@ public static class SoundPanel
                 {
                     renderer.color = rollover.OutColor = Palette.DisabledGrey;
                 }
-                var passiveButton = button.GetComponent<PassiveButton>();
-                passiveButton.OnClick = new();
-                passiveButton.OnClick.AddListener(new Action(() =>
-                {
+            var passiveButton = button.GetComponent<PassiveButton>();
+            passiveButton.OnClick = new();
+            passiveButton.OnClick.AddListener(new Action(() =>
+            {
 
                     if (File.Exists(path))
                     {

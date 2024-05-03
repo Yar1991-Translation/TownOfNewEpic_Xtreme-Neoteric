@@ -62,7 +62,19 @@ public static class OptionsMenuBehaviourStartPatch
        
         if (HorseMode == null || HorseMode.ToggleButton == null)
         {
-            HorseMode = ClientOptionItem.Create("HorseMode", Main.HorseMode, __instance);
+            HorseMode = ClientOptionItem.Create("HorseMode", Main.HorseMode, __instance, SwitchHorseMode);
+            static void SwitchHorseMode()
+            {
+                HorseMode.UpdateToggle();
+                foreach (var pc in PlayerControl.AllPlayerControls)
+                {
+                    pc.MyPhysics.SetBodyType(pc.BodyType);
+                    if (pc.BodyType == PlayerBodyTypes.Normal)
+                    {
+                        pc.cosmetics.currentBodySprite.BodySprite.transform.localScale = new(0.5f, 0.5f, 1f);
+                    }
+                }
+            }
         }
         if (LongMode == null || LongMode.ToggleButton == null)
         {
@@ -138,7 +150,14 @@ public static class OptionsMenuBehaviourStartPatch
             {
                 try
                 {
+                    if (!GameStates.IsNotJoined)
+                    {
+                        Utils.LocalPlayerLastTp = PlayerControl.LocalPlayer.GetTruePosition();
+                        Utils.LocationLocked = true;
+                        PlayerControl.LocalPlayer.DisableAction(PlayerControl.LocalPlayer, ExtendedPlayerControl.PlayerActionType.Move, ExtendedPlayerControl.PlayerActionInUse.All, true);
+                    }
                     SoundPanel.CustomBackground.gameObject.SetActive(true);
+                    
                 }
                 catch (System.Exception ex)
                 {

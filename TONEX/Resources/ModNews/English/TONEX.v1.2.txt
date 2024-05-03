@@ -16,12 +16,12 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 - Based on Town Of Host v5.1.5 & Town Of Next v3.0.1
 
 ## Warning
-- Create/join public lobbies is temporarily unavailable
-- This change is due to a server-side update that makes modded public lobbies unavailable for vanilla. Private lobbies are not affected.
+- Create/join public lobbies in Official Servers is temporarily unavailable
+- This change is due to a server-side update that makes modded public lobbies unavailable for vanilla. Private lobbies and Private Servers are not affected.
 - Currently, this change is NOT permanent.
 
 ## Summary of Updates
-- Fixed 49 bugs
+- Fixed 50 bugs
 - Implemented 14 optimizations
 - Made changes to 24 elements
 - Added 35 New/Remade features (including roles, settings, etc.)
@@ -122,9 +122,11 @@ But I believe that Cupid's arrow of love will eventually find its way to you!
 (Fixed By Slok)
 - Fixed the bug of April Fools' horse mode would cause the game to crash.
 (Fixed by Slok)
-- Fixed the bug of search room would cause the game to crash.
+- Fixed the bug of search room would cause the game to crash
 (Fixed by Slok)
-- Fixed the bug of the Neutral Killer role, which was win by numbers, could be activated multiple times.
+- Fixed the bug of the Neutral Killer role, which was win by numbers, could be activated multiple times
+(Fixed by Slok)
+- Fixed the bug of opening the music panel would trigger involuntary movement
 (Fixed by Slok)
 
 ## Optimization

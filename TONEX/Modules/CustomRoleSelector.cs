@@ -269,12 +269,13 @@ internal static class CustomRoleSelector
                 var select = roleRateList[rd.Next(0, roleRateList.Count)];
                 roleRateList.Remove(select);
                 rolesToAssign.Add(select);
+                readyRoleNum++;
                 if (select == CustomRoles.Sheriff && Sheriff.HasDeputy.GetBool() && readyRoleNum < playerCount)
                 {
 
                     rolesToAssign.Add(CustomRoles.Deputy);
                 }
-                readyRoleNum++;
+                
                 Logger.Info(select.ToString() + " 加入船员职业待选列表", "CustomRoleSelector");
                 if (readyRoleNum >= playerCount) goto EndOfAssign;
             }
