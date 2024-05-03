@@ -89,7 +89,7 @@ public class PlayerGameOptionsSender : GameOptionsSender
                 break;
         }
 
-        var roleClass = player.GetRoleClass();
+        var roleClass = player.GetRoleClass()?? null;
         roleClass?.ApplyGameOptions(opt);
         foreach (var subRole in player.GetCustomSubRoles())
         {
@@ -117,10 +117,24 @@ public class PlayerGameOptionsSender : GameOptionsSender
                 case CustomRoles.Mini:
                     if ((player.GetRoleClass() as IKiller)?.IsKiller ?? false)
                     {
-                        if (Mini.Age[player.PlayerId] < 18)
+                        if (Mini.Age[player.PlayerId] < 18 && !Mini.MKL.Contains(player.PlayerId))
+                        {
+                            Mini.MKL.Add(player.PlayerId);
                             opt.SetFloat(FloatOptionNames.KillCooldown, Mini.OptionKidKillCoolDown.GetFloat());
-                        else
+                            Main.AllPlayerKillCooldown[player.PlayerId] *= Mini.OptionKidKillCoolDown.GetFloat();
+                            Mini.SendRPC();
+                            player.ResetKillCooldown();
+                            player.SyncSettings();
+                        }
+                        else if (Mini.Age[player.PlayerId] >= 18 && !Mini.MAL.Contains(player.PlayerId))
+                        {
+                            Mini.MAL.Add(player.PlayerId);
                             opt.SetFloat(FloatOptionNames.KillCooldown, Mini.OptionAdultKillCoolDown.GetFloat());
+                            Main.AllPlayerKillCooldown[player.PlayerId] *= Mini.OptionAdultKillCoolDown.GetFloat();
+                            player.ResetKillCooldown();
+                            player.SyncSettings();
+                            Mini.SendRPC();
+                        }
                     }
                     break;
                 case CustomRoles.Rambler:
@@ -147,7 +161,7 @@ public class PlayerGameOptionsSender : GameOptionsSender
             Main.AllPlayerKillCooldown[player.PlayerId] *= Diseased.OptionVistion.GetFloat();
             player.ResetKillCooldown();
             player.SyncSettings();
-            
+            Diseased.SendRPC();
             Utils.NotifyRoles(player);
         }
 

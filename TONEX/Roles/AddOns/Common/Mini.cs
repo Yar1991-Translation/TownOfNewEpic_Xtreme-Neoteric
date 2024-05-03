@@ -21,6 +21,8 @@ public static class Mini
     public static OptionItem OptionAdultKillCoolDown;
     public static Dictionary<byte,int> Age;
     public static int UpTime;
+    public static List<byte> MKL;
+    public static List<byte> MAL;
     public static void SetupCustomOption()
     {
         SetupAddonOptions(Id, TabGroup.Addons, CustomRoles.Mini);
@@ -49,23 +51,48 @@ public static class Mini
    public static void SendRPC()
     {
         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.MiniAge, SendOption.Reliable, -1);
+        writer.Write(Age.Count);
         foreach (var pc in playerIdList)
         {
             writer.Write(pc);
             writer.Write(Age[pc]);
+        }
+        writer.Write(MKL.Count);
+        foreach (var pc in MKL)
+        {
+            writer.Write(pc);
+        }
+        writer.Write(MAL.Count);
+        foreach (var pc in MAL)
+        {
+            writer.Write(pc);
         }
         AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
     public static void ReceiveRPC(MessageReader reader, CustomRPC rpcType)
     {
         if (rpcType != CustomRPC.MiniAge) return;
-        
-        for (int i = 0; 1 < Age.Count; i++)
+        var ages = reader.ReadInt32();
+        for (int i = 0; i < ages; i++)
         {
             var pc = reader.ReadByte();
             var age = reader.ReadInt32();
             Age.TryAdd(pc, age);
             Age[pc] = age;
+        }
+        var mkl = reader.ReadInt32();
+        for (int i = 0; i < mkl; i++)
+        {
+            var pc = reader.ReadByte();
+            if (!MKL.Contains(pc))
+                MKL.Add(pc);
+        }
+        var mal = reader.ReadInt32();
+        for (int i = 0; i < mal; i++)
+        {
+            var pc = reader.ReadByte();
+            if (!MAL.Contains(pc))
+                MAL.Add(pc);
         }
     }
     public static bool IsEnable => playerIdList.Count > 0;

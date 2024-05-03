@@ -425,7 +425,7 @@ public static class InternalNameTags
             {
                 UpperText = new()
                 {
-                    Text = $"水³",
+                    Text = $"MiaoIce",
                     Gradient = new(new Color32(204, 255, 255, 255), new Color32(0, 153, 204, 255)),
                     SizePercentage = 80
                 }
