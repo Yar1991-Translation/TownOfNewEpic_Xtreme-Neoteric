@@ -41,6 +41,8 @@ public static class AudioManager
 "TheDomeofTruth",
 "TheTruthFadesAway",
 "unavoidable",
+"NeverGonnaGiveYouUp",
+
     };
     public static List<string> NotUp = new()
     {
@@ -50,6 +52,7 @@ public static class AudioManager
     public static Dictionary<string, bool> TONEXSounds = new();
     public static List<string> TONEXSoundList = new()
     {
+        "Birth",
         "AWP",
         "Bet",
         "Bite",

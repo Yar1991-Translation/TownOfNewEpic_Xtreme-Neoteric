@@ -74,7 +74,7 @@ public class MusicDownloader
             
             if (md5ForFiles.ContainsKey(sound))
             {
-                if (GetMD5HashFromFile(filePath) != md5ForFiles[sound].ToLower())
+                if (GetMD5HashFromFile(filePath).ToLower() != md5ForFiles[sound].ToLower())
                 {
                     Logger.Error($"Md5 Wrong in {url}", "DownloadSound");
                     File.Delete(filePath);
@@ -122,7 +122,7 @@ public class MusicDownloader
         }
         if (!succeed)
         {
-            if (url == downloadUrl_website)
+            if (url == downloadUrl_website && IsChineseLanguageUser || url == downloadUrl_github && !IsChineseLanguageUser)
             {
                 url = downloadUrl_website2;
                 goto retry;
@@ -132,7 +132,12 @@ public class MusicDownloader
                 url = downloadUrl_gitee;
                 goto retry;
             }
-            
+            else if (url == downloadUrl_gitee && IsChineseLanguageUser)
+            {
+                url = downloadUrl_github;
+                goto retry;
+            }
+
         }
     }
     private static bool IsValidUrl(string url)
@@ -162,6 +167,7 @@ public class MusicDownloader
     }
     private static Dictionary<string, string> md5ForFiles = new()
     {
+        {"Birth","d0c811d7c10fc934ed863467fe3a8ac8" },
         {"AWP","A191F48B6689290ECD4568149C22A381" },
         {"Bet","8B9B734E97998BE8872ADAE6B5D4343C"},
         {"Bite","9AEFF327DE582FF926EF2187AE4DC338"},
@@ -210,7 +216,8 @@ public class MusicDownloader
 {"StarsFallWithDomeCrumbles", "b5ccabeaf3324cedb107c83a2dc0ce1e"},
 {"TheDomeofTruth", "183804914e3310b9f92b47392f503a9f"},
 {"TheTruthFadesAway", "75fbed53db391ed73085074ad0709d82"},
-{"unavoidable", "da520f4613103826b4df7647e368d4b4"}
+{"unavoidable", "da520f4613103826b4df7647e368d4b4"},
+        {"NeverGonnaGiveYouUp","354cab3103b7e033c6e31d12766eb59c" }
 
 
     };

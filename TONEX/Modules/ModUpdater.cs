@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TMPro;
 using TONEX.Modules;
+using TONEX.Modules.SoundInterface;
 using UnityEngine;
 using static TONEX.Translator;
 
@@ -33,7 +34,7 @@ public class ModUpdater
         "https://raw.githubusercontent.com/XtremeWave/TownOfNewEpic_Xtreme/_develop_v1.3/info.json",
         "https://raw.githubusercontent.com/XtremeWave/TownOfNewEpic_Xtreme/_develop_v1.4/info.json",
         "https://raw.githubusercontent.com/XtremeWave/TownOfNewEpic_Xtreme/_develop_v1.5/info.json",
-        //"https://cdn.jsdelivr.net/gh/XtremeWave/TownOfNewEpic_Xtreme/info.json",
+        "https://cdn.jsdelivr.net/gh/XtremeWave/TownOfNewEpic_Xtreme/info.json",
          //"https://tonx-1301425958.cos.ap-shanghai.myqcloud.com/info.json",
         "https://tohex.club/Resource/info.json",
         "https://www.xtreme.net.cn/Resource/info.json",
@@ -85,7 +86,24 @@ public class ModUpdater
     public static string downloadUrl_website2 = "";
     private static int retried = 0;
     private static bool firstLaunch = true;
-
+    [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start)), HarmonyPrefix, HarmonyPriority(Priority.LowerThanNormal)]
+    public static void StartPrefix()
+    {
+        if (!File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birth.wav"))
+        {
+            var task = MusicDownloader.StartDownload("");
+            task.ContinueWith(t =>
+            {
+                if (!MusicDownloader.succeed)
+                {
+                    Logger.Error("DownloadFailed", "DownloadSound");
+                }
+                new LateTask(() =>
+                {
+                }, 0.1f);
+            });
+        }
+    }
     [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start)), HarmonyPostfix, HarmonyPriority(Priority.LowerThanNormal)]
     public static void StartPostfix()
     {
@@ -93,7 +111,24 @@ public class ModUpdater
 
         if (!isChecked && firstStart) CheckForUpdate();
         SetUpdateButtonStatus();
-
+        if (!File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birth.wav"))
+        {
+            var task = MusicDownloader.StartDownload("");
+            task.ContinueWith(t =>
+            {
+                if (!MusicDownloader.succeed)
+                {
+                    Logger.Error("DownloadFailed", "DownloadSound");
+                }
+                new LateTask(() =>
+                {
+                }, 0.1f);
+            });
+        }
+        if (File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birth.wav"))
+        {
+            CustomSoundsManager.Play("Birth", 0);
+        }
         firstStart = false;
     }
     public static void SetUpdateButtonStatus()

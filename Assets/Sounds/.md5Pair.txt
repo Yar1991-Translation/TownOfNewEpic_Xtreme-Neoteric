@@ -1,6 +1,7 @@
 a3672341f586b4d81efba6d4278cfeae  \AFamiliarPromise.wav
 a191f48b6689290ecd4568149c22a381  \AWP.wav
 8b9b734e97998be8872adae6b5d4343c  \Bet.wav
+d0c811d7c10fc934ed863467fe3a8ac8  \Birth.wav
 9aeff327de582ff926ef2187ae4dc338  \Bite.wav
 4df61f364e7ee087a983172021cee00c  \Boom.wav
 394f4ec5823a7f8ad4ecea6897d2928c  \Clothe.wav
@@ -30,6 +31,7 @@ e613f02735a761e720367aaed8f93af9  \Join3.wav
 a485bcfee7311ef3a7651f4b20e381cb  \MarioJump.wav
 1054c90edfa66e31655bc7a58f553231  \Mendax.wav
 1b82e1ea81aeb9a968a94bec7f4f62fd  \MendaxsTimeForExperiment.wav
+354cab3103b7e033c6e31d12766eb59c  \NeverGonnaGiveYouUp.wav
 13b71f389e21c2af8e35996201843642  \Onichian.wav
 7ab4778744242e4cfa0468568308ea9b  \RejoiceThisSEASONRespectThisWORLD.wav
 b7119cc4e0e5b108b8735d734769aa5c  \Shapeshifter.wav
