@@ -78,14 +78,15 @@ public class MusicDownloader
                 {
                     Logger.Error($"Md5 Wrong in {url}", "DownloadSound");
                     File.Delete(filePath);
-                    if (url == downloadUrl_website)
+                    if (url == downloadUrl_website && IsChineseLanguageUser || url == downloadUrl_github && !IsChineseLanguageUser)
                     {
-                        url = downloadUrl_website2;
+
+                        url = downloadUrl_gitee;
                         goto retry;
                     }
-                    else if (url == downloadUrl_website2)
+                    else if (url == downloadUrl_gitee && IsChineseLanguageUser)
                     {
-                        url = downloadUrl_gitee;
+                        url = downloadUrl_github;
                         goto retry;
                     }
                     return;
@@ -97,14 +98,15 @@ public class MusicDownloader
             {
                 Logger.Error($"Md5 No Found in {url}", "DownloadSound");
                 File.Delete(filePath);
-                if (url == downloadUrl_website)
+                if (url == downloadUrl_website && IsChineseLanguageUser || url == downloadUrl_github && !IsChineseLanguageUser)
                 {
-                    url = downloadUrl_website2;
+
+                    url = downloadUrl_gitee;
                     goto retry;
                 }
-                else if (url == downloadUrl_website2)
+                else if (url == downloadUrl_gitee && IsChineseLanguageUser)
                 {
-                    url = downloadUrl_gitee;
+                    url = downloadUrl_github;
                     goto retry;
                 }
                 return;
@@ -124,11 +126,7 @@ public class MusicDownloader
         {
             if (url == downloadUrl_website && IsChineseLanguageUser || url == downloadUrl_github && !IsChineseLanguageUser)
             {
-                url = downloadUrl_website2;
-                goto retry;
-            }
-            else if (url == downloadUrl_website2)
-            {
+                
                 url = downloadUrl_gitee;
                 goto retry;
             }
@@ -147,7 +145,7 @@ public class MusicDownloader
     }
     private static void OnDownloadProgressChanged(long? totalFileSize, long totalBytesDownloaded, double? progressPercentage)
     {
-        string msg = $"{GetString("updateInProgress")}\n{totalFileSize / 1000}KB / {totalBytesDownloaded / 1000}KB  -  {(int)progressPercentage}%";
+        string msg = $"\n{totalFileSize / 1000}KB / {totalBytesDownloaded / 1000}KB  -  {(int)progressPercentage}%";
         Logger.Info(msg, "DownloadSounds");
     }
     public static string GetMD5HashFromFile(string fileName)

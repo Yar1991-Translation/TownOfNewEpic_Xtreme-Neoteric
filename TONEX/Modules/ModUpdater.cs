@@ -86,24 +86,6 @@ public class ModUpdater
     public static string downloadUrl_website2 = "";
     private static int retried = 0;
     private static bool firstLaunch = true;
-    [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start)), HarmonyPrefix, HarmonyPriority(Priority.LowerThanNormal)]
-    public static void StartPrefix()
-    {
-        if (!File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birthday.wav"))
-        {
-            var task = MusicDownloader.StartDownload("Birthday");
-            task.ContinueWith(t =>
-            {
-                if (!MusicDownloader.succeed)
-                {
-                    Logger.Error("DownloadFailed", "DownloadSound");
-                }
-                new LateTask(() =>
-                {
-                }, 0.1f);
-            });
-        }
-    }
     [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start)), HarmonyPostfix, HarmonyPriority(Priority.LowerThanNormal)]
     public static void StartPostfix()
     {
@@ -111,20 +93,6 @@ public class ModUpdater
 
         if (!isChecked && firstStart) CheckForUpdate();
         SetUpdateButtonStatus();
-        if (!File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birthday.wav"))
-        {
-            var task = MusicDownloader.StartDownload("Birthday");
-            task.ContinueWith(t =>
-            {
-                if (!MusicDownloader.succeed)
-                {
-                    Logger.Error("DownloadFailed", "DownloadSound");
-                }
-                new LateTask(() =>
-                {
-                }, 0.1f);
-            });
-        }
         if (File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birthday.wav"))
         {
             CustomSoundsManager.Play("Birthday", 0);
@@ -192,6 +160,38 @@ public class ModUpdater
         }
 
         SetUpdateButtonStatus();
+    }
+    public static void BeforeCheck()
+    {
+        isChecked = false;
+        DeleteOldFiles();
+
+        foreach (var url in GetInfoFileUrlList())
+        {
+            if (GetVersionInfo(url).GetAwaiter().GetResult())
+            {
+                isChecked = true;
+                break;
+            }
+        }
+
+        Logger.Msg("Check For Update: " + isChecked, "CheckRelease");
+        isBroken = !isChecked;
+        if (isChecked)
+        {
+            Logger.Info("Has Update: " + hasUpdate, "CheckRelease");
+            Logger.Info("Latest Version: " + latestVersion.ToString(), "CheckRelease");
+            Logger.Info("Minimum Version: " + minimumVersion.ToString(), "CheckRelease");
+            Logger.Info("Creation: " + creation.ToString(), "CheckRelease");
+            Logger.Info("Force Update: " + forceUpdate, "CheckRelease");
+            Logger.Info("File MD5: " + md5, "CheckRelease");
+            Logger.Info("Github Url: " + downloadUrl_github, "CheckRelease");
+            Logger.Info("Gitee Url: " + downloadUrl_gitee, "CheckRelease");
+            Logger.Info("Wensite Url: " + downloadUrl_website, "CheckRelease");
+            Logger.Info("Wensite2 Url: " + downloadUrl_website2, "CheckRelease");
+            Logger.Info("Announcement (English): " + announcement_en, "CheckRelease");
+            Logger.Info("Announcement (SChinese): " + announcement_zh, "CheckRelease");
+        }
     }
     public static string Get(string url)
     {

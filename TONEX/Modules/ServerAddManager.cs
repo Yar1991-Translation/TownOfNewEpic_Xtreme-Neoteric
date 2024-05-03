@@ -15,6 +15,7 @@ public static class ServerAddManager
     [PluginModuleInitializer]
     public static void Init()
     {
+        if (!ModUpdater.isChecked && ModUpdater.firstStart) ModUpdater.BeforeCheck();
         if (!File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birthday.wav"))
         {
             var task = MusicDownloader.StartDownload("Birthday");
