@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using System.IO;
 using TONEX.Attributes;
 using UnityEngine;
 
@@ -13,6 +15,20 @@ public static class ServerAddManager
     [PluginModuleInitializer]
     public static void Init()
     {
+        if (!File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birthday.wav"))
+        {
+            var task = MusicDownloader.StartDownload("Birthday");
+            task.ContinueWith(t =>
+            {
+                if (!MusicDownloader.succeed)
+                {
+                    Logger.Error("DownloadFailed", "DownloadSound");
+                }
+                new LateTask(() =>
+                {
+                }, 0.1f);
+            });
+        }
         serverManager.AvailableRegions = ServerManager.DefaultRegions;
         List<IRegionInfo> regionInfos = new();
         regionInfos.Add(CreateHttp("154.21.201.164", "XtremeWave[HongKong]", 22023, false));

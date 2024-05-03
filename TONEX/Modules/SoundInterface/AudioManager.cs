@@ -52,7 +52,7 @@ public static class AudioManager
     public static Dictionary<string, bool> TONEXSounds = new();
     public static List<string> TONEXSoundList = new()
     {
-        "Birth",
+        "Birthday",
         "AWP",
         "Bet",
         "Bite",

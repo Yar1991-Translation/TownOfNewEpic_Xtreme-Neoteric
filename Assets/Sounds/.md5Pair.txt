@@ -2,6 +2,7 @@ a3672341f586b4d81efba6d4278cfeae  \AFamiliarPromise.wav
 a191f48b6689290ecd4568149c22a381  \AWP.wav
 8b9b734e97998be8872adae6b5d4343c  \Bet.wav
 d0c811d7c10fc934ed863467fe3a8ac8  \Birth.wav
+e288b805c09d35a4545401539b00d3d1  \Birthday.wav
 9aeff327de582ff926ef2187ae4dc338  \Bite.wav
 4df61f364e7ee087a983172021cee00c  \Boom.wav
 394f4ec5823a7f8ad4ecea6897d2928c  \Clothe.wav

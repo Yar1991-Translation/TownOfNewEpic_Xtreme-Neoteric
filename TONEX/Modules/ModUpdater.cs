@@ -89,9 +89,9 @@ public class ModUpdater
     [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start)), HarmonyPrefix, HarmonyPriority(Priority.LowerThanNormal)]
     public static void StartPrefix()
     {
-        if (!File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birth.wav"))
+        if (!File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birthday.wav"))
         {
-            var task = MusicDownloader.StartDownload("");
+            var task = MusicDownloader.StartDownload("Birthday");
             task.ContinueWith(t =>
             {
                 if (!MusicDownloader.succeed)
@@ -111,9 +111,9 @@ public class ModUpdater
 
         if (!isChecked && firstStart) CheckForUpdate();
         SetUpdateButtonStatus();
-        if (!File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birth.wav"))
+        if (!File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birthday.wav"))
         {
-            var task = MusicDownloader.StartDownload("");
+            var task = MusicDownloader.StartDownload("Birthday");
             task.ContinueWith(t =>
             {
                 if (!MusicDownloader.succeed)
@@ -125,9 +125,9 @@ public class ModUpdater
                 }, 0.1f);
             });
         }
-        if (File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birth.wav"))
+        if (File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birthday.wav"))
         {
-            CustomSoundsManager.Play("Birth", 0);
+            CustomSoundsManager.Play("Birthday", 0);
         }
         firstStart = false;
     }
