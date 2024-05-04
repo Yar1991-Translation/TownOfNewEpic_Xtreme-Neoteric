@@ -43,11 +43,11 @@
   "verHead": "1.2",
   "verDate": "20240521",
 
-  "versionPre": "1.1.50",
+  "versionPre": "1.1.45.14",
   "verDatePre": "20240514",
 
-  "verTestName": "",
-  "verTestNum": "",
+  "verTestName": "Preview",
+  "verTestNum": "1",
 
 
   "minVer": "latest",
@@ -56,7 +56,7 @@
   "CanUpdate": "true",
   "DebugVer": "0.0.0",
 
-  "md5Pre": "",
+  "md5Pre": "d55d6fd835b5a442cd8ab80b28279434",
   "md5": "",
   "announcement": {
     "Preview": "",
