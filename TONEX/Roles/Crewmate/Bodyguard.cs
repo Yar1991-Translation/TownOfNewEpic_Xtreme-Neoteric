@@ -42,7 +42,6 @@ public sealed class Bodyguard : RoleBase
     {
         var (killer, target) = info.AttemptTuple;
         if (info.IsSuicide || target.Is(CustomRoles.Bodyguard)) return true;
-
         foreach (var pc in Main.AllAlivePlayerControls.Where(x => x.PlayerId != target.PlayerId))
         {
             var pos = target.transform.position;

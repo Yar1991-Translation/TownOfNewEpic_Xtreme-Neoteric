@@ -38,13 +38,13 @@ public class Main : BasePlugin
     public static ConfigEntry<string> DebugKeyInput { get; private set; }
     // == 版本相关设定 / Version Config ==
     public const string LowestSupportedVersion = "2024.3.5";
-    public static readonly bool IsPublicAvailableOnThisVersion = false;
-    public const string PluginVersion = "1.1.0";
-    public const string PluginShowVersion = "1.1_20240404";
+    public static readonly bool IsPublicAvailableOnThisVersion = true;
+    public const string PluginVersion = "1.2.0";
+    public const string PluginShowVersion = "1.2_20240521";
     public const int PluginCreation = 1;
     // == 链接相关设定 / Link Config ==
     public static readonly bool ShowWebsiteButton = true;
-    public static readonly string WebsiteUrl = Translator.IsChineseLanguageUser ? "https://tonex.cc" : "https://tonex.cc/En";
+    public static readonly string WebsiteUrl = Translator.IsChineseLanguageUser ? "https://www.xtreme.net.cn" : "https://www.xtreme.net.cn";
     public static readonly bool ShowQQButton = true;
     public static readonly string QQInviteUrl = "http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=4ojpzbUU42giZZeQ-DTaal-tC5RIpL46&authKey=49OYQwsCza2x5eHGdXDHXD1M%2FvYvQcEhJBNL5h8Gq7AxOu5eMfTc6g2edtlsMuCm&noverify=0&group_code=733425569";
     public static readonly bool ShowDiscordButton = true;
@@ -69,6 +69,7 @@ public class Main : BasePlugin
     public static ConfigEntry<bool> UnlockFPS { get; private set; }
     //public static ConfigEntry<bool> CanPublic { get; private set; }
     public static ConfigEntry<bool> HorseMode { get; private set; }
+    public static ConfigEntry<bool> LongMode { get; private set; }
     public static ConfigEntry<bool> AutoStartGame { get; private set; }
     public static ConfigEntry<bool> AutoEndGame { get; private set; }
     public static ConfigEntry<bool> ForceOwnLanguage { get; private set; }
@@ -102,12 +103,9 @@ public class Main : BasePlugin
     public static List<string> winnerNameList = new();
     public static List<int> clientIdList = new();
     public static List<(string, byte, string)> MessagesToSend = new();
-    public static List<PlayerControl> LoversPlayers = new();
-    public static bool isLoversDead = true;
+
     public static Dictionary<byte, float> AllPlayerKillCooldown = new();
     public static Dictionary<byte, List<string>> SetRolesList = new();
-    public static List<byte> CantUseSkillList = new();
-    public static List<byte> CantDoActList = new();
     /// <summary>
     /// 基本的に速度の代入は禁止.スピードは増減で対応してください.
     /// </summary>
@@ -165,6 +163,7 @@ public class Main : BasePlugin
         UnlockFPS = Config.Bind("Client Options", "UnlockFPS", false);
         //CanPublic = Config.Bind("Client Options", "CanPublic", true);
         HorseMode = Config.Bind("Client Options", "HorseMode", false);
+        LongMode = Config.Bind("Client Options", "LongMode", false);
         AutoStartGame = Config.Bind("Client Options", "AutoStartGame", false);
         AutoEndGame = Config.Bind("Client Options", "AutoEndGame", false);
         ForceOwnLanguage = Config.Bind("Client Options", "ForceOwnLanguage", false);
@@ -182,6 +181,7 @@ public class Main : BasePlugin
         TONEX.Logger.Disable("SwitchSystem");
         TONEX.Logger.Disable("ModNews");
         TONEX.Logger.Disable("CustomRpcSender");
+        TONEX.Logger.Disable("CoBegin");
         if (!DebugModeManager.AmDebugger)
         {
             TONEX.Logger.Disable("CheckRelease");
@@ -206,11 +206,6 @@ public class Main : BasePlugin
             //TONEX.Logger.Disable("SetScanner");
             TONEX.Logger.Disable("test");
             TONEX.Logger.Disable("ver");
-            TONEX.Logger.Disable("ForNVBeKilled");
-            TONEX.Logger.Disable("ForNVCAAList");
-            TONEX.Logger.Disable("ForNVDFList");
-            TONEX.Logger.Disable("ForNvFarAheadList");
-            TONEX.Logger.Disable("ForNVMoney");
             TONEX.Logger.Disable("RpcTeleport");
         }
         //TONEX.Logger.isDetail = true;
@@ -253,6 +248,10 @@ public class Main : BasePlugin
                 {CustomRoles.NotAssigned, "#ffffff"},
                 {CustomRoles.LastImpostor, "#ff1919"},
                 {CustomRoles.Lovers, "#ff9ace"},
+                {CustomRoles.AdmirerLovers, "#FFC8EE"},
+                {CustomRoles.AkujoLovers, "#8E4593"},
+                {CustomRoles.AkujoFakeLovers, "#9C709F"},
+                {CustomRoles.CupidLovers, "#F69896"},
                 {CustomRoles.Neptune, "#00a4ff"},
                 {CustomRoles.Madmate, "#ff1919"},
                 {CustomRoles.Watcher, "#800080"},
@@ -282,6 +281,9 @@ public class Main : BasePlugin
                 {CustomRoles.Libertarian,"#33CC99" },
                 {CustomRoles.Spiders, "#ff1919"},
                 {CustomRoles.Diseased,"#c0c0c0" },
+                {CustomRoles.Nihility,"#444444" },
+                {CustomRoles.Believer,"#007169" },
+                {CustomRoles.PublicOpinionShaper, "#ff1919"},
             };
             var type = typeof(RoleBase);
             var roleClassArray =
@@ -380,6 +382,7 @@ public enum CustomWinner
     Jester = CustomRoles.Jester,
     Terrorist = CustomRoles.Terrorist,
     Lovers = CustomRoles.Lovers,
+
     Executioner = CustomRoles.Executioner,
     Arsonist = CustomRoles.Arsonist,
     Revolutionist = CustomRoles.Revolutionist,
@@ -410,6 +413,14 @@ public enum CustomWinner
     NightWolf = CustomRoles.NightWolf,
     GodOfPlagues = CustomRoles.GodOfPlagues,
     Puppeteer = CustomRoles.Puppeteer,
+    MeteorArbiter = CustomRoles.MeteorArbiter,
+    MeteorMurderer = CustomRoles.MeteorMurderer,
+    SharpShooter = CustomRoles.SharpShooter,
+    AdmirerLovers = CustomRoles.AdmirerLovers,
+    AkujoLovers = CustomRoles.AkujoLovers,
+    CupidLovers = CustomRoles.CupidLovers,
+    Phantom = CustomRoles.Phantom,
+    Yandere = CustomRoles.Yandere,
 }
 public enum SuffixModes
 {

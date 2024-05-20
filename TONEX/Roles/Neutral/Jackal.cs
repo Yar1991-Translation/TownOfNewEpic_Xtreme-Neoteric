@@ -9,6 +9,7 @@ using TONEX.Roles.Core.Interfaces.GroupAndRole;
 using UnityEngine;
 using UnityEngine.UIElements.UIR;
 using static TONEX.Translator;
+using System;
 using static UnityEngine.ParticleSystem.PlaybackState;
 
 namespace TONEX.Roles.Neutral;
@@ -138,13 +139,13 @@ public sealed class Jackal : RoleBase, INeutralKiller
     }
     public bool OverrideKillButtonText(out string text)
     {
-        text = GetString("GangsterButtonText");
-        return SidekickLimit  >= 1;
+        text =  GetString("GangsterButtonText");
+        return SidekickLimit  >= 1 || OptionItemCanSidekick.GetBool();
     }
     public bool OverrideKillButtonSprite(out string buttonName)
     {
         buttonName = "Sidekick";
-        return SidekickLimit >= 1;
+        return SidekickLimit >= 1 || OptionItemCanSidekick.GetBool();
     }
     public bool CanUseSabotageButton() => CanUseSabotage;
     public bool CanUseImpostorVentButton() => CanVent;
@@ -162,9 +163,20 @@ public sealed class Jackal : RoleBase, INeutralKiller
         else
         {
             if (target.CanUseKillButton())
-                 target.RpcSetCustomRole(CustomRoles.Sidekick);
-             else
-                 target.RpcSetCustomRole(CustomRoles.Whoops);
+                target.RpcSetCustomRole(CustomRoles.Sidekick);
+            else
+            {
+                
+                target.RpcSetCustomRole(CustomRoles.Whoops);
+                var taskState = target.GetPlayerTaskState();
+                taskState.AllTasksCount = Jackal.OptionWhoopsTasksCount.GetInt();
+                if (AmongUsClient.Instance.AmHost)
+                {
+                    GameData.Instance.RpcSetTasks(target.PlayerId, Array.Empty<byte>());
+                    target.SyncSettings();
+                    Utils.NotifyRoles();
+                }
+            }
         }
        
 
@@ -175,7 +187,7 @@ public sealed class Jackal : RoleBase, INeutralKiller
     public bool OnCheckMurderAsKiller(MurderInfo info)
     {
         var (killer, target) = info.AttemptTuple;
-        if (SidekickLimit < 1 || (OptionItemCanSidekick.GetBool() && !CanBeSidekick(target))) return true;
+        if (SidekickLimit < 1 || !OptionItemCanSidekick.GetBool() || !CanBeSidekick(target)) return true;
         if (target.GetCountTypes() == CountTypes.Jackal)
         {
             Player.Notify(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Jackal), GetString("SmartYou")));
@@ -201,7 +213,7 @@ public sealed class Jackal : RoleBase, INeutralKiller
     {
         if (seer.Is(CustomRoles.Jackal) || seer.Is(CustomRoles.Wolfmate) || seer.Is(CustomRoles.Sidekick) || seer.Is(CustomRoles.Wolfmate)) enabled = true;
     }
-    public static bool CanBeSidekick(PlayerControl pc) => pc != null && (!OptionJackalCanSaveSidekick.GetBool() && !pc.GetCustomRole().IsNeutral() || OptionJackalCanSaveSidekick.GetBool());
+    public static bool CanBeSidekick(PlayerControl pc) => pc != null && (OptionJackalCanSaveSidekick.GetBool() && !pc.GetCustomRole().IsNeutral() && !pc.Is(CustomRoles.Believer) && !pc.Is(CustomRoles.Nihility));
     public override string GetMark(PlayerControl seer, PlayerControl seen, bool _ = false)
     {
         //seenが省略の場合seer

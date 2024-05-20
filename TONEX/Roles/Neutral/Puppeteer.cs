@@ -40,7 +40,7 @@ public sealed class Puppeteer : RoleBase, INeutralKiller
     static OptionItem OptionBeKillLimit;
     enum OptionName
     {
-       PuooeteerKillCooldown,
+       PuppeteerKillCooldown,
         BeKillLimit,
     }
     Vector2 MyLastPos;
@@ -53,7 +53,7 @@ public sealed class Puppeteer : RoleBase, INeutralKiller
     public long Timer;
     private static void SetupOptionItem()
     {
-        OptionKillCooldown = FloatOptionItem.Create(RoleInfo, 10, OptionName.PuooeteerKillCooldown, new(2.5f, 180f, 2.5f), 20f, false)
+        OptionKillCooldown = FloatOptionItem.Create(RoleInfo, 10, OptionName.PuppeteerKillCooldown, new(2.5f, 180f, 2.5f), 20f, false)
             .SetValueFormat(OptionFormat.Seconds);
         OptionBeKillLimit = IntegerOptionItem.Create(RoleInfo, 11, OptionName.BeKillLimit, new(1, 99, 1), 3, false)
             .SetValueFormat(OptionFormat.Times);
@@ -96,7 +96,7 @@ public sealed class Puppeteer : RoleBase, INeutralKiller
         Skins = new GameData.PlayerOutfit().Set(Player.GetRealName(), Player.Data.DefaultOutfit.ColorId, Player.Data.DefaultOutfit.HatId, Player.Data.DefaultOutfit.SkinId, Player.Data.DefaultOutfit.VisorId, Player.Data.DefaultOutfit.PetId);
         return false;
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (info.IsSuicide) return true;
         if (!CanKill)

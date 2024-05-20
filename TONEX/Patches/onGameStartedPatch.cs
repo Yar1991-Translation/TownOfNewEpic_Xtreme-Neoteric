@@ -10,6 +10,8 @@ using TONEX.Roles.AddOns;
 using TONEX.Roles.Core;
 using static TONEX.Modules.CustomRoleSelector;
 using static TONEX.Translator;
+using TONEX.Roles.AddOns.Common;
+using TONEX.Roles.AddOns.Crewmate;
 
 namespace TONEX;
 
@@ -70,12 +72,31 @@ internal class ChangeRoleSettings
 
             Main.PlayerColors = new();
 
-            Main.CantUseSkillList = new();
-            Main.CantDoActList = new();
+            ExtendedPlayerControl.PlayerSpeedRecord = new();
+
+            ExtendedPlayerControl.DisableKill = new();
+            ExtendedPlayerControl.DisableEnterVent = new();
+            ExtendedPlayerControl.DisableExitVent = new();
+            ExtendedPlayerControl.DisableShapeshift = new();
+            ExtendedPlayerControl.DisableSabotage = new();
+            ExtendedPlayerControl.DisableReport = new();
+            ExtendedPlayerControl.DisableMeeting = new();
+            ExtendedPlayerControl.DisablePet = new();
+            ExtendedPlayerControl.DisableMove = new();
+
+            ExtendedPlayerControl.HasDisabledKill = new();
+            ExtendedPlayerControl.HasDisabledEnterVent = new();
+            ExtendedPlayerControl.HasDisabledExitVent = new();
+            ExtendedPlayerControl.HasDisabledShapeshift = new();
+            ExtendedPlayerControl.HasDisabledSabotage = new();
+            ExtendedPlayerControl.HasDisabledReport = new();
+            ExtendedPlayerControl.HasDisabledMeeting = new();
+            ExtendedPlayerControl.HasDisabledPet = new();
+            ExtendedPlayerControl.HasDisabledMove = new();
+
             //名前の記録
             RPC.SyncAllPlayerNames();
             HudSpritePatch.IsEnd = false ;
-            RPC.SyncEndRPC(false);
             ConfirmEjections.LatestEjec = null;
             //var invalidColor = Main.AllPlayerControls.Where(p => p.Data.DefaultOutfit.ColorId < 0 || Palette.PlayerColors.Length <= p.Data.DefaultOutfit.ColorId);
             //if (invalidColor.Any())
@@ -96,10 +117,11 @@ internal class ChangeRoleSettings
                     var pair = (target.PlayerId, seer.PlayerId);
                     Main.LastNotifyNames[pair] = target.name;
                 }
-               target.RpcSetScanner(false);
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(target.NetId, (byte)RpcCalls.SetScanner, SendOption.Reliable, -1);
+
+                target.RpcSetScanner(false);
+                /*MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(target.NetId, (byte)RpcCalls.SetScanner, SendOption.Reliable, -1);
                 writer.Write(false);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);*/
             }
             foreach (var pc in Main.AllPlayerControls)
             {
@@ -134,11 +156,11 @@ internal class ChangeRoleSettings
             MeetingStates.MeetingCalled = false;
             MeetingStates.FirstMeeting = true;
             GameStates.AlreadyDied = false;
-                foreach (var pc in Main.AllAlivePlayerControls)
+            foreach (var pc in Main.AllAlivePlayerControls)
+            {
+                if (!pc.Is(CustomRoles.GM))
                 {
-                    if (!pc.Is(CustomRoles.GM))
-                    {
-                        var sender = CustomRpcSender.Create(name: $"PetsPatch.RpcSetPet)");
+                    var sender = CustomRpcSender.Create(name: $"PetsPatch.RpcSetPet)");
                     if (pc.Data.DefaultOutfit.PetId == null)
                     {
                         pc.SetPet("pet_Crewmate");
@@ -147,10 +169,10 @@ internal class ChangeRoleSettings
                         .EndRpc();
                         sender.SendMessage();
                     }
-                        pc.CanPet();
-                        
-                    }
+                    pc.CanPet();
+
                 }
+            }
         }
         catch (Exception ex)
         {
@@ -283,9 +305,9 @@ internal class SelectRolesPatch
                 Logger.Info($"7-3.5", "test");
             }
             Logger.Info($"7-4", "test");
-            if (CustomRoles.Lovers.IsEnable() && CustomRoles.Hater.IsEnable()) AssignLoversRoles();
-            else if (CustomRoles.Lovers.IsEnable() && rd.Next(0, 100) < Options.GetRoleChance(CustomRoles.Lovers)) AssignLoversRoles();
-            if (CustomRoles.Madmate.IsEnable() && Options.MadmateSpawnMode.GetInt() == 0) AssignMadmateRoles();
+            if ((CustomRoles.Lovers.IsEnable()/* || CustomRoles.Admirer.IsEnable() || CustomRoles.Akujo.IsEnable() || CustomRoles.Cupid.IsEnable()*/) && CustomRoles.Hater.IsEnable()) Lovers.AssignLoversRoles();
+            else if (CustomRoles.Lovers.IsEnable()) Lovers.AssignLoversRoles();
+            if (CustomRoles.Madmate.IsEnable() && Madmate.MadmateSpawnMode.GetInt() == 0) Madmate.AssignMadmateRoles();
             AddOnsAssignData.AssignAddOnsFromList();
             Logger.Info($"7-5", "test");
             foreach (var pair in PlayerState.AllPlayerStates)
@@ -314,6 +336,7 @@ internal class SelectRolesPatch
             switch (Options.CurrentGameMode)
             {
                 case CustomGameMode.Standard:
+                case CustomGameMode.AllCrewModMode:
                     GameEndChecker.SetPredicateToNormal();
                     break;
                 case CustomGameMode.HotPotato:
@@ -391,46 +414,8 @@ internal class SelectRolesPatch
             }
         }
     }
-    private static void AssignLoversRoles(int RawCount = -1)
-    {
-        //Loversを初期化
-        Main.LoversPlayers.Clear();
-        Main.isLoversDead = false;
-        var allPlayers = new List<PlayerControl>();
-        foreach (var pc in Main.AllPlayerControls)
-        {
-            if (pc.Is(CustomRoles.GM) || (PlayerState.GetByPlayerId(pc.PlayerId).SubRoles.Count >= Options.AddonsNumLimit.GetInt())
-                || pc.Is(CustomRoles.LazyGuy) || pc.Is(CustomRoles.Neptune) || pc.Is(CustomRoles.God) || pc.Is(CustomRoles.Hater)) continue;
-            allPlayers.Add(pc);
-        }
-        var loversRole = CustomRoles.Lovers;
-        var rd = IRandom.Instance;
-        var count = Math.Clamp(RawCount, 0, allPlayers.Count);
-        if (RawCount == -1) count = Math.Clamp(loversRole.GetCount(), 0, allPlayers.Count);
-        if (count <= 0) return;
-        for (var i = 0; i < count; i++)
-        {
-            var player = allPlayers[rd.Next(0, allPlayers.Count)];
-            Main.LoversPlayers.Add(player);
-            allPlayers.Remove(player);
-            PlayerState.GetByPlayerId(player.PlayerId).SetSubRole(loversRole);
-            Logger.Info($"注册附加职业：{player?.Data?.PlayerName}（{player.GetCustomRole()}）=> {loversRole}", "AssignCustomSubRoles");
-        }
-        RPC.SyncLoversPlayers();
-    }
-    private static void AssignMadmateRoles()
-    {
-        var allPlayers = Main.AllPlayerControls.Where(x => x.CanBeMadmate()).ToList();
-        var count = Math.Clamp(CustomRoles.Madmate.GetCount(), 0, allPlayers.Count);
-        if (count <= 0) return;
-        for (var i = 0; i < count; i++)
-        {
-            var player = allPlayers[IRandom.Instance.Next(0, allPlayers.Count)];
-            allPlayers.Remove(player);
-            PlayerState.GetByPlayerId(player.PlayerId).SetSubRole(CustomRoles.Madmate);
-            Logger.Info($"注册附加职业：{player?.Data?.PlayerName}（{player.GetCustomRole()}）=> {CustomRoles.Madmate}", "AssignCustomSubRoles");
-        }
-    }
+    
+    
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.RpcSetRole))]
     private class RpcSetRoleReplacer
     {

@@ -70,10 +70,6 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
             _team = value;
         }
     }
-    public static TeamType TeamStatic
-    {
-        get => (PL.GetRoleClass() as SchrodingerCat).Team;
-    }
     public bool AmMadmate => Team == TeamType.Mad;
     public Color DisplayRoleColor => GetCatColor(Team);
     private static LogHandler logger = Logger.Handler(nameof(SchrodingerCat));
@@ -88,8 +84,9 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
     {
         owner?.ApplySchrodingerCatOptions(opt);
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
+
         var killer = info.AttemptKiller;
 
         //自殺ならスルー
@@ -106,7 +103,7 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
     /// <summary>
     /// キルしてきた人に応じて陣営の状態を変える
     /// </summary>
-    private void ChangeTeamOnKill(PlayerControl killer)
+    public void ChangeTeamOnKill(PlayerControl killer)
     {
         killer.RpcProtectedMurderPlayer(Player);
         if (killer.GetRoleClass() is ISchrodingerCatOwner catOwner)
@@ -210,6 +207,14 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
         {
             candidates.Add(TeamType.RewardOfficer);
         }
+        if (CustomRoles.SharpShooter.IsExist())
+        {
+            candidates.Add(TeamType.SharpShooter);
+        }
+        if (CustomRoles.Stalker.IsExist())
+        {
+            candidates.Add(TeamType.Stalker);
+        }
         var team = candidates[rand.Next(candidates.Count)];
         RpcSetTeam(team);
     }
@@ -225,10 +230,12 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
             TeamType.BloodKnight => CustomWinnerHolder.WinnerTeam == CustomWinner.BloodKnight,
             TeamType.Demon => CustomWinnerHolder.WinnerTeam == CustomWinner.Demon,
             TeamType.Hater => CustomWinnerHolder.AdditionalWinnerRoles.Contains(CustomRoles.Hater),
-            TeamType.GodOfPlagues => CustomWinnerHolder.WinnerTeam == (CustomWinner.GodOfPlagues),
-            TeamType.Opportunist => PL.IsAlive() || CustomWinnerHolder.AdditionalWinnerRoles.Contains(CustomRoles.Opportunist),
-            TeamType.NightWolf => CustomWinnerHolder.WinnerTeam == (CustomWinner.NightWolf),
-            TeamType.RewardOfficer => CustomWinnerHolder.WinnerTeam == (CustomWinner.RewardOfficer),
+            TeamType.GodOfPlagues => CustomWinnerHolder.WinnerTeam == CustomWinner.GodOfPlagues,
+            TeamType.Opportunist => Player.IsAlive() || CustomWinnerHolder.AdditionalWinnerRoles.Contains(CustomRoles.Opportunist),
+            TeamType.NightWolf => CustomWinnerHolder.WinnerTeam == CustomWinner.NightWolf,
+            TeamType.RewardOfficer => CustomWinnerHolder.WinnerTeam == CustomWinner.RewardOfficer,
+            TeamType.SharpShooter => CustomWinnerHolder.WinnerTeam == CustomWinner.SharpShooter,
+            TeamType.Stalker => CustomWinnerHolder.WinnerTeam == CustomWinner.Stalker,
             _ => null,
         };
         if (!won.HasValue)
@@ -274,7 +281,8 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
         Opportunist,
         NightWolf,
         RewardOfficer,
-
+        SharpShooter,
+        Stalker,
     }
     public static Color GetCatColor(TeamType catType)
     {
@@ -292,12 +300,41 @@ public sealed class SchrodingerCat : RoleBase, IAdditionalWinner, IDeathReasonSe
             TeamType.Opportunist => Utils.GetRoleColor(CustomRoles.Opportunist),
             TeamType.NightWolf => Utils.GetRoleColor(CustomRoles.NightWolf),
             TeamType.RewardOfficer => Utils.GetRoleColor(CustomRoles.RewardOfficer),
+            TeamType.SharpShooter => Utils.GetRoleColor(CustomRoles.SharpShooter),
+            TeamType.Stalker => Utils.GetRoleColor(CustomRoles.Stalker),
             _ => null,
         };
         if (!color.HasValue)
         {
             logger.Warn($"不明な猫に対する色の取得: {catType}");
             return Utils.GetRoleColor(CustomRoles.Crewmate);
+        }
+        return color.Value;
+    }
+    public static CountTypes GetCatTeam(TeamType catType)
+    {
+        CountTypes? color = catType switch
+        {
+            TeamType.None => CountTypes.None,
+            TeamType.Mad => CountTypes.Impostor,
+            TeamType.Crew => CountTypes.Crew,
+            TeamType.Jackal => CountTypes.Jackal,
+            TeamType.Pelican => CountTypes.Pelican,
+            TeamType.BloodKnight => CountTypes.BloodKnight,
+            TeamType.Demon => CountTypes.Demon,
+            TeamType.Hater => CountTypes.Crew,
+            TeamType.GodOfPlagues => CountTypes.GodOfPlagues,
+            TeamType.Opportunist => CountTypes.Crew,
+            TeamType.NightWolf => CountTypes.NightWolf,
+            TeamType.RewardOfficer => CountTypes.Crew,
+            TeamType.SharpShooter => CountTypes.SharpShooter,
+            TeamType.Stalker => CountTypes.Crew,
+            _ => null,
+        };
+        if (!color.HasValue)
+        {
+            logger.Warn($"阵营不明: {catType}");
+            return CountTypes.None;
         }
         return color.Value;
     }

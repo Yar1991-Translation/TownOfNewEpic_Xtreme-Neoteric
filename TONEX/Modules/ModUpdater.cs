@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TMPro;
 using TONEX.Modules;
+using TONEX.Modules.SoundInterface;
 using UnityEngine;
 using static TONEX.Translator;
 
@@ -25,10 +26,7 @@ public class ModUpdater
     private static IReadOnlyList<string> URLs => new List<string>
     {
 #if DEBUG
-        "file:///D:/Desktop/TONEX/info.json",
-        "file:///C:/Users/YJNSH/Desktop/info.json",
-        "file:///%userprofile%/Desktop/info.json",
-        "file:///D:/Desktop/info.json",
+        $"file:///{Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "info.json")}",
 #else
         "https://raw.githubusercontent.com/XtremeWave/TownOfNewEpic_Xtreme/TONEX/info.json",
         "https://raw.githubusercontent.com/XtremeWave/TownOfNewEpic_Xtreme/_develop_v1.1/info.json",
@@ -38,8 +36,7 @@ public class ModUpdater
         "https://raw.githubusercontent.com/XtremeWave/TownOfNewEpic_Xtreme/_develop_v1.5/info.json",
         "https://cdn.jsdelivr.net/gh/XtremeWave/TownOfNewEpic_Xtreme/info.json",
          //"https://tonx-1301425958.cos.ap-shanghai.myqcloud.com/info.json",
-        "https://tohex.club/Resource/info.json",
-        "https://tonex.cc/Resource/info.json",
+        "https://cn-sy1.rains3.com/xtremewave/info.json",
         "https://gitee.com/TEAM_TONEX/TownOfNewEpic_Xtreme/raw/TONEX/info.json",
         "https://gitee.com/TEAM_TONEX/TownOfNewEpic_Xtreme/raw/_develop_v1.1/info.json",
         "https://gitee.com/TEAM_TONEX/TownOfNewEpic_Xtreme/raw/_develop_v1.2/info.json",
@@ -88,7 +85,6 @@ public class ModUpdater
     public static string downloadUrl_website2 = "";
     private static int retried = 0;
     private static bool firstLaunch = true;
-
     [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.Start)), HarmonyPostfix, HarmonyPriority(Priority.LowerThanNormal)]
     public static void StartPostfix()
     {
@@ -96,7 +92,10 @@ public class ModUpdater
 
         if (!isChecked && firstStart) CheckForUpdate();
         SetUpdateButtonStatus();
-
+        if (File.Exists(@$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/Birthday.wav"))
+        {
+            CustomSoundsManager.Play("Birthday", 0);
+        }
         firstStart = false;
     }
     public static void SetUpdateButtonStatus()
@@ -161,6 +160,38 @@ public class ModUpdater
 
         SetUpdateButtonStatus();
     }
+    public static void BeforeCheck()
+    {
+        isChecked = false;
+        DeleteOldFiles();
+
+        foreach (var url in GetInfoFileUrlList())
+        {
+            if (GetVersionInfo(url).GetAwaiter().GetResult())
+            {
+                isChecked = true;
+                break;
+            }
+        }
+
+        Logger.Msg("Check For Update: " + isChecked, "CheckRelease");
+        isBroken = !isChecked;
+        if (isChecked)
+        {
+            Logger.Info("Has Update: " + hasUpdate, "CheckRelease");
+            Logger.Info("Latest Version: " + latestVersion.ToString(), "CheckRelease");
+            Logger.Info("Minimum Version: " + minimumVersion.ToString(), "CheckRelease");
+            Logger.Info("Creation: " + creation.ToString(), "CheckRelease");
+            Logger.Info("Force Update: " + forceUpdate, "CheckRelease");
+            Logger.Info("File MD5: " + md5, "CheckRelease");
+            Logger.Info("Github Url: " + downloadUrl_github, "CheckRelease");
+            Logger.Info("Gitee Url: " + downloadUrl_gitee, "CheckRelease");
+            Logger.Info("Wensite Url: " + downloadUrl_website, "CheckRelease");
+            Logger.Info("Wensite2 Url: " + downloadUrl_website2, "CheckRelease");
+            Logger.Info("Announcement (English): " + announcement_en, "CheckRelease");
+            Logger.Info("Announcement (SChinese): " + announcement_zh, "CheckRelease");
+        }
+    }
     public static string Get(string url)
     {
         string result = string.Empty;
@@ -193,7 +224,7 @@ public class ModUpdater
             {
                 using HttpClient client = new();
                 client.DefaultRequestHeaders.Add("User-Agent", "TONEX Updater");
-                client.DefaultRequestHeaders.Add("Referer", "tonex.cc");
+                client.DefaultRequestHeaders.Add("Referer", "www.xtreme.net.cn");
                 using var response = await client.GetAsync(new Uri(url), HttpCompletionOption.ResponseContentRead);
                 if (!response.IsSuccessStatusCode || response.Content == null)
                 {

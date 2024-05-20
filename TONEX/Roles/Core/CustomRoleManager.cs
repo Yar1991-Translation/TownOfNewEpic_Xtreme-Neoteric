@@ -48,10 +48,13 @@ public static class CustomRoleManager
         if (appearanceKiller != attemptKiller || appearanceTarget != attemptTarget)
             Logger.Info($"Apperance：{appearanceKiller.GetNameWithRole()} => {appearanceTarget.GetNameWithRole()}", "CheckMurder");
 
+
+
         var info = new MurderInfo(attemptKiller, attemptTarget, appearanceKiller, appearanceTarget);
 
         appearanceKiller.ResetKillCooldown();
 
+       
         // 無効なキルをブロックする処理 必ず最初に実行する
         if (!CheckMurderPatch.CheckForInvalidMurdering(info))
         {
@@ -60,14 +63,30 @@ public static class CustomRoleManager
 
         var killerRole = attemptKiller.GetRoleClass();
         var targetRole = attemptTarget.GetRoleClass();
-        if (attemptKiller.CantDoAnyAct()) return false;
+        if (attemptKiller.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Kill)) return false;
         // 首先凶手确实是击杀类型的职业
         if (killerRole is IKiller killer)
         {
-            if (!attemptKiller.CanUseSkill()) return false;
+
+            if (attemptKiller.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Kill, ExtendedPlayerControl.PlayerActionInUse.Skill)&& !killer.IsKiller) return false;
+            attemptKiller.DisableAction(attemptTarget);
+            attemptTarget.DisableAction(attemptKiller);
             // 其他职业类对击杀事件的事先检查
+            if (!killer.IsKiller)
+            {
+                Nihility.OnCheckMurderPlayerOthers_Nihility(info);
+            }
             if (killer.IsKiller)
             {
+                if (targetRole != null)
+                {
+                    // 被害者检查击杀
+                    if (!targetRole.OnCheckMurderAsTargetBefore(info))
+                    {
+                        Logger.Info($"被害者阻塞了击杀", "CheckMurder");
+                        return false;
+                    }
+                }
                 foreach (var onCheckMurderPlayer in OnCheckMurderPlayerOthers_Before)
                 {
                     if (!onCheckMurderPlayer(info))
@@ -83,17 +102,17 @@ public static class CustomRoleManager
                 Logger.Info($"凶手阻塞了击杀", "CheckMurder");
                 return false;
             }
-            if (killer.IsKiller && targetRole != null)
-            {
-                // 被害者检查击杀
-                if (!targetRole.OnCheckMurderAsTarget(info))
-                {
-                    Logger.Info($"被害者阻塞了击杀", "CheckMurder");
-                    return false;
-                }
-            }
             if (killer.IsKiller)
             {
+                if (targetRole != null)
+                {
+                    // 被害者检查击杀
+                    if (!targetRole.OnCheckMurderAsTargetAfter(info))
+                    {
+                        Logger.Info($"被害者阻塞了击杀", "CheckMurder");
+                        return false;
+                    }
+                }
                 // 其他职业类对击杀事件的事后检查
                 foreach (var onCheckMurderPlayer in OnCheckMurderPlayerOthers_After)
                 {
@@ -104,6 +123,7 @@ public static class CustomRoleManager
                     }
                 }
             }
+
         }
 
         //キル可能だった場合のみMurderPlayerに進む
@@ -133,7 +153,6 @@ public static class CustomRoleManager
     /// <param name="appearanceTarget">视觉上被击杀的玩家，可变</param>
     public static void OnMurderPlayer(PlayerControl appearanceKiller, PlayerControl appearanceTarget)
     {
-        if (appearanceKiller.CantDoAnyAct()) return;
         //MurderInfoの取得
         if (CheckMurderInfos.TryGetValue(appearanceKiller.PlayerId, out var info))
         {
@@ -156,8 +175,7 @@ public static class CustomRoleManager
         //ターゲットの処理
         var targetRole = attemptTarget.GetRoleClass();
         targetRole?.OnMurderPlayerAsTarget(info);
-
-        //SubRoels
+        //SubRoles
         Bait.OnMurderPlayerOthers(info);
         Beartrap.OnMurderPlayerOthers(info);
         Avenger.OnMurderPlayerOthers(info);
@@ -169,7 +187,7 @@ public static class CustomRoleManager
         }
 
         //サブロール処理ができるまではラバーズをここで処理
-        FixedUpdatePatch.LoversSuicide(attemptTarget.PlayerId);
+        Lovers.LoversSuicide(attemptTarget.PlayerId);
 
         //以降共通処理
         var targetState = PlayerState.GetByPlayerId(attemptTarget.PlayerId);
@@ -376,6 +394,12 @@ public static class CustomRoleManager
                 case CustomRoles.Diseased:
                     Diseased.Add(pc.PlayerId);
                     break;
+                case CustomRoles.Believer:
+                    Believer.Add(pc.PlayerId);
+                    break;
+                case CustomRoles.Nihility:
+                    Nihility.Add(pc.PlayerId);
+                    break;
             }
         }
     }
@@ -579,18 +603,18 @@ public enum CustomRoles
     Medusa,
     Skinwalker,
     ViciousSeeker,
-    EvilGuardian,//TODO 邪恶天使
-    EvilTimeStops, //TODO 邪恶的时停者
+    EvilAngle,
+    EvilTimeStops,
     MirrorSpirit,//TODO 镜妖
-    Assaulter,//TODO 强袭者
+    Assaulter,
     MimicTeam,//TODO 模仿者团队
     MimicKiller,//TODO 模仿者（杀手）
     MimicAssistant,//TODO 模仿者（助手）
-    Blackmailer,//TODO 勒索者
+    Blackmailer,
     EvilSwapper,
     Disperser,//TODO 分散者
     EvilPianist,//TODO 邪恶的钢琴家
-
+    EvilGrenadier,
     //Crewmate(Vanilla)
     Engineer,
     GuardianAngel,
@@ -616,7 +640,7 @@ public enum CustomRoles
     Veteran,
     Bodyguard,
     Deceiver,
-    Grenadier,
+    NiceGrenadier,
     Medic,
     FortuneTeller,
     Glitch,
@@ -646,7 +670,9 @@ public enum CustomRoles
     Bees,//TODO 蜜蜂
     CopyCat,//TODO 效颦者
     Deputy,
-    InjusticeSpirit,//TODO 冤魂
+    InjusticeSpirit,
+    Scout,
+    Amber,
     //Neutral
     Arsonist,
     Jester,
@@ -656,17 +682,17 @@ public enum CustomRoles
     Terrorist,
     Executioner,
     Jackal,
-    Innocent, //TODO 冤罪师
+    Innocent,
     Pelican,
     Revolutionist, //TODO 革命家
     Hater,
     Konan, //TODO 柯南
     Demon,
-    Stalker, //TODO 潜藏者
+    Stalker, 
     Workaholic,
-    Collector, //TODO 集票者
-    Provocateur, //TODO 自爆卡车
-    Sunnyboy, //TODO 阳光开朗大男孩
+    Collector,
+    Provocateur,
+    Sunnyboy, 
     BloodKnight,
     Follower,
     Succubus,
@@ -683,24 +709,26 @@ public enum CustomRoles
     Prosecutors,
     PVPboss,//TODO PvP大佬
     Rebels,
-    Admirer,//TODO 暗恋者
-    Akujo, //TODO 魅魔
+    Admirer,
+    Akujo, 
+    Cupid,
+    Yandere,
     Puppeteer,
     Changger,//TODO 连环交换师
     Amnesiac,//TODO 失忆者
     Plaguebearer,
     GodOfPlagues,
-    Yandere,//TODO 病娇
+    
     PoliticalStrategists,//TODO 纵横家
 
     Challenger,//TODO 挑战者
     Martyr,//先烈 1.1限定
     NightWolf,
     Moonshadow,//TODO 月影,1.4限定
-    Phantom,//TODO 幻影
-    MeteorArbiter,//TODO 陨星判官,1.2限定
-    MeteorMurder,//TODO 陨星戮者,1.2限定
-    SharpShooter,//TODO 神射手
+    Phantom,
+    MeteorArbiter,// 陨星判官,1.2限定
+    MeteorMurderer,// 陨星戮者,1.2限定
+    SharpShooter,
     //GameMode
     HotPotato,
     ColdPotato,
@@ -712,6 +740,10 @@ public enum CustomRoles
     NotAssigned = 500,
     LastImpostor,
     Lovers,
+    AdmirerLovers,
+    AkujoLovers,
+    AkujoFakeLovers,
+    CupidLovers,
     Neptune,
     Madmate,
     Watcher,
@@ -743,11 +775,12 @@ public enum CustomRoles
     Professional,//TODO 专业赌怪
     Luckless,//TODO 倒霉蛋
     FateFavor,//TODO 命运眷顾者
-    Nihility,//TODO 虚无
+    Nihility,
     Diseased,
     IncorruptibleOfficial,//TODO 清廉之官
     VIP,//TODO VIP
-    Believer,//TODO 信徒
+    Believer,
+    PublicOpinionShaper,
 
 }
 public enum CustomRoleTypes

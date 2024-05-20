@@ -2,9 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using TONEX.MoreGameModes;
 using TONEX.Roles.Core;
 using TONEX.Roles.Crewmate;
+using TONEX.Roles.Neutral;
 
 namespace TONEX.Modules;
 
@@ -13,14 +14,16 @@ internal static class CustomRoleSelector
     public static Dictionary<PlayerControl, CustomRoles> RoleResult;
     public static IReadOnlyList<CustomRoles> AllRoles => RoleResult.Values.ToList();
 
+    private static void SelectHiddenImpRoles()
+    { }
     public static void SelectCustomRoles()
     {
         // 开始职业抽取
         RoleResult = new();
         var rd = IRandom.Instance;
         int playerCount = Main.AllAlivePlayerControls.Count();
-        int optImpNum = Main.RealOptionsData.GetInt(Int32OptionNames.NumImpostors);
-        int optHPNum = HotPotatoManager.HotQuan.GetInt();
+        int optImpNum = Options.SetImpNum.GetBool()? Options.ImpNum.GetInt():Main.RealOptionsData.GetInt(Int32OptionNames.NumImpostors);
+        int optHPNum = HotPotatoManager.HotPotatoMaxNum.GetInt();
         int optNeutralNum = 0;
         if (Options.NeutralRolesMaxPlayer.GetInt() > 0 && Options.NeutralRolesMaxPlayer.GetInt() >= Options.NeutralRolesMinPlayer.GetInt())
             optNeutralNum = rd.Next(Options.NeutralRolesMinPlayer.GetInt(), Options.NeutralRolesMaxPlayer.GetInt() + 1);
@@ -49,7 +52,6 @@ internal static class CustomRoleSelector
             foreach (var pc in Main.AllAlivePlayerControls)
             {
                 RoleResult.Add(pc, CustomRoles.ColdPotato);
-                HotPotatoManager.IsAliveCold++;
             }
             return;
         }
@@ -81,7 +83,6 @@ internal static class CustomRoleSelector
         }
 
         #region 抽取隐藏职业
-#if RELEASE
         if (!Options.DisableHiddenRoles.GetBool())
         {
             if (readyRoleNum >= playerCount) goto EndOfAssign;
@@ -114,7 +115,7 @@ internal static class CustomRoleSelector
             }
             if (readyRoleNum >= playerCount) goto EndOfAssign;
 
-            /*if (sp < 3 && !rolesToAssign.Contains(CustomRoles.Sunnyboy) && readyNeutralNum < optNeutralNum)
+            if (sp < 3 && !rolesToAssign.Contains(CustomRoles.Sunnyboy) && readyNeutralNum < optNeutralNum)
             {
                 var shouldExecute = true;
                 if (NeutralRateList.Count > 0)
@@ -139,13 +140,13 @@ internal static class CustomRoleSelector
                 }
                 sp = UnityEngine.Random.Range(0, 100);
             }
-            if (readyRoleNum >= playerCount) goto EndOfAssign;*/
+            if (readyRoleNum >= playerCount) goto EndOfAssign;
         }
-#endif
 #endregion
         // 抽取优先职业（内鬼）
         while (ImpOnList.Count > 0)
         {
+            if (readyRoleNum >= optImpNum) break;
             var select = ImpOnList[rd.Next(0, ImpOnList.Count)];
             ImpOnList.Remove(select);
             
@@ -166,6 +167,7 @@ internal static class CustomRoleSelector
         {
             while (ImpRateList.Count > 0)
             {
+                if (readyRoleNum >= optImpNum) break;
                 var select = ImpRateList[rd.Next(0, ImpRateList.Count)];
                 ImpRateList.Remove(select);
                 rolesToAssign.Add(select);
@@ -188,6 +190,7 @@ internal static class CustomRoleSelector
             
             NKOnList.Remove(select);
             if (select is CustomRoles.Vagator && !Options.UsePets.GetBool()) continue;
+            if (select is CustomRoles.Plaguebearer && Plaguebearer.BecomeGodOfPlaguesStart.GetBool()) select = CustomRoles.GodOfPlagues;
             rolesToAssign.Add(select);
             readyRoleNum++;
             readyNKNum += select.GetAssignCount();
@@ -201,8 +204,10 @@ internal static class CustomRoleSelector
             while (NKRateList.Count > 0 && optNKNum > 0)
             {
                 var select = NKRateList[rd.Next(0, NKRateList.Count)];
-                if (select is CustomRoles.Vagator && !Options.UsePets.GetBool()) continue;
+                
                 NKRateList.Remove(select);
+                if (select is CustomRoles.Vagator && !Options.UsePets.GetBool()) continue;
+                if (select is CustomRoles.Plaguebearer && Plaguebearer.BecomeGodOfPlaguesStart.GetBool()) select = CustomRoles.GodOfPlagues;
                 rolesToAssign.Add(select);
                 readyRoleNum++;
                 readyNKNum += select.GetAssignCount();
@@ -264,12 +269,13 @@ internal static class CustomRoleSelector
                 var select = roleRateList[rd.Next(0, roleRateList.Count)];
                 roleRateList.Remove(select);
                 rolesToAssign.Add(select);
+                readyRoleNum++;
                 if (select == CustomRoles.Sheriff && Sheriff.HasDeputy.GetBool() && readyRoleNum < playerCount)
                 {
 
                     rolesToAssign.Add(CustomRoles.Deputy);
                 }
-                readyRoleNum++;
+                
                 Logger.Info(select.ToString() + " 加入船员职业待选列表", "CustomRoleSelector");
                 if (readyRoleNum >= playerCount) goto EndOfAssign;
             }
@@ -341,7 +347,7 @@ internal static class CustomRoleSelector
         }
 
         if (AllPlayer.Count > 0)
-            Logger.Error("职业分配错误：存在未被分配职业的玩家", "CustomRoleSelector");
+            Logger.Warn("职业分配错误：存在未被分配职业的玩家", "CustomRoleSelector");
         if (rolesToAssign.Count > 0)
             Logger.Error("职业分配错误：存在未被分配的职业", "CustomRoleSelector");
 
@@ -398,7 +404,7 @@ internal static class CustomRoleSelector
             CustomRoles role = (CustomRoles)Enum.Parse(typeof(CustomRoles), cr.ToString());
             if (!role.IsAddon()) continue;
             //if (role is CustomRoles.Madmate && Options.MadmateSpawnMode.GetInt() != 0) continue;
-            if (role is CustomRoles.Lovers or CustomRoles.LastImpostor or CustomRoles.Workhorse) continue;
+            if (role is CustomRoles.Lovers or CustomRoles.AdmirerLovers or CustomRoles.AkujoLovers or CustomRoles.AkujoFakeLovers or CustomRoles.CupidLovers or CustomRoles.LastImpostor or CustomRoles.Workhorse) continue;
             AddonRolesList.Add(role);
         }
     }

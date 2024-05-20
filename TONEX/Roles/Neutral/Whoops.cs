@@ -5,6 +5,7 @@ using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
 using UnityEngine;
+using System;
 using static TONEX.Translator;
 using static UnityEngine.GraphicsBuffer;
 
@@ -55,10 +56,24 @@ public sealed class Whoops : RoleBase, INeutral
     public override bool CheckVoteAsVoter(PlayerControl votedFor)
     {
         if (votedFor == null || (votedFor.GetCountTypes() == CountTypes.Jackal || !CanRecruit)) return true;
-        if (votedFor.CanUseKillButton())
-            votedFor.RpcSetCustomRole(CustomRoles.Sidekick);
-        else
-            votedFor.RpcSetCustomRole(CustomRoles.Whoops);
+        if (!votedFor.Is(CustomRoles.Believer) && !votedFor.Is(CustomRoles.Nihility))
+        {
+            if (votedFor.CanUseKillButton())
+                votedFor.RpcSetCustomRole(CustomRoles.Sidekick);
+            else
+            {
+                votedFor.RpcSetCustomRole(CustomRoles.Whoops);
+                var taskState = votedFor.GetPlayerTaskState();
+                taskState.AllTasksCount = Jackal.OptionWhoopsTasksCount.GetInt();
+                if (AmongUsClient.Instance.AmHost)
+                {
+                    GameData.Instance.RpcSetTasks(votedFor.PlayerId, Array.Empty<byte>());
+                    votedFor.SyncSettings();
+                    Utils.NotifyRoles();
+
+                }
+            }
+        }
         Utils.SendMessage(Translator.GetString("WhoopsRecruitTrue"), votedFor.PlayerId);
         return false;
     }

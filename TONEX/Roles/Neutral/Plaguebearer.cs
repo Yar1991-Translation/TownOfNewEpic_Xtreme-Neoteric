@@ -25,7 +25,10 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
             "pl|瘟疫",
             "#fffcbe",
             true,
-            true
+            true,
+            countType:CountTypes.GodOfPlagues,
+            assignCountRule: new(1, 1, 1)
+
         );
     public Plaguebearer(PlayerControl player)
     : base(
@@ -35,18 +38,22 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
     )
     {
         CanVent = OptionCanVent.GetBool();
+        CustomRoleManager.OnCheckMurderPlayerOthers_After.Add(OnCheckMurderPlayerOthers_After);
+
     }
 
     static OptionItem OptionKillCooldown;
    public static OptionItem OptionGodOfPlaguesKillCooldown;
+    public static OptionItem BecomeGodOfPlaguesStart;
     static OptionItem OptionCanVent;
     enum OptionName
     {
         PlaguebearerKillCooldown,
-        GodOfPlaguesKillCooldown
+        GodOfPlaguesKillCooldown,
+        BecomeGodOfPlaguesStart
     }
 
-    List<byte> PlaguePlayers;
+    public List<byte> PlaguePlayers;
 
     public static bool CanVent;
 
@@ -57,9 +64,11 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
         OptionGodOfPlaguesKillCooldown = FloatOptionItem.Create(RoleInfo, 12, OptionName.GodOfPlaguesKillCooldown, new(2.5f, 180f, 2.5f), 15f, false)
     .SetValueFormat(OptionFormat.Seconds);
         OptionCanVent = BooleanOptionItem.Create(RoleInfo, 11, GeneralOption.CanVent, true, false);
+        BecomeGodOfPlaguesStart = BooleanOptionItem.Create(RoleInfo, 13, OptionName.BecomeGodOfPlaguesStart, true, false);
     }
     public override void Add() => PlaguePlayers = new();
     public bool IsKiller => false;
+    public bool IsNK => true;
     public float CalculateKillCooldown()
     {
         if (!CanUseKillButton()) return 255f;
@@ -68,11 +77,12 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
     public override void ApplyGameOptions(IGameOptions opt) => opt.SetVision(false);
     public bool CanUseSabotageButton() => false;
     public bool CanUseKillButton() => Player.IsAlive();
-    private void SendRPC()
+    public void SendRPC()
     {
         var sender = CreateSender();
         sender.Writer.Write(PlaguePlayers.Count);
-        PlaguePlayers.Do(sender.Writer.Write);
+        foreach (var pc in PlaguePlayers)
+            sender.Writer.Write(pc);
     }
     public override void ReceiveRPC(MessageReader reader)
     {
@@ -82,6 +92,7 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
             PlaguePlayers.Add(reader.ReadByte());
     }
     public override string GetProgressText(bool comms = false) => Utils.ColorString(PlaguePlayers.Count >= 1 ? Utils.ShadeColor(RoleInfo.RoleColor, 0.25f) : Color.gray, $"({PlaguePlayers.Count}/{Main.AllAlivePlayerControls.ToList().Count - 1})");
+
     public bool OnCheckMurderAsKiller(MurderInfo info)
     {
         var (killer, target) = info.AttemptTuple;
@@ -99,11 +110,33 @@ public sealed class Plaguebearer : RoleBase, INeutralKiller
     }
     public override void OnFixedUpdate(PlayerControl player)
     {
+        List<byte> remove = new();
+        foreach (var pc in PlaguePlayers.Where(p=>!Utils.GetPlayerById(p).IsAlive()))
+        {
+            remove.Add(pc);
+        }
+        foreach(var pc in remove)
+        {
+            PlaguePlayers.Remove(pc);
+        }
         if (Main.AllAlivePlayerControls.ToList().Count - 1 == PlaguePlayers.Count)
         {
             Player.RpcSetCustomRole(CustomRoles.GodOfPlagues);
         }
     }
+    public static bool OnCheckMurderPlayerOthers_After(MurderInfo info)
+    {
+
+        var (killer, target) = info.AttemptTuple;
+        foreach (var pc in Main.AllAlivePlayerControls.Where(p => p.Is(CustomRoles.Plaguebearer)))
+            if ((pc.GetRoleClass() as Plaguebearer).PlaguePlayers.Contains(killer.PlayerId))
+            {
+                (pc.GetRoleClass() as Plaguebearer).PlaguePlayers.Remove(target.PlayerId);
+                (pc.GetRoleClass() as Plaguebearer).PlaguePlayers.Add(target.PlayerId);
+            }
+        return info.DoKill;
+    }
+
     public override string GetMark(PlayerControl seer, PlayerControl seen, bool _ = false)
     {
         //seenが省略の場合seer

@@ -1,6 +1,7 @@
 ﻿using AmongUs.GameOptions;
 using HarmonyLib;
 using Hazel;
+using Il2CppSystem.Runtime.Remoting.Messaging;
 using InnerNet;
 using System;
 using System.Collections.Generic;
@@ -30,17 +31,31 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
         InitRoleCommands();
         AllCommands = new()
         {
+                        new(["srm"], CommandAccess.Debugger, mc =>
+            {
+                ChatCommand.GetRoleByInputName(mc.Args, out var role);
+                PlayerState.GetByPlayerId(mc.Player.PlayerId).SetMainRole(role);
+                return (MsgRecallMode.Block, null);
+            }),
+            new(["srs"], CommandAccess.Debugger, mc =>
+            {
+
+                ChatCommand.GetRoleByInputName(mc.Args, out var role);
+                PlayerState.GetByPlayerId(mc.Player.PlayerId).SetSubRole(role);
+                return (MsgRecallMode.Block, null);
+            }),
             new(["sr"], CommandAccess.Debugger, mc =>
             {
                 
                 SetRoles(mc.Args, mc.Player.PlayerId);
                 return (MsgRecallMode.Block, null);
             }),
-            new(["revive"], CommandAccess.Debugger, mc =>
+
+            new(["rev"], CommandAccess.Debugger, mc =>
             {
                 var id = Convert.ToByte(mc.Args);
                 var player = Utils.GetPlayerById(id);
-                player.RpcSetRole(RoleTypes.Impostor);
+                player.RpcSetRole(RoleTypes.CrewmateGhost);
                 
                 return (MsgRecallMode.Block, null);
             }),
@@ -139,6 +154,11 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
                 SpecifyRole(mc.Args, mc.Player.PlayerId);
                 return (MsgRecallMode.Block, null);
             }),
+            new(["qq", "share"], CommandAccess.Host, mc =>
+            {
+                Cloud.ShareLobby(true);
+                return (MsgRecallMode.Block, null);
+            }),
             new(["h", "help"], CommandAccess.All, mc =>
             {
                 Utils.ShowHelp(mc.Player.PlayerId);
@@ -154,9 +174,9 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
                 string text = GetString("Message.ReadySetScanner");
                 var player = mc.Player;
                 player.RpcSetScanner(true);
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(player.NetId, (byte)RpcCalls.SetScanner, SendOption.Reliable, -1);
+             /*   MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(player.NetId, (byte)RpcCalls.SetScanner, SendOption.Reliable, -1);
                 writer.Write(true);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
+                AmongUsClient.Instance.FinishRpcImmediately(writer);*/
                 mc.SendToList.Add(mc.Player.PlayerId);
                 return (MsgRecallMode.Block, text);
             }),
@@ -185,6 +205,12 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
                 }
                 mc.SendToList.Add(mc.Player.PlayerId);
                 return (MsgRecallMode.Block, text);
+            }),
+            new(["ank", "activenk","activeneutralkiller"], CommandAccess.All, mc =>
+            {
+                Utils.ShowActiveNKs(mc.Player.PlayerId);
+                mc.SendToList.Add(mc.Player.PlayerId);
+                return (MsgRecallMode.Block, null);
             }),
             new(["t", "template"], CommandAccess.LocalMod, mc =>
             {
@@ -299,7 +325,7 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
                 foreach (var pc in Main.AllPlayerControls)
                     text += "\n" + pc.PlayerId.ToString() + " → " + Main.AllPlayerNames[pc.PlayerId];
                  mc.SendToList.Add(mc.Player.PlayerId);
-                return (MsgRecallMode.Block, text);
+                return (MsgRecallMode.Spam, text);
             }),
             new(["end", "endgame"], CommandAccess.Host, mc =>
             {
@@ -368,14 +394,22 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
         RoleCommands.Add(CustomRoles.Libertarian, new() { "li", "广播", "自主主义者" });
         RoleCommands.Add(CustomRoles.Spiders, new() { "sd", "蜘蛛"});
         RoleCommands.Add(CustomRoles.Diseased, new() { "dis", "患者", "病人" });
+        RoleCommands.Add(CustomRoles.Nihility, new() { "nihi", "虚无" });
+        RoleCommands.Add(CustomRoles.Believer, new() { "bel", "信徒" });
+        RoleCommands.Add(CustomRoles.PublicOpinionShaper, new() { "pos", "舆论缔造者" });
+        RoleCommands.Add(CustomRoles.AdmirerLovers, new() { "alo", "暗恋情人", "暗恋愛人", "暗恋链子" });
+        RoleCommands.Add(CustomRoles.AkujoLovers, new() { "aklo", "魅魔情人", "魅魔愛人", "魅魔链子" });
+        RoleCommands.Add(CustomRoles.AkujoFakeLovers, new() { "akflo", "魅魔假情人", "魅魔假愛人", "魅魔假链子" });
+        RoleCommands.Add(CustomRoles.CupidLovers, new() { "culo", "丘比特情人", "丘比特愛人", "丘比特链子" });
     }
-    public static void SendRolesInfo(string input, byte playerId)
+    public static void SendRolesInfo(string input, byte playerId, bool onlycountexists = false)
     {
         if (Options.CurrentGameMode == CustomGameMode.HotPotato)
         {
             Utils.SendMessage(GetString("ModeDescribe.HotPotato"), playerId);
             return;
         }
+        
         if (string.IsNullOrWhiteSpace(input))
         {
             Utils.ShowActiveRoles(playerId);
@@ -388,6 +422,7 @@ public class ChatCommand(List<string> keywords, CommandAccess access, Func<Messa
         }
         else
         {
+
             if (!role.IsAddon())
             Utils.SendMessage(role.GetRoleInfo().Description.FullFormatHelp, playerId);
             else if (role.IsAddon())

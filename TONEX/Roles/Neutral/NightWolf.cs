@@ -22,7 +22,8 @@ public sealed class NightWolf : RoleBase, INeutralKiller, ISchrodingerCatOwner
            "#a77738",
            true,
            true,
-           countType: CountTypes.NightWolf
+           countType: CountTypes.NightWolf,
+            assignCountRule: new(1, 1, 1)
 #if RELEASE
 ,
 ctop:true

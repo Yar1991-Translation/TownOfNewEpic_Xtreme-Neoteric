@@ -125,7 +125,7 @@ public sealed class Succubus : RoleBase, INeutralKiller
         if (seer.Is(CustomRoles.Charmed)) enabled = true;
     }
     public override string GetProgressText(bool comms = false) => Utils.ColorString(CanUseKillButton() ? Utils.ShadeColor(RoleInfo.RoleColor, 0.25f) : Color.gray, $"({CharmLimit})");
-    public static bool CanBeCharmed(PlayerControl pc) => pc != null && (pc.GetCustomRole().IsCrewmate() || pc.GetCustomRole().IsImpostor()) && !pc.Is(CustomRoles.Charmed);
+    public static bool CanBeCharmed(PlayerControl pc) => pc != null && (pc.GetCustomRole().IsCrewmate() || pc.GetCustomRole().IsImpostor()) && !pc.Is(CustomRoles.Charmed) && !pc.Is(CustomRoles.Believer) && !pc.Is(CustomRoles.Nihility);
     public bool OverrideKillButtonText(out string text)
     {
         text = Translator.GetString("SuccubusKillButtonText");

@@ -54,7 +54,7 @@ class HudSpritePatch
                 if (killer.OverrideVentButtonSprite(out var newVentButtonName))
                     newVentButton = CustomButton.GetSprite(newVentButtonName);
             }
-            if (player.Is(CustomRoles.EvilGuardian)) newAbilityButton = CustomButton.GetSprite("KillButton");
+            if (player.Is(CustomRoles.EvilAngle)) newAbilityButton = CustomButton.GetSprite("KillButton");
             if (player.GetRoleClass()?.GetAbilityButtonSprite(out var newAbilityButtonName) ?? false)
                 newAbilityButton = CustomButton.GetSprite(newAbilityButtonName);
             if (player.GetRoleClass()?.GetReportButtonSprite(out var newReportButtonName) ?? false)
@@ -119,19 +119,19 @@ class HudSpritePatch
             switch (Main.NormalOptions.MapId)
             {
                 case 0:
-                    newmap = CustomButton.GetSprite("mapJourne");
+                    newmap = CustomButton.GetSprite("mapJourney_icon");
                     break;
                 case 1:
-                    newmap = CustomButton.GetSprite("mapMIRA");
+                    newmap = CustomButton.GetSprite("mapMIRA_icon");
                     break;
                 case 2:
-                    newmap = CustomButton.GetSprite("mapPolus");
+                    newmap = CustomButton.GetSprite("mapPolus_icon");
                     break;
                 case 4:
-                    newmap = CustomButton.GetSprite("mapAirship");
+                    newmap = CustomButton.GetSprite("mapAirship_icon");
                     break;
                 case 5:
-                    newmap = CustomButton.GetSprite("theFungle");
+                    newmap = CustomButton.GetSprite("theFungle_circleIcon");
                     break;
 
             }

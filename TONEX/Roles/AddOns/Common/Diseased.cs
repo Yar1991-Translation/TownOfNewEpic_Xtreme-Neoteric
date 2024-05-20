@@ -26,6 +26,7 @@ public static class Diseased
     public static void Init()
     {
         playerIdList = new();
+        DisList = new();
     }
     public static void Add(byte playerId)
     {
@@ -33,22 +34,22 @@ public static class Diseased
     }
     public static void SendRPC()
     {
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.MiniAge, SendOption.Reliable, -1);
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetDiseasedList, SendOption.Reliable, -1);
+        writer.Write(DisList.Count);
         foreach (var pc in DisList)
         {
             writer.Write(pc);
         }
         AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
-    public static void ReceiveRPC(MessageReader reader, CustomRPC rpcType)
+    public static void ReceiveRPC(MessageReader reader)
     {
-        if (rpcType != CustomRPC.MiniAge) return;
-        
-        for (int i =0;i<DisList.Count; i++)
+        var dis = reader.ReadInt32();
+        for (int i =0;i<dis; i++)
         {
             var pc = reader.ReadByte();
-            if (!DisList.Contains(pc))
-                DisList.Add(pc);
+            if(!DisList.Contains(pc))
+            DisList.Add(pc);
         }
     }
     public static bool IsEnable => playerIdList.Count > 0;

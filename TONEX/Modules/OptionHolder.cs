@@ -7,8 +7,12 @@ using TONEX.Modules;
 using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.AddOns.Crewmate;
 using TONEX.Roles.AddOns.Impostor;
+using TONEX.MoreGameModes;
 using TONEX.Roles.Core;
 using UnityEngine;
+using TONEX.Roles.Ghost.Impostor;
+using TONEX.Roles.Ghost.Crewmate;
+using TONEX.Roles.Ghost.Neutral;
 
 namespace TONEX;
 
@@ -17,8 +21,8 @@ public enum CustomGameMode
 {
     Standard = 0x01,
     HotPotato = 0x02,
-    AllCrewMod = 0x03,
-    All = int.MaxValue,
+    AllCrewModMode = Standard | 0x04,
+    All = Standard | HotPotato | AllCrewModMode
 }
 
 [HarmonyPatch]
@@ -51,12 +55,19 @@ public static class Options
         => GameMode.GetInt() switch
         {    
             1 => CustomGameMode.HotPotato,
+#if DEBUG
+            2 => CustomGameMode.AllCrewModMode,
+#endif
             _ => CustomGameMode.Standard
         };
 
     public static readonly string[] gameModes =
     {
-        "Standard","HotPotatoMode"
+        "Standard",
+        "HotPotatoMode",
+#if DEBUG
+        "AllCrewModMode"
+#endif
     };
 
     // 地图启用
@@ -66,6 +77,9 @@ public static class Options
     public static bool IsActiveAirship => AddedTheAirShip.GetBool() || Main.NormalOptions.MapId == 4;
     public static bool IsActiveFungle => AddedTheFungle.GetBool() || Main.NormalOptions.MapId == 5;
 
+
+    public static bool IsAllCrew => CurrentGameMode == CustomGameMode.AllCrewModMode;
+    public static bool IsStandard => CurrentGameMode == CustomGameMode.Standard || IsAllCrew;
     // 职业数量・生成模式&概率
     public static Dictionary<CustomRoles, OptionItem> CustomRoleCounts;
     public static Dictionary<CustomRoles, StringOptionItem> CustomRoleSpawnChances;
@@ -110,11 +124,9 @@ public static class Options
 
     public static OptionItem DeadImpCantSabotage;
     public static OptionItem ImpKnowAlliesRole;
-    public static OptionItem ImpKnowWhosMadmate;
-    public static OptionItem MadmateKnowWhosImp;
-    public static OptionItem MadmateKnowWhosMadmate;
-    public static OptionItem ImpCanKillMadmate;
-    public static OptionItem MadmateCanKillImp;
+   
+    public static OptionItem SetImpNum;
+    public static OptionItem ImpNum;
 
     public static OptionItem NeutralRolesMinPlayer;
     public static OptionItem NeutralRolesMaxPlayer;
@@ -125,18 +137,9 @@ public static class Options
 
     public static OptionItem AddonsNumLimit;
 
-    public static OptionItem LoverKnowRoles;
-    public static OptionItem LoverSuicide;
 
-    public static OptionItem MadmateSpawnMode;
-    public static OptionItem MadmateCountMode;
-    public static OptionItem SheriffCanBeMadmate;
-    public static OptionItem MayorCanBeMadmate;
-    public static OptionItem NGuesserCanBeMadmate;
-    public static OptionItem SnitchCanBeMadmate;
-    public static OptionItem JudgeCanBeMadmate;
-    public static OptionItem NSwapperCanBeMadmate;
-    public static OptionItem MadSnitchTasks;
+
+    
 
     //// 游戏设置 ////
 
@@ -152,6 +155,7 @@ public static class Options
     public static OptionItem ConfirmEjectionsNonNK;
     public static OptionItem ConfirmEjectionsNeutralAsImp;
     public static OptionItem ShowImpRemainOnEject;
+    public static OptionItem ShowNERemainOnEject;
     public static OptionItem ShowNKRemainOnEject;
     public static OptionItem ShowTeamNextToRoleNameOnEject;
 
@@ -411,18 +415,7 @@ public static class Options
 
     /* 选项 */
 
-    public static readonly string[] madmateSpawnMode =
-    {
-        "MadmateSpawnMode.Assign",
-        "MadmateSpawnMode.FirstKill",
-        "MadmateSpawnMode.SelfVote",
-    };
-    public static readonly string[] madmateCountMode =
-    {
-        "MadmateCountMode.None",
-        "MadmateCountMode.Imp",
-        "MadmateCountMode.Crew",
-    };
+   
     public static readonly string[] suffixModes =
     {
         "SuffixMode.None",
@@ -506,18 +499,15 @@ public static class Options
         ImpKnowAlliesRole = BooleanOptionItem.Create(1_000_001, "ImpKnowAlliesRole", true, TabGroup.ImpostorRoles, false)
             .SetGameMode(CustomGameMode.Standard)
            .SetHeader(true);
-        ImpKnowWhosMadmate = BooleanOptionItem.Create(1_000_002, "ImpKnowWhosMadmate", false, TabGroup.ImpostorRoles, false)
-            .SetGameMode(CustomGameMode.Standard);
-        ImpCanKillMadmate = BooleanOptionItem.Create(1_000_003, "ImpCanKillMadmate", true, TabGroup.ImpostorRoles, false)
-            .SetGameMode(CustomGameMode.Standard);
+        Madmate.SetupImpTotalOption();
 
-        MadmateKnowWhosMadmate = BooleanOptionItem.Create(1_001_001, "MadmateKnowWhosMadmate", false, TabGroup.ImpostorRoles, false)
+        SetImpNum = BooleanOptionItem.Create(1_001_004, "SetImpNum", false, TabGroup.ImpostorRoles, false)
             .SetHeader(true)
             .SetGameMode(CustomGameMode.Standard);
-        MadmateKnowWhosImp = BooleanOptionItem.Create(1_001_002, "MadmateKnowWhosImp", true, TabGroup.ImpostorRoles, false)
-            .SetGameMode(CustomGameMode.Standard);
-        MadmateCanKillImp = BooleanOptionItem.Create(1_001_003, "MadmateCanKillImp", true, TabGroup.ImpostorRoles, false)
-            .SetGameMode(CustomGameMode.Standard);
+        ImpNum = IntegerOptionItem.Create(1_001_005, "ImpNum", new(0, 15, 1), 2, TabGroup.ImpostorRoles, false)
+            .SetGameMode(CustomGameMode.Standard)
+            .SetParent(SetImpNum)
+            .SetValueFormat(OptionFormat.Players);
 
         DefaultShapeshiftCooldown = FloatOptionItem.Create(1_002_001, "DefaultShapeshiftCooldown", new(5f, 999f, 5f), 15f, TabGroup.ImpostorRoles, false)
             .SetGameMode(CustomGameMode.Standard)
@@ -525,6 +515,11 @@ public static class Options
             .SetValueFormat(OptionFormat.Seconds);
         DeadImpCantSabotage = BooleanOptionItem.Create(1_002_002, "DeadImpCantSabotage", false, TabGroup.ImpostorRoles, false)
             .SetGameMode(CustomGameMode.Standard);
+
+#if DEBUG
+        EvilAngle.SetupOptionItem();
+        InjusticeSpirit.SetupOptionItem();
+#endif
 
         NeutralRolesMinPlayer = IntegerOptionItem.Create(1_003_001, "NeutralRolesMinPlayer", new(0, 15, 1), 0, TabGroup.NeutralRoles, false)
             .SetGameMode(CustomGameMode.Standard)
@@ -545,7 +540,9 @@ public static class Options
             .SetHeader(true);
         NeutralWinTogether = BooleanOptionItem.Create(1_003_004, "NeutralWinTogether", false, TabGroup.NeutralRoles, false).SetParent(NeutralRoleWinTogether)
             .SetGameMode(CustomGameMode.Standard);
-
+#if DEBUG
+        Phantom.SetupOptionItem();
+#endif
         AddonsNumLimit = IntegerOptionItem.Create(1_003_005, "AddonsNumLimit", new(0, 99, 1), 1, TabGroup.Addons, false)
             .SetGameMode(CustomGameMode.Standard)
             .SetValueFormat(OptionFormat.Pieces)
@@ -623,14 +620,7 @@ public static class Options
             .SetGameMode(CustomGameMode.Standard)
             .SetColor(Utils.GetCustomRoleTypeColor(CustomRoleTypes.Addon));
 
-        #region Options of Lover
-        SetupRoleOptions(80100, TabGroup.Addons, CustomRoles.Lovers, assignCountRule: new(2, 2, 2));
-        LoverKnowRoles = BooleanOptionItem.Create(80100 + 4, "LoverKnowRoles", true, TabGroup.Addons, false).SetParent(Options.CustomRoleSpawnChances[CustomRoles.Lovers])
-            .SetGameMode(CustomGameMode.Standard);
-        LoverSuicide = BooleanOptionItem.Create(80100 + 3, "LoverSuicide", true, TabGroup.Addons, false).SetParent(Options.CustomRoleSpawnChances[CustomRoles.Lovers])
-            .SetGameMode(CustomGameMode.Standard);
-        #endregion
-
+        Lovers.SetupCustomOption();
         Neptune.SetupCustomOption();
         Watcher.SetupCustomOption();
         Lighter.SetupCustomOption();
@@ -652,6 +642,8 @@ public static class Options
         Signal.SetupCustomOption();
         Libertarian.SetupCustomOption();
         Diseased.SetupCustomOption();
+        Nihility.SetupCustomOption();
+        Believer.SetupCustomOption();
 
         // 船员专属附加
         TextOptionItem.Create(5_100_002, "MenuTitle.Addon.Crew", TabGroup.Addons)
@@ -660,7 +652,7 @@ public static class Options
 
         YouTuber.SetupCustomOption();
         Workhorse.SetupCustomOption();
-        SetupMadmateRoleOptionsToggle(80200);
+        Madmate.SetupMadmateRoleOptionsToggle(75_1_2_1500);
 
         // 内鬼专属附加
         TextOptionItem.Create(5_100_003, "MenuTitle.Addon.Imp", TabGroup.Addons)
@@ -671,6 +663,7 @@ public static class Options
         TicketsStealer.SetupCustomOption();
         Mimic.SetupCustomOption();
         Spiders.SetupCustomOption();
+        PublicOpinionShaper.SetupCustomOption();
 
         #endregion
 
@@ -824,10 +817,13 @@ public static class Options
         ShowImpRemainOnEject = BooleanOptionItem.Create(3_000_002, "ShowImpRemainOnEject", true, TabGroup.GameSettings, false)
             .SetGameMode(CustomGameMode.Standard)
             .SetColor(new Color32(255, 238, 232, byte.MaxValue));
-        ShowNKRemainOnEject = BooleanOptionItem.Create(3_000_003, "ShowNKRemainOnEject", true, TabGroup.GameSettings, false).SetParent(ShowImpRemainOnEject)
+        ShowNERemainOnEject = BooleanOptionItem.Create(3_000_003, "ShowNERemainOnEject", true, TabGroup.GameSettings, false).SetParent(ShowImpRemainOnEject)
             .SetGameMode(CustomGameMode.Standard)
             .SetColor(new Color32(255, 238, 232, byte.MaxValue));
-        ShowTeamNextToRoleNameOnEject = BooleanOptionItem.Create(3_000_004, "ShowTeamNextToRoleNameOnEject", false, TabGroup.GameSettings, false)
+        ShowNKRemainOnEject = BooleanOptionItem.Create(3_000_004, "ShowNKRemainOnEject", true, TabGroup.GameSettings, false).SetParent(ShowImpRemainOnEject)
+            .SetGameMode(CustomGameMode.Standard)
+            .SetColor(new Color32(255, 238, 232, byte.MaxValue));
+        ShowTeamNextToRoleNameOnEject = BooleanOptionItem.Create(3_000_005, "ShowTeamNextToRoleNameOnEject", false, TabGroup.GameSettings, false)
             .SetGameMode(CustomGameMode.Standard)
             .SetColor(new Color32(255, 238, 232, byte.MaxValue));
 
@@ -1082,7 +1078,7 @@ public static class Options
             .SetValueFormat(OptionFormat.Seconds)
             .SetGameMode(CustomGameMode.Standard);
 
-        UsePets = BooleanOptionItem.Create(3_048_002, "CanUsePet", false, TabGroup.GameSettings, false)
+        UsePets = BooleanOptionItem.Create(3_048_002, "CanUsePet", true, TabGroup.GameSettings, false)
 .SetColor(Color.cyan)
 .SetHeader(true);
 
@@ -1134,10 +1130,11 @@ public static class Options
     }
     public static void SetupRoleOptions(SimpleRoleInfo info) =>
         SetupRoleOptions(info.ConfigId, info.Tab, info.RoleName);
-    public static void SetupRoleOptions(int id, TabGroup tab, CustomRoles role, IntegerValueRule assignCountRule = null, CustomGameMode customGameMode = CustomGameMode.Standard)
+    public static void SetupRoleOptions(int id, TabGroup tab, CustomRoles role, IntegerValueRule assignCountRule = null, CustomGameMode customGameMode = CustomGameMode.Standard | CustomGameMode.AllCrewModMode)
     {
         if (role.IsVanilla() || role.IsHidden() || role.IsCanNotOpen()) return;
-        assignCountRule ??= new(1, 15, 1);
+        
+        assignCountRule ??= role.GetRoleInfo()?.AssignCountRule??new(1, 15, 1);
 
         bool broken = role.GetRoleInfo()?.Broken ?? false;
 
@@ -1155,29 +1152,7 @@ public static class Options
         CustomRoleSpawnChances.Add(role, spawnOption);
         CustomRoleCounts.Add(role, countOption);
     }
-    private static void SetupMadmateRoleOptionsToggle(int id, CustomGameMode customGameMode = CustomGameMode.Standard)
-    {
-        var role = CustomRoles.Madmate;
-        var spawnOption = StringOptionItem.Create(id, role.ToString(), RoleSpwanToggle, 0, TabGroup.Addons, false).SetColor(Utils.GetRoleColor(role))
-                .SetHeader(true)
-                .SetGameMode(customGameMode) as StringOptionItem;
-
-        var countOption = IntegerOptionItem.Create(id + 1, "Maximum", new(1, 15, 1), 1, TabGroup.Addons, false).SetParent(spawnOption)
-            .SetGameMode(customGameMode);
-
-        MadmateSpawnMode = StringOptionItem.Create(id + 10, "MadmateSpawnMode", madmateSpawnMode, 0, TabGroup.Addons, false).SetParent(spawnOption);
-        MadmateCountMode = StringOptionItem.Create(id + 11, "MadmateCountMode", madmateCountMode, 0, TabGroup.Addons, false).SetParent(spawnOption);
-        SheriffCanBeMadmate = BooleanOptionItem.Create(id + 12, "SheriffCanBeMadmate", false, TabGroup.Addons, false).SetParent(spawnOption);
-        MayorCanBeMadmate = BooleanOptionItem.Create(id + 13, "MayorCanBeMadmate", false, TabGroup.Addons, false).SetParent(spawnOption);
-        NGuesserCanBeMadmate = BooleanOptionItem.Create(id + 14, "NGuesserCanBeMadmate", false, TabGroup.Addons, false).SetParent(spawnOption);
-        SnitchCanBeMadmate = BooleanOptionItem.Create(id + 15, "SnitchCanBeMadmate", false, TabGroup.Addons, false).SetParent(spawnOption);
-        MadSnitchTasks = IntegerOptionItem.Create(id + 16, "MadSnitchTasks", new(1, 99, 1), 3, TabGroup.Addons, false).SetParent(SnitchCanBeMadmate)
-            .SetValueFormat(OptionFormat.Pieces);
-        JudgeCanBeMadmate = BooleanOptionItem.Create(id + 17, "JudgeCanBeMadmate", false, TabGroup.Addons, false).SetParent(spawnOption);
-        NSwapperCanBeMadmate = BooleanOptionItem.Create(id + 18, "NSwapperCanBeMadmate", false, TabGroup.Addons, false).SetParent(spawnOption);
-        CustomRoleSpawnChances.Add(role, spawnOption);
-        CustomRoleCounts.Add(role, countOption);
-    }
+    
     public class OverrideTasksData
     {
         public static Dictionary<CustomRoles, OverrideTasksData> AllData = new();

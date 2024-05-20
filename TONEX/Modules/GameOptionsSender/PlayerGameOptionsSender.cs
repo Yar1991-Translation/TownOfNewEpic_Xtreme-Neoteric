@@ -10,6 +10,7 @@ using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
 using TONEX.Roles.Crewmate;
+using TONEX.Roles.Impostor;
 using TONEX.Roles.Neutral;
 using Mathf = UnityEngine.Mathf;
 
@@ -88,7 +89,7 @@ public class PlayerGameOptionsSender : GameOptionsSender
                 break;
         }
 
-        var roleClass = player.GetRoleClass();
+        var roleClass = player.GetRoleClass()?? null;
         roleClass?.ApplyGameOptions(opt);
         foreach (var subRole in player.GetCustomSubRoles())
         {
@@ -116,10 +117,24 @@ public class PlayerGameOptionsSender : GameOptionsSender
                 case CustomRoles.Mini:
                     if ((player.GetRoleClass() as IKiller)?.IsKiller ?? false)
                     {
-                        if (Mini.Age[player.PlayerId] < 18)
+                        if (Mini.Age[player.PlayerId] < 18 && !Mini.MKL.Contains(player.PlayerId))
+                        {
+                            Mini.MKL.Add(player.PlayerId);
                             opt.SetFloat(FloatOptionNames.KillCooldown, Mini.OptionKidKillCoolDown.GetFloat());
-                        else
+                            Main.AllPlayerKillCooldown[player.PlayerId] *= Mini.OptionKidKillCoolDown.GetFloat();
+                            Mini.SendRPC();
+                            player.ResetKillCooldown();
+                            player.SyncSettings();
+                        }
+                        else if (Mini.Age[player.PlayerId] >= 18 && !Mini.MAL.Contains(player.PlayerId))
+                        {
+                            Mini.MAL.Add(player.PlayerId);
                             opt.SetFloat(FloatOptionNames.KillCooldown, Mini.OptionAdultKillCoolDown.GetFloat());
+                            Main.AllPlayerKillCooldown[player.PlayerId] *= Mini.OptionAdultKillCoolDown.GetFloat();
+                            player.ResetKillCooldown();
+                            player.SyncSettings();
+                            Mini.SendRPC();
+                        }
                     }
                     break;
                 case CustomRoles.Rambler:
@@ -140,13 +155,13 @@ public class PlayerGameOptionsSender : GameOptionsSender
         }
 
         // Œ™ªº’ﬂµƒ–◊ ÷
-        if (Main.AllPlayerControls.Any(x => x.Is(CustomRoles.Diseased) && !x.IsAlive() && x.GetRealKiller()?.PlayerId == player.PlayerId && !x.Is(CustomRoles.Hangman)))
+        if (Main.AllPlayerControls.Any(x => x.Is(CustomRoles.Diseased) && !x.IsAlive() && x.GetRealKiller()?.PlayerId == player.PlayerId && !x.Is(CustomRoles.Hangman) && !Diseased.DisList.Contains(player.PlayerId)))
         {
-            opt.SetVision(false);
-            float KILL = (player.GetRoleClass() as IKiller)?.CalculateKillCooldown() ?? Options.DefaultKillCooldown;
-            opt.SetFloat(FloatOptionNames.KillCooldown, KILL * Diseased.OptionVistion.GetFloat());
+            Diseased.DisList.Add(player.PlayerId);
+            Main.AllPlayerKillCooldown[player.PlayerId] *= Diseased.OptionVistion.GetFloat();
             player.ResetKillCooldown();
             player.SyncSettings();
+            Diseased.SendRPC();
             Utils.NotifyRoles(player);
         }
 
@@ -167,13 +182,20 @@ public class PlayerGameOptionsSender : GameOptionsSender
             opt.SetFloat(FloatOptionNames.ImpostorLightMod, 5f);
             Utils.NotifyRoles(player);
         }*/
-        // Õ∂÷¿…µπœµ∞¿≤£°£°£°£°£°
-        if (Grenadier.IsBlinding(player))
+        // Õ∂÷¿…µπœµ∞¿≤£°£°£°£°
+        if (CustomRoles.NiceGrenadier.IsExist() && NiceGrenadier.IsBlinding(player))
         {
             opt.SetVision(false);
-            opt.SetFloat(FloatOptionNames.CrewLightMod, Grenadier.OptionCauseVision.GetFloat());
-            opt.SetFloat(FloatOptionNames.ImpostorLightMod, Grenadier.OptionCauseVision.GetFloat());
+            opt.SetFloat(FloatOptionNames.CrewLightMod, 5f);
+            opt.SetFloat(FloatOptionNames.ImpostorLightMod,5f);
         }
+        if (CustomRoles.EvilGrenadier.IsExist() && EvilGrenadier.IsBlinding(player))
+        {
+            opt.SetVision(false);
+            opt.SetFloat(FloatOptionNames.CrewLightMod, 5f);
+            opt.SetFloat(FloatOptionNames.ImpostorLightMod, 5f);
+        }
+        //*/
 
         AURoleOptions.EngineerCooldown = Mathf.Max(0.01f, AURoleOptions.EngineerCooldown);
 

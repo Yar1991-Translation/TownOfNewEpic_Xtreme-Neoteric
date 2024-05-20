@@ -78,13 +78,15 @@ public class GameStartManagerPatch
             if (!AmongUsClient.Instance.AmHost) return;
 
             // Make Public Button
-#if RELEASE
-if (ModUpdater.isBroken || (ModUpdater.hasUpdate && ModUpdater.forceUpdate) || !Main.AllowPublicRoom || !VersionChecker.IsSupported || !Main.IsPublicAvailableOnThisVersion)
-            {
-                __instance.MakePublicButton.color = Palette.DisabledClear;
-                __instance.privatePublicText.color = Palette.DisabledClear;
-            }
-            #endif
+            //#if RELEASE
+            
+                if (ModUpdater.isBroken || (ModUpdater.hasUpdate && ModUpdater.forceUpdate) || !Main.AllowPublicRoom || !VersionChecker.IsSupported || !Main.IsPublicAvailableOnThisVersion)
+                {
+                    __instance.MakePublicButton.color = Palette.DisabledClear;
+                    __instance.privatePublicText.color = Palette.DisabledClear;
+                }
+            
+            //#endif
 
             if (Main.NormalOptions.KillCooldown == 0f)
                 Main.NormalOptions.KillCooldown = Main.LastKillCooldown.Value;

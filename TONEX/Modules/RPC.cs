@@ -5,14 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TONEX.Modules;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces;
 using TONEX.Roles.Crewmate;
 using TONEX.Roles.AddOns.Common;
+using TONEX.Roles.AddOns.CanNotOpened;
 using static TONEX.Translator;
 using TONEX.Roles.Impostor;
 using TONEX.Roles.Neutral;
+using TONEX.Modules.SoundInterface;
 namespace TONEX;
 
 public enum CustomRPC
@@ -44,118 +45,64 @@ public enum CustomRPC
 
     //TONEX
     ColorFlash,
-    CantDoAnyActPlayer,
-    IsEnd,
+    SetAction,
+    IsDisabledAction,
+    SetAdmirerLoversPlayers,
+    SetAkujoLoversPlayers,
+    SetCupidLoversPlayers,
 
     //GameMode
     SyncHpNameNotify,
 
     //Roles
-    SetDrawPlayer,
-    SetCurrentDrawTarget,
-    SyncPelicanEatenPlayers,
-    VigilanteKill,
-    SetDemonHealth,
-    SetDeceiverSellLimit,
-    SetMedicProtectLimit,
-    SetGangsterRecruitLimit,
-    SetJackalRewardLimit,
-    SetGhostPlayer,
+   
+    //阴阳
     SetYangPlayer,
     SetYinPlayer,
-    SetStalkerrKillCount,
-    SetCursedWolfSpellCount,
-    SetCollectorVotes,
-    SetQuickShooterShotLimit,
-    SetEraseLimit,
     SuicideWithAnime,
     SetMarkedPlayer,
-    SetConcealerTimer,
+    //医生
     SetMedicProtectList,
-    SetHackerHackLimit,
-    SyncPsychicRedList,
-    SetMorticianArrow,
+
+    //会议
     Judge,
     Guess,
-    SetEvilInvisiblerTimer,
-    SetBKTimer,
-    SyncFollowerTargetAndTimes,
+    Swap,
+
     //魅惑者
     SetSuccubusCharmLimit,
-    //傀儡
+    //控制狂
     SyncControlFreakList,
-    //术士
-    SyncWarlock,
-    //逃逸
-    SyncEscapist,
-    //马里奥
-    SyncMarioVentedTimes,
-    //时间之主
-    SyncTimeMaster,
-    //绝望先生
-    DespairBeKill,
     //预言家
-    ProphetKill,
     SetProphetList,
-    //老兵
-    VeteranKill,
     //迷你船员
     MiniAge,
     //通讯兵
     SignalPosition,
-    //双刀手
-    DoubleKillerBeKillTime,
     //悬赏官
     SetRewardOfficerTarget,
-    SetRewardOfficerName,
     //恶猎手
     ViciousSeekerKill,
     //秃鹫
     VultureLimit,
-    SetVultureArrow,
-    //热土豆
-    SetHotPotatoBoomTime,
-    //市长
-    MayorCanUseButton,
-    //冒险家
-    AdventurerSabotage,
-    //异世闲游
-    SetVagator,
+    //闲游
     AddFeeble,
-    RemoveFeeble,
-    //'不演反派'
-    ForNVBeKilled,
-    ForNVStaticOvercomeList,
-    ForNVStaticFarAheadList,
-    ForNVMoney,
-    ForNVWAH,
-    ForNVCAAList,
-    ForNVOvercomeList,
-    ForNVFarAheadList,
-    ForNVDFList,
-    //换票
-    NiceSwapperSync,
-    EvilSwapperSync,
-    //先烈
-    SetMartyrTarget,
-    //瘟疫
-    SyncPlaguePlayers,
-    //傀儡
-    SetBeKillLimit,
-    //捕快
-    SetDeputyLimit,
-    //起诉
-    SetProsectorsLimit,
-    //借魂
-    SpecterSlayerKill,
     //猎人
-    HunterKill,
     SetHunterList,
-    //患者,
-    ForDiseased,
-    //判官&戮者
-    SetMeteorArbiter,
-    SetMeteorMurder
+    //玩家
+    SetDemonHealth,
+    //患者
+    SetDiseasedList,
+    //琥珀
+    SetAmberProtectList,
+    //正义掷弹兵
+    SetNiceGraList,
+    //邪恶掷弹兵
+    SetEvilGraList,
+    //起诉
+    SetProsecutorList,
+    //捕快
+    SetDeputyList,
 }
 public enum Sounds
 {
@@ -171,7 +118,8 @@ public enum Sounds
 internal class RPCHandlerPatch
 {
     public static bool TrustedRpc(byte id)
-    => (CustomRPC)id is CustomRPC.VersionCheck or CustomRPC.RequestRetryVersionCheck or CustomRPC.AntiBlackout or CustomRPC.Judge or CustomRPC.Guess or CustomRPC.OnClickMeetingButton;
+ => (CustomRPC)id is CustomRPC.VersionCheck or CustomRPC.RequestRetryVersionCheck or CustomRPC.AntiBlackout or CustomRPC.Judge or CustomRPC.Swap or CustomRPC.Guess or CustomRPC.OnClickMeetingButton or CustomRPC.PlaySound or CustomRPC.IsDisabledAction;
+
     public static bool Prefix(PlayerControl __instance, [HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
     {
         var rpcType = (RpcCalls)callId;
@@ -308,9 +256,6 @@ internal class RPCHandlerPatch
             case CustomRPC.SetDeathReason:
                 RPC.GetDeathReason(reader);
                 break;
-            case CustomRPC.IsEnd:
-                HudSpritePatch.IsEnd = reader.ReadBoolean();
-                break;
             case CustomRPC.EndGame:
                 RPC.EndGame(reader);
                 break;
@@ -332,10 +277,16 @@ internal class RPCHandlerPatch
                 NameColorManager.ReceiveRPC(reader);
                 break;
             case CustomRPC.SetLoversPlayers:
-                Main.LoversPlayers.Clear();
-                int count = reader.ReadInt32();
-                for (int i = 0; i < count; i++)
-                    Main.LoversPlayers.Add(Utils.GetPlayerById(reader.ReadByte()));
+                Lovers.ReceiveRPC(reader);
+                break;
+            case CustomRPC.SetAdmirerLoversPlayers:
+                AdmirerLovers.ReceiveRPC(reader);
+                break;
+            case CustomRPC.SetAkujoLoversPlayers:
+                AkujoLovers.ReceiveRPC(reader);
+                break;
+            case CustomRPC.SetCupidLoversPlayers:
+                CupidLovers.ReceiveRPC(reader);
                 break;
             case CustomRPC.SetRealKiller:
                 byte targetId = reader.ReadByte();
@@ -367,21 +318,11 @@ internal class RPCHandlerPatch
             case CustomRPC.SyncNameNotify:
                 NameNotifyManager.ReceiveRPC(reader);
                 break;
-            case CustomRPC.CantDoAnyActPlayer:
-                var counta = reader.ReadInt32();
-                if (reader.ReadBoolean())
-                {
-                    for (int i = 0; i < counta; i++)
-                        if (!Main.CantDoActList.Contains(reader.ReadByte()))
-                            Main.CantDoActList.Add(reader.ReadByte());
-                }
-                else
-                    for (int i = 0; i < counta; i++)
-                        if (Main.CantDoActList.Contains(reader.ReadByte()))
-                            Main.CantDoActList.Remove(reader.ReadByte());
-
-
-
+            case CustomRPC.SetAction:
+                ExtendedPlayerControl.ReceiveSetAction(reader);
+                break;
+            case CustomRPC.IsDisabledAction:
+                ExtendedPlayerControl.ReceiveIsDisabledActionion(reader);
                 break;
             case CustomRPC.KillFlash:
                 Utils.FlashColor(new(1f, 0f, 0f, 0.3f));
@@ -436,6 +377,30 @@ internal class RPCHandlerPatch
             case CustomRPC.CustomRoleSync:
                 CustomRoleManager.DispatchRpc(reader);
                 break;
+            case CustomRPC.AddFeeble:
+                Vagator.ReceiveRPC_SyncList(reader);
+                break;
+            case CustomRPC.Swap:
+                SwapperHelper.ReceiveRPC(reader, __instance);
+                break;
+            case CustomRPC.SetDiseasedList:
+                Diseased.ReceiveRPC(reader);
+                break;
+            case CustomRPC.SetAmberProtectList:
+                Amber.ReceiveRPC_SyncList(reader);
+                break;
+            case CustomRPC.SetNiceGraList:
+                NiceGrenadier.ReceiveRPC_SyncList(reader);
+                break;
+            case CustomRPC.SetEvilGraList:
+                EvilGrenadier.ReceiveRPC_SyncList(reader);
+                break;
+            case CustomRPC.SetProsecutorList:
+                EvilGrenadier.ReceiveRPC_SyncList(reader);
+                break;
+            case CustomRPC.SetDeputyList:
+                Deputy.ReceiveRPC_SyncList(reader);
+                break;
         }
     }
 }
@@ -443,21 +408,6 @@ internal class RPCHandlerPatch
 internal static class RPC
 {
     //来源：https://github.com/music-discussion/TownOfHost-TheOtherRoles/blob/main/Modules/RPC.cs
-    public static bool IsNVRPC(this CustomRPC rpc)
-    {
-        if (
-            rpc == CustomRPC.ForNVBeKilled ||
-    rpc == CustomRPC.ForNVStaticOvercomeList ||
-    rpc == CustomRPC.ForNVStaticFarAheadList ||
-    rpc == CustomRPC.ForNVMoney ||
-    rpc == CustomRPC.ForNVWAH ||
-    rpc == CustomRPC.ForNVCAAList ||
-    rpc == CustomRPC.ForNVOvercomeList ||
-    rpc == CustomRPC.ForNVFarAheadList
-            )
-        return true;
-        return false;
-    }
     public static void SyncCustomSettingsRPC(int targetId = -1)
     {
         if (targetId != -1)
@@ -470,12 +420,6 @@ internal static class RPC
         int divideBy = amount / 10;
         for (var i = 0; i <= 10; i++)
             SyncOptionsBetween(i * divideBy, (i + 1) * divideBy, targetId);
-    }
-    public static void SyncEndRPC(bool isend)
-    {
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.IsEnd, SendOption.Reliable, -1);
-        writer.Write(isend);
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
     public static void SyncCustomSettingsRPCforOneOption(OptionItem option)
     {
@@ -658,17 +602,7 @@ internal static class RPC
         HudManager.Instance.SetHudActive(true);
         if (PlayerControl.LocalPlayer.PlayerId == targetId) RemoveDisableDevicesPatch.UpdateDisableDevices();
     }
-    public static void SyncLoversPlayers()
-    {
-        if (!AmongUsClient.Instance.AmHost) return;
-        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetLoversPlayers, SendOption.Reliable, -1);
-        writer.Write(Main.LoversPlayers.Count);
-        foreach (var lp in Main.LoversPlayers)
-        {
-            writer.Write(lp.PlayerId);
-        }
-        AmongUsClient.Instance.FinishRpcImmediately(writer);
-    }
+    
     public static void SendRpcLogger(uint targetNetId, byte callId, int targetClientId = -1)
     {
         if (!DebugModeManager.AmDebugger) return;

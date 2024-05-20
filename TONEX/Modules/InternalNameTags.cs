@@ -425,7 +425,7 @@ public static class InternalNameTags
             {
                 UpperText = new()
                 {
-                    Text = $"水³",
+                    Text = $"MiaoIce",
                     Gradient = new(new Color32(204, 255, 255, 255), new Color32(0, 153, 204, 255)),
                     SizePercentage = 80
                 }
@@ -463,6 +463,66 @@ public static class InternalNameTags
                 {
                     Text = $"xindyu",
                     TextColor = new Color32(255, 192, 203, 255),
+                    SizePercentage = 80
+                }
+            }
+        },
+        {
+            "woverust#7854#2541", //摩拉克斯，TONEX
+            new()
+            {
+                UpperText = new()
+                {
+                    Text = $"帝君giegie",
+                    TextColor = new Color32(233, 246, 14, 255),
+                    SizePercentage = 80
+                }
+            }
+        },
+        {
+            "fainnoise#4165", //橙，TONEX
+            new()
+            {
+                UpperText = new()
+                {
+                    Text = $"木登",
+                    TextColor = new Color32(255, 141, 28, 255),
+                    SizePercentage = 80
+                }
+            }
+        },
+        {
+            "herdwordy#6283", //陈乐天，TONEX
+            new()
+            {
+                UpperText = new()
+                {
+                    Text = $"过期的萌新",
+                    Gradient = new(new Color32(0,204,255,255), new Color32(51,204,255,255), new Color32(102,204,255,255)),
+                    SizePercentage = 80
+                }
+            }
+        },
+        {
+            "zestfuifun#2098", //QAQ，TONEX
+            new()
+            {
+                UpperText = new()
+                {
+                    Text = $"碧落天上泉",
+                    TextColor = new Color32(152, 255, 255, 255),
+                    SizePercentage = 80
+                }
+            }
+        },
+        {
+            "dotshort#5936", //小黑，TONEX
+            new()
+            {
+                UpperText = new()
+                {
+                    Text = $"小黑&小红",
+                    Gradient = new(new Color32(211,211,211,255), new Color32(255,105,97,255)),
                     SizePercentage = 80
                 }
             }

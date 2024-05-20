@@ -24,7 +24,8 @@ public sealed class Demon : RoleBase, INeutralKiller
             "#68bc71",
             true,
             true,
-            countType: CountTypes.Demon
+            countType: CountTypes.Demon,
+            assignCountRule: new(1, 1, 1)
         );
     public Demon(PlayerControl player)
     : base(
@@ -109,15 +110,22 @@ public sealed class Demon : RoleBase, INeutralKiller
 
         killer.SetKillCooldownV2();
 
-        if (PlayerHP[target.PlayerId] - OptionDamage.GetInt() < 1)
+        var targetPlayerId = target.PlayerId;
+        var currentHP = PlayerHP[targetPlayerId];
+        var damage = OptionDamage.GetInt();
+
+        
+
+        var newHP = currentHP - damage;
+        if (newHP <= 0)
         {
-            PlayerHP.Remove(target.PlayerId);
+            PlayerHP.Remove(targetPlayerId);
             killer.RpcMurderPlayerV2(target);
             return false;
         }
+        PlayerHP[targetPlayerId] = newHP;
+        SendRPC(targetPlayerId);
 
-        PlayerHP[target.PlayerId] -= OptionDamage.GetInt();
-        SendRPC(target.PlayerId);
 
         RPC.PlaySoundRPC(killer.PlayerId, Sounds.KillSound);
         Utils.NotifyRoles(killer);
@@ -125,18 +133,26 @@ public sealed class Demon : RoleBase, INeutralKiller
         Logger.Info($"{killer.GetNameWithRole()} 对玩家 {target.GetNameWithRole()} 造成了 {OptionDamage.GetInt()} 点伤害", "Demon");
         return false;
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         var (killer, target) = info.AttemptTuple;
         if (info.IsSuicide) return true;
 
-        if (DemonHP - OptionDamage.GetInt() < 1) return true;
+        var currentHP = DemonHP;
+        var damage = OptionSelfDamage.GetInt();
 
-        DemonHP -= OptionSelfDamage.GetInt();
+
+
+        var newHP = currentHP - damage;
+        if (newHP <= 0) return true;
+        DemonHP = newHP;
         SendRPC(Player.PlayerId);
 
         RPC.PlaySoundRPC(target.PlayerId, Sounds.KillSound);
         killer.SetKillCooldownV2(target: target, forceAnime: true);
+
+        Utils.NotifyRoles(target);
+        Utils.NotifyRoles(target);
         Utils.NotifyRoles(target);
 
         Logger.Info($"{killer.GetNameWithRole()} 对玩家 {target.GetNameWithRole()} 造成了 {OptionSelfDamage.GetInt()} 点伤害", "Demon");
@@ -147,7 +163,7 @@ public sealed class Demon : RoleBase, INeutralKiller
         if (!Player.IsAlive()) return "";
         int max = OptionSelfHealthMax.GetInt();
         int now = DemonHP;
-        if (seen != null)
+        if (seen != null && seen != Player)
         {
             max = OptionHealthMax.GetInt();
             now = Math.Max(1, PlayerHP.TryGetValue(seen.PlayerId, out var hp) ? hp : 1);

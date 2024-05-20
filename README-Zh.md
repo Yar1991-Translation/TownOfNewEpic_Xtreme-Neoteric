@@ -7,7 +7,7 @@
 
   </br></br>
 
-  <h1>:point_right: <a href="https://tonex.cc">点此</a> :point_left:</h1> 
+  <h1>:point_right: <a href="https://www.xtreme.net.cn">点此</a> :point_left:</h1> 
   <h3>以查看模组简介 和 安装教程</h3>  
 
   </br></br>
@@ -42,7 +42,7 @@
 [Clash Of Gods](https://github.com/CognifyDev/ClashOfGods)<br>
 [Town Of Crew:Sea Of Shark](https://github.com/yiTOC/TOCS)<br>
 [QQ频道](https://pd.qq.com/s/gm7xdfhw8)的**玩家**<br>
-**感谢这些模组以及他们优秀的想法，是他们早就了我们**<br>
+**感谢这些模组以及他们优秀的想法，是他们造就了我们**<br>
 **更要感谢长久以来支持我们的玩家们。是您们给予了我们继续这个项目的动力！**
 
   </br></br>
@@ -54,7 +54,7 @@
 > - 开发者：[tukasa0001](https://github.com/tukasa0001)
 > - 一切都基于Town Of Host
 >
->### :star: [Town Of Host Edited & Town Of Next](https://github.com/KARPED1EM/TownOfHostEdited) :
+>### :star: [Town Of Next(原Town Of Host Edited)](https://github.com/KARPED1EM/TownOfNext) :
 > 
 > - 开发者：[KARPED1EM](https://github.com/KARPED1EM)
 > - 梦开始的地方
@@ -65,7 +65,7 @@
 > 
 > - 开发者：[Yumenopai](https://github.com/Yumenopai)
 > - 许多职业想法
-> - 提供职业: AntiAdminer, CursedWolf, Workaholic, Greedier, DarkHide
+> - 提供职业: 监管者, 呪狼, 工作狂, 贪婪者, 潜藏者
 > - 参考: 修改游戏公告
 >### :star: [Town Of Host : The Other Roles](https://github.com/music-discussion/TownOfHost-TheOtherRoles) :
 >
@@ -78,7 +78,7 @@
 > 
 > - 开发者：[ykundesu](https://github.com/ykundesu)
 > - 参考: TOHEX中的制作者名单(v2023.7.11前)
-> - 参考: 切换马模式
+> - 参考: 愚人节牧马模式(v2024.3.5前)
 > - 参考: 寻找模组游戏
 > - 参考: TOHEX中的自定义按钮
 >
@@ -100,7 +100,7 @@
 >  
 >### :star: [To-Hope](https://gitee.com/xigua_ya/to-hope) :
 > 
-> - 开发者：[Night_瓜(Yu遇千知)](https://gitee.com/xigua_ya)
+> - 开发者：[遇千知Yu(Night_瓜)](https://gitee.com/xigua_ya)
 > - 参考: TOHEX中的自定义按钮
 > 
 >### :star: [Project:Lotus](https://github.com/ImaMapleTree/Lotus) :
@@ -113,6 +113,7 @@
 > 
 > - 开发者：[Moe](https://github.com/0xDrMoe)
 > - 许多职业想法
+> - 参考: 愚人节牧马模式(v2024.3.5后)
 >
 	
   </br></br>
@@ -133,11 +134,14 @@
 
   </br>
 
->> ***Contributors：***<BR>
->[Night_瓜(Yu遇千知)]()- **TOHEX开发者** -<br>
+>> ***贡献者：***<BR>
+>[KARPED1EM]()- **技术指导** -<br>
+>[遇千知Yu(Night_瓜)]()- **TOHEX开发者** -<br>
 >[ryuk]()- **提供部分功能想法** -<br>
->[水木年华]()- **部分翻译&Bug 修复** -<br>
->[Niko]()- **Bug 修复** -<br>
+>[Amongus(水木年华)]()- **部分翻译&Bug修复** -<br>
+>[Niko]()- **Bug修复&技术指导** -<br>
 >[Farewell]()- **提供支持** -<br>
 >[LeZaiYa]()- **提供支持** -<br>
+>[Imp11]()- **提供支持** -<br>
+>[方块]()- **提供支持** -<br>
 </div>

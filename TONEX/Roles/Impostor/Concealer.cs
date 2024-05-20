@@ -52,13 +52,15 @@ public sealed class Concealer : RoleBase, IImpostor
         AURoleOptions.ShapeshifterDuration = OptionShapeshiftDuration.GetFloat();
     }
     private bool Shapeshifting = false;
-    public override void OnShapeshift(PlayerControl target)
+    public override bool OnCheckShapeshift(PlayerControl target, ref bool animate)
     {
         Shapeshifting = !Is(target);
 
-        if (!AmongUsClient.Instance.AmHost) return;
+        if (!AmongUsClient.Instance.AmHost) return false;
 
         Camouflage.CheckCamouflage();
+        Player.RpcResetAbilityCooldown();
+        return false;
     }
     public override bool GetAbilityButtonSprite(out string buttonName)
     {

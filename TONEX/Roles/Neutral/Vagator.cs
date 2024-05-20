@@ -8,11 +8,12 @@ using TONEX.Roles.Neutral;
 using System.Collections.Generic;
 using Hazel;
 using static Il2CppSystem.Net.Http.Headers.Parser;
-using TONEX.Modules;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
 using TONEX.Roles.Core.Interfaces;
 using System.Linq;
 using TONEX.Roles.Crewmate;
+using TONEX.Modules.SoundInterface;
+using System.Drawing;
 
 namespace TONEX.Roles.Neutral;
 
@@ -46,7 +47,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
         KillTimesTotalCount = 0;
         SkillTimesTotalCount = 0;
         ShieldsCount = 0;
-        Feeble = new(15);
+        Feeble = new();
     }
 
     #region 全局变量
@@ -94,18 +95,17 @@ public sealed class Vagator : RoleBase, INeutralKiller
     public override void ReceiveRPC(MessageReader reader)
     {
 
-            ElementPowerCount = reader.ReadInt32();
-            NormalKillTimesCount = reader.ReadInt32();
-            KillTimesTotalCount = reader.ReadInt32();
-            SkillTimesTotalCount = reader.ReadInt32();
-            ShieldsCount = reader.ReadInt32();
-       
-            var pid = reader.ReadByte();
-            if (!Feeble.Contains(pid))
-                 Feeble.Add(pid);
-        
-            if (Feeble.Contains(pid))
-                Feeble.Remove(pid);
+        ElementPowerCount = reader.ReadInt32();
+        NormalKillTimesCount = reader.ReadInt32();
+        KillTimesTotalCount = reader.ReadInt32();
+        SkillTimesTotalCount = reader.ReadInt32();
+        ShieldsCount = reader.ReadInt32();
+
+        var pid = reader.ReadByte();
+        if (!Feeble.Contains(pid))
+            Feeble.Add(pid);
+        else
+            Feeble.Remove(pid);
     }
     #endregion
     public bool CanUseKillButton() => true;
@@ -113,7 +113,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
     public bool CanUseImpostorVentButton() => false;
     public float CalculateKillCooldown() => KillCooldown;
     public bool IsNK { get; private set; } = true;
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetBefore(MurderInfo info)
     {
         if (info.IsSuicide) return true;
         var (killer, target) = info.AttemptTuple;
@@ -178,12 +178,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
             player.Notify(string.Format(GetString("PetSkillCanUse")), 2f);
         }
     }
-    public override string GetSuffix(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false)
-    {
-        seen ??= seer;
-        //seeおよびseenが自分である場合以外は関係なし
-        return $"\n<color=#e6adoa>{GetString("VagatorKillTimesTotalCount")}:{KillTimesTotalCount},{GetString("VagatorSkillTimesTotalCount")}:{SkillTimesTotalCount},{GetString("VagatorElementPowerCount")}:{ElementPowerCount}</color>";
-    }
+
     public override void OnUsePet()
     {
         if (UsePetCooldown != 0)
@@ -204,6 +199,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
                 var diss = Vector2.Distance(posi, pc.transform.position);
                 if (pc != Player && diss <= 2.5f)
                 {
+                    Player.DisableAction(pc);
                     if (Feeble.Contains(pc.PlayerId) && !feb)
                     {
                         killsucceed += killsucceed * 1.5f;
@@ -246,6 +242,7 @@ public sealed class Vagator : RoleBase, INeutralKiller
                 {
                     if (diss < 5f)
                     {
+                        Player.DisableAction(pc);
                         if (Feeble.Contains(pc.PlayerId) && !feb)
                         {
                             killsucceed += killsucceed * 1.5f;
@@ -259,17 +256,12 @@ public sealed class Vagator : RoleBase, INeutralKiller
                         List<byte> NiceTimeStopsstop = new();
                         if (!pc.IsAlive() || Pelican.IsEaten(pc.PlayerId)) continue;
                         NameNotifyManager.Notify(pc, Utils.ColorString(Utils.GetRoleColor(CustomRoles.Vagator), GetString("ForZhongLi")));
-                        var tmpSpeed1 = Main.AllPlayerSpeed[pc.PlayerId];
-                        NiceTimeStopsstop.Add(pc.PlayerId);
-                        Main.AllPlayerSpeed[pc.PlayerId] = Main.MinSpeed;
-                        ReportDeadBodyPatch.CanReport[pc.PlayerId] = false;
-                        pc.MarkDirtySettings();
+                        Player.DisableAction(pc, ExtendedPlayerControl.PlayerActionType.All, ExtendedPlayerControl.PlayerActionInUse.All);
+
                         new LateTask(() =>
                         {
-                            Main.AllPlayerSpeed[pc.PlayerId] = Main.AllPlayerSpeed[pc.PlayerId] - Main.MinSpeed + tmpSpeed1;
-                            ReportDeadBodyPatch.CanReport[pc.PlayerId] = true;
-                            pc.MarkDirtySettings();
-                            NiceTimeStopsstop.Remove(pc.PlayerId);
+                            Player.EnableAction(pc, ExtendedPlayerControl.PlayerActionType.All);
+
                             RPC.PlaySoundRPC(pc.PlayerId, Sounds.TaskComplete);
                         }, 5f, "ZhongLi ");
                     }
@@ -306,10 +298,16 @@ public sealed class Vagator : RoleBase, INeutralKiller
     }
     public static string GetMarkOthers(PlayerControl seer, PlayerControl seen, bool isForMeeting = false)
     {
-
-        if (Feeble.Contains(seen.PlayerId)) return "↓";
+        if (!seer.Is(CustomRoles.Vagator)) return "";
+        if (Feeble != null)
+        {
+            if (Feeble.Contains(seen.PlayerId))
+            {
+                return "↓";
+            }
+        }
         else if (seer == seen)
-        return Utils.ColorString(RoleInfo.RoleColor, $"({(seer.GetRoleClass() as Vagator).ShieldsCount})");
+            return Utils.ColorString(RoleInfo.RoleColor, $"({(seer.GetRoleClass() as Vagator).ShieldsCount})");
         return "";
     }
     public override bool GetPetButtonText(out string text)
@@ -348,5 +346,16 @@ public sealed class Vagator : RoleBase, INeutralKiller
     {
         buttonName = "RainOfGeo";
         return true;
+    }
+    public override string GetLowerText(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false, bool isForHud = false)
+    {
+        seen ??= seer;
+        if (isForMeeting) return "";
+        
+        var text = isForHud ?  $"<color=#E6AD0A>" : "";
+        text += $"{GetString("VagatorKillTimesTotalCount")}:{KillTimesTotalCount},{GetString("VagatorSkillTimesTotalCount")}:{SkillTimesTotalCount},{GetString("VagatorElementPowerCount")}:{ElementPowerCount}";
+        text += isForHud ? $"</color>" : "";
+        //seeおよびseenが自分である場合以外は関係なし
+        return text;
     }
 }

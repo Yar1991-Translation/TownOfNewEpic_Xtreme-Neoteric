@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TONEX.Attributes;
+using TONEX.Roles.AddOns.Crewmate;
 using TONEX.Roles.Core;
 using TONEX.Roles.Neutral;
 
@@ -82,6 +83,11 @@ public class PlayerState
             SubRoles.Remove(CustomRoles.Charmed);
             SubRoles.Remove(CustomRoles.LastImpostor);
         }
+        if (role is CustomRoles.EvilAngle)
+        {
+            SubRoles.Remove(CustomRoles.Madmate);
+            SubRoles.Remove(CustomRoles.LastImpostor);
+        }
     }
     public void SetSubRole(CustomRoles role, bool AllReplace = false)
     {
@@ -93,7 +99,7 @@ public class PlayerState
 
         if (role == CustomRoles.Madmate)
         {
-            CountType = Options.MadmateCountMode.GetInt() switch
+            CountType = Madmate.MadmateCountMode.GetInt() switch
             {
                 0 => CountTypes.OutOfGame,
                 1 => CountTypes.Impostor,

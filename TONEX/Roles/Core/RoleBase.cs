@@ -147,7 +147,18 @@ public abstract class RoleBase : IDisposable
     /// </summary>
     /// <param name="info">击杀事件的信息</param>
     /// <returns>false：不再向下执行击杀事件</returns>
-    public virtual bool OnCheckMurderAsTarget(MurderInfo info) => true;
+    public virtual bool OnCheckMurderAsTargetAfter(MurderInfo info) => true;
+
+    /// <summary>
+    /// CheckMurder 作为目标处理函数<br/>
+    /// 该函数用于您被击杀前的检查，调用该函数前已经调用过 OnCheckMurderAsKiller 函数<br/>
+    /// 因此您不需要判断击杀者是否真的尝试击杀你，击杀者对您尝试的击杀是确定的<br/>
+    /// 对于无法被击杀的状态（无敌、被保护）等，设置 info.CanKill = false<br/>
+    /// 若本次击杀本身就不合法，您可以返回 false 以完全终止本次击杀事件<br/>
+    /// </summary>
+    /// <param name="info">击杀事件的信息</param>
+    /// <returns>false：不再向下执行击杀事件</returns>
+    public virtual bool OnCheckMurderAsTargetBefore(MurderInfo info) => true;
 
     /// <summary>
     /// 已确定本次击杀会发生，但在真正发生前，您想要做点什么吗？
@@ -212,8 +223,7 @@ public abstract class RoleBase : IDisposable
     /// 请注意：全部模组端都会调用
     /// </summary>
     /// <param name="target">守护目标</param>
-    public virtual void OnProtectPlayer(PlayerControl target)
-    { }
+    public virtual bool OnProtectPlayer(PlayerControl target) => true;
 
     /// <summary>
     /// 摸宠物时调用的函数
@@ -269,6 +279,15 @@ public abstract class RoleBase : IDisposable
     /// <param name="ventId">通风管 ID</param>
     /// <returns>false：将玩家被踢出通风管，其他人将看不到动画。</returns>
     public virtual bool OnEnterVent(PlayerPhysics physics, int ventId) =>  true;
+
+    /// <summary>
+    /// <para>离开通风管时调用的函数</para>
+    /// <para>可以取消</para>
+    /// </summary>
+    /// <param name="physics"></param>
+    /// <param name="ventId">通风管 ID</param>
+    /// <returns>false：将玩家被无法退出通风管，其他人将看不到动画。</returns>
+    public virtual bool OnExitVent(PlayerPhysics physics, int ventId) => true;
 
     public virtual void CheckNotWin(PlayerControl player)
     {  }
@@ -479,7 +498,7 @@ public abstract class RoleBase : IDisposable
     /// <returns>组合后的全部 LowerText</returns>
     public virtual string GetLowerText(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false, bool isForHud = false) => "";
     /// <summary>
-    /// 作为 seer 时获取 LowerTex 的函数
+    /// 作为 seer 时获取 Suffix 的函数
     /// 如果您想在 seer,seen 都不是您时进行处理，请使用相同的参数将其实现为静态
     /// 并注册为 CustomRoleManager.SuffixOthers
     /// </summary>
@@ -532,7 +551,7 @@ public abstract class RoleBase : IDisposable
     /// </summary>
     public virtual bool GetPetButtonText(out string text)
     {
-        text = GetString(StringNames.PetAction);
+        text = default;
         return false;
     }
     /// <summary>
@@ -546,7 +565,7 @@ public abstract class RoleBase : IDisposable
     /// <summary>
     /// 更改使用按钮的文本
     /// </summary>
-    public virtual string GetUseButtonText() => GetString(StringNames.UseLabel);
+    public virtual string GetUseButtonText() => default;
     /// <summary>
     /// 更改使用按钮的图标
     /// </summary>
@@ -558,7 +577,7 @@ public abstract class RoleBase : IDisposable
     /// <summary>
     /// 更改管理室地图的文本（？）
     /// </summary>
-    public virtual string GetAdminButtonText() => GetString(StringNames.AdminMapSystem);
+    public virtual string GetAdminButtonText() => default;
     /// <summary>
     /// 更改理室地图的图标（？）
     /// </summary>
@@ -610,5 +629,13 @@ public abstract class RoleBase : IDisposable
         SkillDuration,
         SkillCooldown,
         SkillLimit,
+    }
+    public enum SkillReleaseType : int
+    {
+        Kill_Killer,
+        Kill_Target,
+        Vent,
+        ShapeShift,
+        Pet,
     }
 }

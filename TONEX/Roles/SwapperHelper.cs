@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
-using TONEX.Modules;
+using TONEX.Modules.SoundInterface;
 using TONEX.Roles.Core;
 using TONEX.Roles.Crewmate;
 using TONEX.Roles.Impostor;
@@ -90,6 +90,7 @@ public static class SwapperHelper
 
         if (operate == 1)
         {
+            spam = true;
             Utils.SendMessage(GetFormatString(), pc.PlayerId);
             return true;
         }
@@ -164,6 +165,7 @@ public static class SwapperHelper
                 return false;
             }
         }
+
         Logger.Info($"{swapper.GetNameWithRole()} 添加了 {target.GetNameWithRole()}", "Swapper");
 
 
@@ -175,7 +177,7 @@ public static class SwapperHelper
     private static bool MsgToPlayer(string msg, out byte id, out string error)
     {
         id = byte.MaxValue;
-        
+
 
         if (msg.StartsWith("/")) msg = msg.Replace("/", string.Empty);
 
@@ -215,9 +217,21 @@ public static class SwapperHelper
             return false;
         }
 
-        
+
 
         error = string.Empty;
         return true;
+    }
+    public static void SendRPC(byte playerId)
+    {
+        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.Swap, SendOption.Reliable, -1);
+        writer.Write(playerId);
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
+    }
+    public static void ReceiveRPC(MessageReader reader, PlayerControl pc)
+    {
+        int PlayerId = reader.ReadByte();
+        if (!Swap(pc, Utils.GetPlayerById(PlayerId), out var reason, true))
+            pc.ShowPopUp(reason);
     }
 }//*/

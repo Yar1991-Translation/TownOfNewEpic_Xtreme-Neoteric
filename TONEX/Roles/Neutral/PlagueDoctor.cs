@@ -24,7 +24,7 @@ public sealed class PlagueDoctor : RoleBase, INeutralKiller
             51400,
             SetupOptionItem,
             "pd",
-            "#ff6633",
+            "#ffc000",
             true,
             introSound: () => GetIntroSound(RoleTypes.Shapeshifter)
         );
@@ -92,7 +92,8 @@ public sealed class PlagueDoctor : RoleBase, INeutralKiller
         OptionInfectWhenKilled = BooleanOptionItem.Create(RoleInfo, 11, OptionName.PlagueDoctorInfectWhenKilled, false, true);
         OptionInfectTime = FloatOptionItem.Create(RoleInfo, 12, OptionName.PlagueDoctorInfectTime, new(3f, 20f, 1f), 8f, false)
            .SetValueFormat(OptionFormat.Seconds);
-        OptionInfectDistance = FloatOptionItem.Create(RoleInfo, 13, OptionName.PlagueDoctorInfectDistance, new(0.5f, 2f, 0.25f), 1.5f, false);
+        OptionInfectDistance = FloatOptionItem.Create(RoleInfo, 13, OptionName.PlagueDoctorInfectDistance, new(0.5f, 2f, 0.25f), 1.5f, false)
+            .SetValueFormat(OptionFormat.Multiplier);
         OptionInfectInactiveTime = FloatOptionItem.Create(RoleInfo, 14, OptionName.PlagueDoctorInfectInactiveTime, new(0.5f, 10f, 0.5f), 5f, false)
            .SetValueFormat(OptionFormat.Seconds);
         OptionInfectCanInfectSelf = BooleanOptionItem.Create(RoleInfo, 15, OptionName.PlagueDoctorCanInfectSelf, false, true);
@@ -302,6 +303,18 @@ public sealed class PlagueDoctor : RoleBase, INeutralKiller
         SendRPC(player.PlayerId, 100);
         Utils.NotifyRoles();
         CheckWin();
+    }
+    public override string GetSuffix(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false)
+    {
+        if (seen == Player) return "";
+        int max = 100;
+        InfectInfos.TryGetValue(seen.PlayerId, out var rate);
+        return rate == 100?(Utils.ColorString(GetColor(rate, seen == null), $"【{GetString("Infected")}】")):(Utils.ColorString(GetColor(rate, seen == null), $"【{rate:F1}/{max}】"));
+    }
+    private static Color32 GetColor(float Health, bool self = false)
+    {
+        var hpGradient = new NameTagManager.ColorGradient(new Color32(0, 255, 0, 255), new Color32(255, 0, 0, 255));
+        return hpGradient.Evaluate(Health / 100);
     }
     public static void CheckWin()
     {

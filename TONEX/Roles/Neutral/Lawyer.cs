@@ -35,7 +35,6 @@ public sealed class Lawyer : RoleBase, IAdditionalWinner,INeutralKiller
     {
 
         Lawyers.Add(this);
-        CustomRoleManager.OnMurderPlayerOthers.Add(OnMurderPlayerOthers);
         CustomRoleManager.MarkOthers.Add(GetMarkOthers);
     }
     public static byte WinnerID;
@@ -78,7 +77,8 @@ public sealed class Lawyer : RoleBase, IAdditionalWinner,INeutralKiller
         OptionTargetKnowsLawyer = BooleanOptionItem.Create(RoleInfo, 14, OptionName.OptionTargetKnowsLawyer, false, false);
         OptionSkillCooldown = FloatOptionItem.Create(RoleInfo, 15, OptionName.ProsecutorsSkillCooldown, new(2.5f, 180f, 2.5f), 30f, false)
             .SetValueFormat(OptionFormat.Seconds);
-        OptionSkillLimit = IntegerOptionItem.Create(RoleInfo, 16, OptionName.ProsecutorsSkillLimit, new(1, 999, 1), 3, false);
+        OptionSkillLimit = IntegerOptionItem.Create(RoleInfo, 16, OptionName.ProsecutorsSkillLimit, new(1, 999, 1), 3, false)
+            .SetValueFormat(OptionFormat.Times);
     }
     public override void Add()
     {
@@ -107,11 +107,6 @@ public sealed class Lawyer : RoleBase, IAdditionalWinner,INeutralKiller
     public override void OnDestroy()
     {
         Lawyers.Remove(this);
-
-        if (Lawyers.Count <= 0)
-        {
-            CustomRoleManager.OnMurderPlayerOthers.Remove(OnMurderPlayerOthers);
-        }
     }
     public void SendRPC()
     {
@@ -129,18 +124,10 @@ public sealed class Lawyer : RoleBase, IAdditionalWinner,INeutralKiller
     {
         if (OptionKnowTargetRole.GetBool() && seen.PlayerId == TargetId) enabled = true;
     }
-    public static void OnMurderPlayerOthers(MurderInfo info)
+    public override void OnPlayerDeath(PlayerControl player, CustomDeathReason deathReason, bool isOnMeeting = false)
     {
-        var target = info.AttemptTarget;
-
-        foreach (var executioner in Lawyers.ToArray())
-        {
-            if (executioner.TargetId == target.PlayerId)
-            {
-                executioner.ChangeRole();
-                break;
-            }
-        }
+        if (player.PlayerId != TargetId || isOnMeeting) return;
+        ChangeRole();
     }
     public override string GetMark(PlayerControl seer, PlayerControl seen, bool _ = false)
     {

@@ -1,8 +1,7 @@
 ﻿using AmongUs.GameOptions;
 using HarmonyLib;
 using System.Linq;
-
-using TONEX.Modules;
+using TONEX.Modules.SoundInterface;
 using TONEX.Roles.Core;
 
 using static TONEX.Translator;
@@ -89,6 +88,7 @@ public sealed class DoveOfPeace : RoleBase
                 x.ResetKillCooldown();
                 x.SetKillCooldownV2();
                 x.Notify(Utils.ColorString(Utils.GetRoleColor(CustomRoles.DoveOfPeace), GetString("DoveOfPeaceSkillNotify")));
+                Player.DisableAction(x);
             });
             Player.RPCPlayCustomSound("Dove");
             Player.Notify(string.Format(GetString("DoveOfPeaceOnGuard"), SkillLimit));
@@ -124,6 +124,7 @@ public sealed class DoveOfPeace : RoleBase
                 x.ResetKillCooldown();
                 x.SetKillCooldownV2();
                 x.Notify(Utils.ColorString(Utils.GetRoleColor(CustomRoles.DoveOfPeace), GetString("DoveOfPeaceSkillNotify")));
+                Player.DisableAction(x);
             });
             Player.RPCPlayCustomSound("Dove");
             Player.Notify(string.Format(GetString("DoveOfPeaceOnGuard"), SkillLimit));

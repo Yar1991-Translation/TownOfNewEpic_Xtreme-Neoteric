@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using TONEX.Modules;
 using TONEX.Roles.AddOns.Common;
+using TONEX.Roles.AddOns.Crewmate;
+using TONEX.Roles.AddOns.CanNotOpened;
 using TONEX.Roles.Core;
 using TONEX.Roles.Crewmate;
+using TONEX.Roles.Neutral;
 using UnityEngine;
 using YamlDotNet.Core;
 using static TONEX.Translator;
@@ -38,25 +41,7 @@ public static class MeetingHudPatch
 
             if (voter != null)
             {
-                //主动叛变模式
-                if (Options.MadmateSpawnMode.GetInt() == 2 && srcPlayerId == suspectPlayerId)
-                {
-                    if (Main.AllPlayerControls.Count(p => p.Is(CustomRoles.Madmate)) < CustomRoles.Madmate.GetCount() && voter.CanBeMadmate())
-                    {
-                        voter.RpcSetCustomRole(CustomRoles.Madmate);
-                        Logger.Info($"注册附加职业：{voter.GetNameWithRole()} => {CustomRoles.Madmate}", "AssignCustomSubRoles");
-                        voter.ShowPopUp(GetString("MadmateSelfVoteModeSuccessfulMutiny"));
-                        Utils.SendMessage(GetString("MadmateSelfVoteModeSuccessfulMutiny"), voter.PlayerId);
-                    }
-                    else
-                    {
-                        voter.ShowPopUp(GetString("MadmateSelfVoteModeMutinyFailed"));
-                        Utils.SendMessage(GetString("MadmateSelfVoteModeMutinyFailed"), voter.PlayerId);
-                    }
-                    __instance.RpcClearVote(voter.GetClientId());
-                    Logger.Info($"{voter.GetNameWithRole()} 的投票被清除", nameof(CastVotePatch));
-                    return false;
-                }
+                if (!Madmate.CheckVoteAsVoter(srcPlayerId, suspectPlayerId, voter, ref __instance)) return false;
                 if (voter.GetRoleClass()?.CheckVoteAsVoter(voted) == false)
                 {
                     __instance.RpcClearVote(voter.GetClientId());
@@ -201,17 +186,35 @@ public static class MeetingHudPatch
                                 isLover = true;
                             }
                             break;
+                        case CustomRoles.AdmirerLovers:
+                            if (seer.Is(CustomRoles.AdmirerLovers) || seer.Data.IsDead)
+                            {
+                                sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.AdmirerLovers), "♡"));
+                                isLover = true;
+                            }
+                            break;
+                        case CustomRoles.AkujoLovers:
+                            if (seer.Is(CustomRoles.Akujo) || seer.Data.IsDead || seer == target)
+                            {
+                                sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.AkujoLovers), "❤"));
+                                isLover = true;
+                            }
+                            break;
+                        case CustomRoles.CupidLovers:
+                            if (seer.Is(CustomRoles.CupidLovers) || seer.Is(CustomRoles.Cupid)|| seer.Data.IsDead)
+                            {
+                                sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.CupidLovers), "♡"));
+                                isLover = true;
+                            }
+                            break;
                     }
                 }
 
+                AkujoFakeLovers.MeetingHud(isLover, seer, target, ref sb);
                 //海王相关显示
-                if ((seer.Is(CustomRoles.Neptune) || target.Is(CustomRoles.Neptune)) && !seer.Data.IsDead && !isLover)
-                    sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡"));
-                else if (seer == target && CustomRoles.Neptune.IsExist() && !isLover)
-                    sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡"));
-                if (target.Is(CustomRoles.Mini) && seer != target)
-                    sb.Append(Utils.ColorString(Color.yellow, $"({Mini.Age})"));
-                
+                Neptune.MeetingHud(isLover, seer, target, ref sb);
+                Mini.MeetingHud(isLover, seer, target, ref sb);
+
 
                 //会議画面ではインポスター自身の名前にSnitchマークはつけません。
 
@@ -270,12 +273,10 @@ public static class MeetingHudPatch
     }
     public static void CheckForDeathOnExile(CustomDeathReason deathReason, params byte[] playerIds)
     {
-        foreach (var playerId in playerIds)
-        {
-            //Loversの後追い
-            if (CustomRoles.Lovers.IsExistCountDeath() && !Main.isLoversDead && Main.LoversPlayers.Find(lp => lp.PlayerId == playerId) != null)
-                FixedUpdatePatch.LoversSuicide(playerId, true);
-        }
+        Lovers.CheckForDeathOnExile(deathReason, playerIds);
+        AdmirerLovers.CheckForDeathOnExile(deathReason, playerIds);
+        AkujoLovers.CheckForDeathOnExile(deathReason, playerIds);
+        CupidLovers.CheckForDeathOnExile(deathReason, playerIds);
     }
 }
 

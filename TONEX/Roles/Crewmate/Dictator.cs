@@ -28,7 +28,7 @@ public sealed class Dictator : RoleBase
     private byte lastVoted;
     public override bool CheckVoteAsVoter(PlayerControl votedFor)
     {
-        if (votedFor != null && lastVoted == votedFor.PlayerId) return true;
+        if (votedFor != null && lastVoted == votedFor.PlayerId || votedFor == null) return true;
         lastVoted = votedFor.PlayerId;
         ModifyVote(Player.PlayerId, votedFor.PlayerId, true);
         Utils.SendMessage(Translator.GetString("DictatorOnVote"), Player.PlayerId);

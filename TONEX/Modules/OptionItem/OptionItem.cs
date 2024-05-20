@@ -110,7 +110,7 @@ public abstract class OptionItem
         }
         else
         {
-            Logger.Error($"ID:{id}が重複しています", "OptionItem");
+            Logger.Error($"ID:{id},{name}が重複しています", "OptionItem");
         }
     }
 
@@ -175,7 +175,14 @@ public abstract class OptionItem
     // 旧IsHidden関数
     public virtual bool IsHiddenOn(CustomGameMode mode)
     {
-        return IsHidden || (GameMode != CustomGameMode.All && GameMode != mode) || GameMode == CustomGameMode.AllCrewMod && mode == CustomGameMode.Standard;
+        var result = true;
+
+        if ((GameMode & mode) != 0)
+        {
+            result = false;
+        }
+
+        return IsHidden || result;
     }
 
     public string ApplyFormat(string value)
@@ -304,4 +311,5 @@ public enum OptionFormat
     Pieces,
     Health,
     Level,
+    Layer,
 }

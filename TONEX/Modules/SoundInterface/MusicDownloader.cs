@@ -56,7 +56,8 @@ public class MusicDownloader
         }
         retry:
         DownloadFileTempPath = DownloadFileTempPath.Replace("{{sound}}", $"{sound}");
-        File.Create(DownloadFileTempPath).Close();
+        string filePath = DownloadFileTempPath + ".xwmus";
+        File.Create(filePath).Close();
        
 
         Logger.Msg("Start Downloading from: " + url, "DownloadSound");
@@ -65,7 +66,7 @@ public class MusicDownloader
         try
         {
            
-            string filePath = DownloadFileTempPath;
+            
             using var client = new HttpClientDownloadWithProgress(url, filePath);
             client.ProgressChanged += OnDownloadProgressChanged;
             await client.StartDownload();
@@ -73,36 +74,39 @@ public class MusicDownloader
             
             if (md5ForFiles.ContainsKey(sound))
             {
-                if (GetMD5HashFromFile(DownloadFileTempPath) != md5ForFiles[sound].ToLower())
+                if (GetMD5HashFromFile(filePath).ToLower() != md5ForFiles[sound].ToLower())
                 {
                     Logger.Error($"Md5 Wrong in {url}", "DownloadSound");
-                    File.Delete(DownloadFileTempPath);
-                    if (url == downloadUrl_website)
+                    File.Delete(filePath);
+                    if (url == downloadUrl_website && IsChineseLanguageUser || url == downloadUrl_github && !IsChineseLanguageUser)
                     {
-                        url = downloadUrl_website2;
+
+                        url = downloadUrl_gitee;
                         goto retry;
                     }
-                    else if (url == downloadUrl_website2)
+                    else if (url == downloadUrl_gitee && IsChineseLanguageUser)
                     {
-                        url = downloadUrl_gitee;
+                        url = downloadUrl_github;
                         goto retry;
                     }
                     return;
                 }
+                File.Move(filePath, DownloadFileTempPath);
                 Logger.Info($"Md5 Currect in {url}", "DownloadSound");
             }
             else
             {
                 Logger.Error($"Md5 No Found in {url}", "DownloadSound");
-                File.Delete(DownloadFileTempPath);
-                if (url == downloadUrl_website)
+                File.Delete(filePath);
+                if (url == downloadUrl_website && IsChineseLanguageUser || url == downloadUrl_github && !IsChineseLanguageUser)
                 {
-                    url = downloadUrl_website2;
+
+                    url = downloadUrl_gitee;
                     goto retry;
                 }
-                else if (url == downloadUrl_website2)
+                else if (url == downloadUrl_gitee && IsChineseLanguageUser)
                 {
-                    url = downloadUrl_gitee;
+                    url = downloadUrl_github;
                     goto retry;
                 }
                 return;
@@ -113,24 +117,25 @@ public class MusicDownloader
         catch (Exception ex)
         {
             Logger.Error($"Failed to download\n{ex.Message}", "DownloadSound", false);
-            if (!string.IsNullOrEmpty(DownloadFileTempPath))
+            if (!string.IsNullOrEmpty(filePath))
             {
-                File.Delete(DownloadFileTempPath);
+                File.Delete(filePath);
             }
         }
         if (!succeed)
         {
-            if (url == downloadUrl_website)
+            if (url == downloadUrl_website && IsChineseLanguageUser || url == downloadUrl_github && !IsChineseLanguageUser)
             {
-                url = downloadUrl_website2;
-                goto retry;
-            }
-            else if (url == downloadUrl_website2)
-            {
+                
                 url = downloadUrl_gitee;
                 goto retry;
             }
-            
+            else if (url == downloadUrl_gitee && IsChineseLanguageUser)
+            {
+                url = downloadUrl_github;
+                goto retry;
+            }
+
         }
     }
     private static bool IsValidUrl(string url)
@@ -140,8 +145,8 @@ public class MusicDownloader
     }
     private static void OnDownloadProgressChanged(long? totalFileSize, long totalBytesDownloaded, double? progressPercentage)
     {
-        string msg = $"{GetString("updateInProgress")}\n{totalFileSize / 1000}KB / {totalBytesDownloaded / 1000}KB  -  {(int)progressPercentage}%";
-        Logger.Info(msg, "DownloadDLL");
+        string msg = $"\n{totalFileSize / 1000}KB / {totalBytesDownloaded / 1000}KB  -  {(int)progressPercentage}%";
+        Logger.Info(msg, "DownloadSounds");
     }
     public static string GetMD5HashFromFile(string fileName)
     {
@@ -160,6 +165,7 @@ public class MusicDownloader
     }
     private static Dictionary<string, string> md5ForFiles = new()
     {
+        {"Birthday","e288b805c09d35a4545401539b00d3d1" },
         {"AWP","A191F48B6689290ECD4568149C22A381" },
         {"Bet","8B9B734E97998BE8872ADAE6B5D4343C"},
         {"Bite","9AEFF327DE582FF926EF2187AE4DC338"},
@@ -198,14 +204,19 @@ public class MusicDownloader
         {"GongXiFaCaiLiuDeHua","DB200D93E613020D62645F4841DD55BD"},
         {"RejoiceThisSEASONRespectThisWORLD","7AB4778744242E4CFA0468568308EA9B"},
         {"SpringRejoicesinParallelUniverses","D92528104A82DBBFADB4FF251929BA5E"},
-        {"StarFallsWithDomeCrumbles_V4","EDCB0187C269BEF42A5E6EC25CFEADF7"},
-        {"TheDomeofTruth","183804914E3310B9F92B47392F503A9F"},
-        {"HopeStillExists_V2","8D5BA9AC283E156AB2C930F7B63A4A36"},
-        {"HeartGuidedbyLight","F1DED08A59936B8E1DB95067A69B006E"},
-        {"Thesorrowofpartingacrosslifetimes","D5071AF2BFE92465EACEB318E6FC3390"},
-        {"GuardianandDream","1AD45F97F70F05E19BCDF77C489932A6"},
-        {"AFamiliarPromise","A3672341F586B4D81EFBA6D4278CFEAE"},
-        {"DeterminationWithJustice","1AD45F97F70F05E19BCDF77C489932A6"},
+{"AFamiliarPromise", "a3672341f586b4d81efba6d4278cfeae"},
+{"GuardianandDream", "cd8fb04bad5755937496eed60c4892f3"},
+{"HeartGuidedbyLight", "f1ded08a59936b8e1db95067a69b006e"},
+{"HopeStillExists", "8d5ba9ac283e156ab2c930f7b63a4a36"},
+{"Mendax", "1054c90edfa66e31655bc7a58f553231"},
+{"MendaxsTimeForExperiment", "1b82e1ea81aeb9a968a94bec7f4f62fd"},
+{"StarfallIntoDarkness", "46f09e0384eb8a087c3ba8cc22e4ac11"},
+{"StarsFallWithDomeCrumbles", "b5ccabeaf3324cedb107c83a2dc0ce1e"},
+{"TheDomeofTruth", "183804914e3310b9f92b47392f503a9f"},
+{"TheTruthFadesAway", "75fbed53db391ed73085074ad0709d82"},
+{"unavoidable", "da520f4613103826b4df7647e368d4b4"},
+        {"NeverGonnaGiveYouUp","354cab3103b7e033c6e31d12766eb59c" }
+
 
     };
 }

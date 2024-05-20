@@ -9,7 +9,7 @@ using TONEX.Roles.Core.Interfaces.GroupAndRole;
 using UnityEngine;
 
 namespace TONEX.Roles.Neutral;
-public sealed class GodOfPlagues: RoleBase, IKiller, INeutral, ISchrodingerCatOwner
+public sealed class GodOfPlagues: RoleBase, INeutralKiller
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
@@ -41,7 +41,7 @@ public sealed class GodOfPlagues: RoleBase, IKiller, INeutral, ISchrodingerCatOw
     public float CalculateKillCooldown()=> Plaguebearer.OptionGodOfPlaguesKillCooldown.GetFloat();
     public override void ApplyGameOptions(IGameOptions opt) => opt.SetVision(false);
     public bool CanUseSabotageButton() => false;
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (info.IsSuicide) return true;
             var (killer, target) = info.AttemptTuple;

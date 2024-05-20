@@ -26,14 +26,12 @@ public sealed class MeteorArbiter : RoleBase, INeutralKiller, IAdditionalWinner
             CustomRoleTypes.Neutral,
             75_1_2_0100,
             null,
-            "Sans|MeteorArbiter|SFBF!Sans",
+            "Sans|MeteorArbiter|USF!Sans",
              "#C0EAFF",
             true,
             true,
-#if RELEASE
-            ctop:true,
-#endif
-            countType: CountTypes.MeteorArbiter
+            countType: CountTypes.MeteorArbiter,
+            assignCountRule: new(1, 1, 1)
         );
     public MeteorArbiter(PlayerControl player)
     : base(
@@ -51,6 +49,8 @@ public sealed class MeteorArbiter : RoleBase, INeutralKiller, IAdditionalWinner
     public int LOVE;
     public int Tired;
     public int LVOverFlow;
+    public int Shield;
+    public bool CanWin = false;
     #endregion
     #region RPC相关
     private void SendRPC()
@@ -61,7 +61,8 @@ public sealed class MeteorArbiter : RoleBase, INeutralKiller, IAdditionalWinner
         sender.Writer.Write(LOVE);
         sender.Writer.Write(Tired);
         sender.Writer.Write(LVOverFlow);
-        
+        sender.Writer.Write(Shield);
+
     }
     public override void ReceiveRPC(MessageReader reader)
     {
@@ -71,14 +72,15 @@ public sealed class MeteorArbiter : RoleBase, INeutralKiller, IAdditionalWinner
             LOVE = reader.ReadInt32();
             Tired = reader.ReadInt32();
             LVOverFlow = reader.ReadInt32();
-        
+        Shield = reader.ReadInt32();
+
     }
     #endregion
     public bool CanUseKillButton() => true;
     public bool CanUseSabotageButton() => false;
     public bool CanUseImpostorVentButton() => false;
     public float CalculateKillCooldown() => 25f;
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (info.IsSuicide) return true;
         var (killer, target) = info.AttemptTuple;
@@ -100,6 +102,14 @@ public sealed class MeteorArbiter : RoleBase, INeutralKiller, IAdditionalWinner
 
         }
         SendRPC();
+        if (Shield >0)
+        {
+            Shield--;
+            killer.RpcProtectedMurderPlayer(target);
+            killer.SetKillCooldown();
+            SendRPC();
+            return false;
+        }
         return true;
     }
     public bool OnCheckMurderAsKiller(MurderInfo info)
@@ -137,6 +147,7 @@ public sealed class MeteorArbiter : RoleBase, INeutralKiller, IAdditionalWinner
                 lv = 20;
             }
             LOVE = lv;
+            SendRPC();
             return true;
         }
         return false;
@@ -147,40 +158,52 @@ public sealed class MeteorArbiter : RoleBase, INeutralKiller, IAdditionalWinner
         if (LOVE > 5 && !Murderer)
         {
             Murderer = true;
-            SendRPC();
         }
         if (LOVE == 20 && !Dust)
         {
             Dust = true;
-            SendRPC();
         }
         if (LOVE > 1 && !(IsNK || IsNE))
         {
             IsNK = true;
         }
+        if ((LOVE == 1 || LOVE < 5 && CustomRoles.MeteorMurderer.IsExistCountDeath())&& !CanWin)
+        {
+            CanWin = true;
+
+        }
+        else if ((LOVE != 1 || LOVE >= 5 && CustomRoles.MeteorMurderer.IsExistCountDeath()) && CanWin)
+        {
+            CanWin = false;
+        }
+        if (LVOverFlow > 5)
+        {
+            Shield++;
+            LVOverFlow -= 5;
+        }
+        SendRPC();
     }
     
     public override void AfterMeetingTasks()
     {
         Tired -= 2;
     }
-    public override string GetProgressText(bool comms = false)
+    public override string GetSuffix(PlayerControl seer, PlayerControl seen = null, bool isForMeeting = false)
     {
+        seen ??= seer;
+        if (!GameStates.IsInTask || isForMeeting || !Is(seer) || !Is(seen)) return "";
         Color color = Utils.GetRoleColor(CustomRoles.MeteorArbiter);
         if (Murderer)
             color = Color.red;
         if (Dust)
             color = Palette.Purple;
-        return Utils.ColorString(color, $"(LV{LOVE})" + GetString("Tired")+ $" {Tired}");
+        var hp = Player.IsAlive() ? Shield + 1 : 0;
+        return Utils.ColorString(color, $"(LV{LOVE})" + GetString("Tired")+ $" {Tired}，" +$"HP{hp}");
     }
-    public bool OverrideKillButtonSprite(out string buttonName)
-    {
-        buttonName = "RainOfGeo";
-        return true;
-    }
+  
     public override bool OnCheckReportDeadBody(PlayerControl reporter, GameData.PlayerInfo target)
     {
-        if (Is(reporter) && target == null)
+        if (Is(reporter) && target != null)
         {
             var player = Utils.GetPlayerById(target.PlayerId);
             int lv = LOVE;
@@ -208,6 +231,6 @@ public sealed class MeteorArbiter : RoleBase, INeutralKiller, IAdditionalWinner
     }
     public bool CheckWin(ref CustomRoles winnerRole, ref CountTypes winnerCountType)
     {
-        return Player.IsAlive() && (LOVE == 1 || LOVE < 5 && CustomRoles.MeteorMurder.IsExistCountDeath());
+        return Player.IsAlive() && CanWin;
     }
 }

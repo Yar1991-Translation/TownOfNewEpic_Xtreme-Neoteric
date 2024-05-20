@@ -6,14 +6,21 @@ using InnerNet;
 using MS.Internal.Xml.XPath;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TONEX.Modules;
+using TONEX.Modules.SoundInterface;
+using TONEX.Roles.AddOns.CanNotOpened;
 using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.AddOns.Crewmate;
 using TONEX.Roles.AddOns.Impostor;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
+using TONEX.Roles.Crewmate;
+using TONEX.Roles.Ghost.Crewmate;
+using TONEX.Roles.Ghost.Impostor;
+using TONEX.Roles.Ghost.Neutral;
 using TONEX.Roles.Impostor;
 using TONEX.Roles.Neutral;
 using TONEX.Roles.Vanilla;
@@ -229,6 +236,7 @@ public static class PlayerControlCheckShapeshiftPatch
         {
             return false;
         }
+        if (__instance.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.All)) return false;
 
         // 無効な変身を弾く．これより前に役職等の処理をしてはいけない
         if (!CheckInvalidShapeshifting(__instance, target, shouldAnimate))
@@ -237,21 +245,27 @@ public static class PlayerControlCheckShapeshiftPatch
             return false;
         }
         // 役職の処理
-        var role = __instance.GetRoleClass();
-        if (role?.OnCheckShapeshift(target, ref shouldAnimate) == false)
+        if (!__instance.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.Skill))
         {
-            if (role.CanDesyncShapeshift)
+            __instance.DisableAction(target);
+            target.DisableAction(__instance);
+            var role = __instance.GetRoleClass();
+            if (role?.OnCheckShapeshift(target, ref shouldAnimate) == false)
             {
-                __instance.RpcSpecificRejectShapeshift(target, shouldAnimate);
+                if (role.CanDesyncShapeshift)
+                {
+                    __instance.RpcSpecificRejectShapeshift(target, shouldAnimate);
+                }
+                else
+                {
+                    __instance.RpcRejectShapeshift();
+                }
+                return false;
             }
-            else
-            {
-                __instance.RpcRejectShapeshift();
-            }
-            return false;
-        }
 
-        __instance.RpcShapeshift(target, shouldAnimate);
+
+            __instance.RpcShapeshift(target, shouldAnimate);
+        }
         return false;
     }
     private static bool CheckInvalidShapeshifting(PlayerControl instance, PlayerControl target, bool animate)
@@ -302,16 +316,19 @@ class ShapeshiftPatch
         var shapeshifter = __instance;
         var shapeshifting = shapeshifter.PlayerId != target.PlayerId;
 
-        if (Main.CheckShapeshift.TryGetValue(shapeshifter.PlayerId, out var last) && last == shapeshifting)
-        {
-            Logger.Info($"{__instance?.GetNameWithRole()}:Cancel Shapeshift.Prefix", "Shapeshift");
-            return;
-        }
+        if (shapeshifter.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.All)) return;
+
+        if (!(shapeshifter.IsEaten() && shapeshifter.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.Skill)))
+            if (Main.CheckShapeshift.TryGetValue(shapeshifter.PlayerId, out var last) && last == shapeshifting)
+            {
+                Logger.Info($"{__instance?.GetNameWithRole()}:Cancel Shapeshift.Prefix", "Shapeshift");
+                return;
+            }
 
         Main.CheckShapeshift[shapeshifter.PlayerId] = shapeshifting;
         Main.ShapeshiftTarget[shapeshifter.PlayerId] = target.PlayerId;
 
-        if (!shapeshifter.IsEaten() && (shapeshifter.CanUseSkill() || !shapeshifter.CantDoAnyAct()))
+        if (!(shapeshifter.IsEaten() && shapeshifter.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Shapeshift, ExtendedPlayerControl.PlayerActionInUse.Skill)))
             shapeshifter.GetRoleClass()?.OnShapeshift(target);
 
         if (!AmongUsClient.Instance.AmHost) return;
@@ -340,7 +357,7 @@ class ReportDeadBodyPatch
         Logger.Info("1", "test");
         if (Options.DisableMeeting.GetBool()) return false;
         if (Options.CurrentGameMode == CustomGameMode.HotPotato) return false;
-        if (__instance.CantDoAnyAct())
+        if (__instance.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Report, ExtendedPlayerControl.PlayerActionInUse.All))
         {
             WaitReport[__instance.PlayerId].Add(target);
             Logger.Warn($"{__instance.GetNameWithRole()}:通報禁止中のため可能になるまで待機します", "ReportDeadBody");
@@ -361,23 +378,33 @@ class ReportDeadBodyPatch
                 return false;
             }
         }
-        //对于仅仅是报告尸体的处理
+        // 对于仅仅是报告的处理
         if (target != null)
         {
-            if (__instance.Is(CustomRoles.Oblivious)) return false;
-            if (target.Object.GetRealKiller().Is(CustomRoles.Spiders))
+            if (__instance.Is(CustomRoles.Oblivious) && !Utils.GetPlayerById(target.PlayerId).Is(CustomRoles.Bait)) return false;
+            if (target.Object.GetRealKiller() != null && target.Object.GetRealKiller().Is(CustomRoles.PublicOpinionShaper))
             {
-                Main.AllPlayerSpeed[__instance.PlayerId] = Spiders.OptionSpeed.GetFloat();
-                __instance.MarkDirtySettings();
+                if(!(Utils.IsActive(SystemTypes.Comms) || Utils.IsActive(SystemTypes.Electrical) || Utils.IsActive(SystemTypes.Reactor) || Utils.IsActive(SystemTypes.LifeSupp) || Utils.IsActive(SystemTypes.MushroomMixupSabotage)))
+                {
+                    __instance.Notify(GetString("NobodyNoticed"));
+                    return false;
+                }
             }
         }
 
         foreach (var role in CustomRoleManager.AllActiveRoles.Values)
         {
-            if (role.OnCheckReportDeadBody(__instance, target) == false)
+            if (!__instance.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Report, ExtendedPlayerControl.PlayerActionInUse.Skill))
             {
-                Logger.Info($"会议被 {role.Player.GetNameWithRole()} 取消", "ReportDeadBody");
-                return false;
+                if (role.OnCheckReportDeadBody(__instance, target) == false)
+                {
+                    Logger.Info($"会议被 {role.Player.GetNameWithRole()} 取消", "ReportDeadBody");
+                    return false;
+                }
+            }
+            else
+            {
+                Logger.Info($" {role.Player.GetNameWithRole()} 技能被禁用", "ReportDeadBody");
             }
         }
 
@@ -409,6 +436,12 @@ class ReportDeadBodyPatch
         Utils.SyncAllSettings();
         foreach (var pc in Main.AllAlivePlayerControls)
             Signal.AddPosi(pc);
+        if (target != null)
+            if (target.Object.GetRealKiller() != null && target.Object.GetRealKiller().Is(CustomRoles.Spiders))
+            {
+                Main.AllPlayerSpeed[__instance.PlayerId] = Spiders.OptionSpeed.GetFloat();
+                __instance.MarkDirtySettings();
+            }
         return true;
     }
     public static async void ChangeLocalNameAndRevert(string name, int time)
@@ -444,6 +477,11 @@ class FixedUpdatePatch
 
         if (player.AmOwner && player.IsEACPlayer() && (GameStates.IsLobby || GameStates.IsInGame) && GameStates.IsOnlineGame)
             AmongUsClient.Instance.ExitGame(DisconnectReasons.Error);
+
+        if (Utils.LocationLocked&& PlayerControl.LocalPlayer == player)
+        {
+            player.RpcTeleport(Utils.LocalPlayerLastTp);
+        }
 
         if (!GameStates.IsModHost) return;
 
@@ -486,7 +524,6 @@ class FixedUpdatePatch
                     Logger.Info(msg, "LowLevel Kick");
                 }
             }
-
             DoubleTrigger.OnFixedUpdate(player);
 
             //ターゲットのリセット
@@ -495,12 +532,19 @@ class FixedUpdatePatch
                 FallFromLadder.FixedUpdate(player);
             }
 
-            if (GameStates.IsInGame) LoversSuicide();
+            if (GameStates.IsInGame)
+            {
+                Lovers.LoversSuicide();
+                AdmirerLovers.AdmirerLoversSuicide();
+                AkujoLovers.AkujoLoversSuicide();
+                CupidLovers.CupidLoversSuicide();
+            }
 
             if (GameStates.IsInGame && player.AmOwner)
                 DisableDevice.FixedUpdate();
 
-            NameTagManager.ApplyFor(player);
+            if (!Main.DoBlockNameChange)
+                NameTagManager.ApplyFor(player);
         }
         //LocalPlayer専用
         if (__instance.AmOwner)
@@ -517,6 +561,7 @@ class FixedUpdatePatch
         //役職テキストの表示
         var RoleTextTransform = __instance.cosmetics.nameText.transform.Find("RoleText");
         var RoleText = RoleTextTransform.GetComponent<TMPro.TextMeshPro>();
+        var colorblindtext = __instance.cosmetics.colorBlindText.text;
         if (RoleText != null && __instance != null)
         {
             if (GameStates.IsLobby)
@@ -526,7 +571,7 @@ class FixedUpdatePatch
                     if (Main.ForkId != ver.forkId) // フォークIDが違う場合
                         __instance.cosmetics.nameText.text = $"<color=#ff0000><size=1.5>{ver.forkId}</size>\n{__instance?.name}</color>";
                     else if (Main.version.CompareTo(ver.version) == 0)
-                        __instance.cosmetics.nameText.text = ver.tag == $"{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch})" ? $"<color=#fcc5f8>{__instance.name}</color>" : $"<color=#ffff00><size=1.5>{ver.tag}</size>\n{__instance?.name}</color>";
+                        __instance.cosmetics.nameText.text = ver.tag == $"{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch})" ? $"<color=#31D5BA>{__instance.name}</color>" : $"<color=#ffff00><size=1.5>{ver.tag}</size>\n{__instance?.name}</color>";
                     else __instance.cosmetics.nameText.text = $"<color=#ff0000><size=1.5>v{ver.version}</size>\n{__instance?.name}</color>";
                 }
                 else __instance.cosmetics.nameText.text = __instance?.Data?.PlayerName;
@@ -544,7 +589,7 @@ class FixedUpdatePatch
                     RoleText.enabled = false; //ゲームが始まっておらずフリープレイでなければロールを非表示
                     if (!__instance.AmOwner) __instance.cosmetics.nameText.text = __instance?.Data?.PlayerName;
                 }
-                
+
                 //変数定義
                 var seer = PlayerControl.LocalPlayer;
                 var seerRole = seer.GetRoleClass();
@@ -569,35 +614,32 @@ class FixedUpdatePatch
                 //NameColorManager準拠の処理
                 RealName = RealName.ApplyNameColorData(seer, target, false);
 
+                // 模组端色盲文字处理
+                if (CustomRoles.NiceGrenadier.IsExist() && NiceGrenadier.IsBlinding(PlayerControl.LocalPlayer))
+                    foreach (var pc in Main.AllAlivePlayerControls)
+                        pc.cosmetics.colorBlindText.text = $"<size=1000><color=#ffffff>●</color></size>";
+                if (CustomRoles.EvilGrenadier.IsExist() && EvilGrenadier.IsBlinding(PlayerControl.LocalPlayer))
+                        foreach (var pc in Main.AllAlivePlayerControls)
+                    pc.cosmetics.colorBlindText.text = $"<size=1000><color=#ffffff>●</color></size>";
+
                 //seer役職が対象のMark
                 Mark.Append(seerRole?.GetMark(seer, target, false));
                 //seerに関わらず発動するMark
                 Mark.Append(CustomRoleManager.GetMarkOthers(seer, target, false));
-                
+
                 //ハートマークを付ける(会議中MOD視点)
-                if (__instance.Is(CustomRoles.Lovers) && PlayerControl.LocalPlayer.Is(CustomRoles.Lovers))
-                {
-                    Mark.Append($"<color={Utils.GetRoleColorCode(CustomRoles.Lovers)}>♡</color>");
-                }
-                else if (__instance.Is(CustomRoles.Lovers) && PlayerControl.LocalPlayer.Data.IsDead)
-                {
-                    Mark.Append($"<color={Utils.GetRoleColorCode(CustomRoles.Lovers)}>♡</color>");
-                }
-                else if ((__instance.Is(CustomRoles.Neptune) || PlayerControl.LocalPlayer.Is(CustomRoles.Neptune)) && CustomRoles.Neptune.IsExist())
-                {
-                    Mark.Append($"<color={Utils.GetRoleColorCode(CustomRoles.Lovers)}>♡</color>");
-                }
-                else if (__instance == PlayerControl.LocalPlayer && CustomRoles.Neptune.IsExist())
-                {
-                    Mark.Append($"<color={Utils.GetRoleColorCode(CustomRoles.Lovers)}>♡</color>");
-                }
-                if (__instance.Is(CustomRoles.Mini) && __instance!= PlayerControl.LocalPlayer)
-                {
-                    Mark.Append($"<color={Utils.GetRoleColorCode(CustomRoles.Judge)}>({Mini.Age})</color>");
-                }
-                Suffix.Append(seerRole?.GetLowerText(seer, target));
+                Lovers.Marks(__instance, ref Mark);
+                AdmirerLovers.Marks(__instance, ref Mark);
+                AkujoLovers.Marks(__instance, ref Mark);
+                AkujoFakeLovers.Marks(__instance, ref Mark);
+                CupidLovers.Marks(__instance, ref Mark);
+                Neptune.Marks(__instance, ref Mark);
+                Mini.Marks(__instance, ref Mark);
+                if (!seer.IsModClient())
+                    Suffix.Append(seerRole?.GetLowerText(seer, target));
                 //seerに関わらず発動するLowerText
-                Suffix.Append(CustomRoleManager.GetLowerTextOthers(seer, target));
+                if (!seer.IsModClient())
+                    Suffix.Append(CustomRoleManager.GetLowerTextOthers(seer, target));
 
                 //seer役職が対象のSuffix
                 Suffix.Append(seerRole?.GetSuffix(seer, target));
@@ -636,41 +678,7 @@ class FixedUpdatePatch
         }
     }
     //FIXME: 役職クラス化のタイミングで、このメソッドは移動予定
-    public static void LoversSuicide(byte deathId = 0x7f, bool isExiled = false, bool now = false)
-    {
-        if (Options.LoverSuicide.GetBool() && CustomRoles.Lovers.IsExistCountDeath() && !Main.isLoversDead)
-        {
-            foreach (var loversPlayer in Main.LoversPlayers)
-            {
-                //生きていて死ぬ予定でなければスキップ
-                if (!loversPlayer.Data.IsDead && loversPlayer.PlayerId != deathId) continue;
-
-                Main.isLoversDead = true;
-                foreach (var partnerPlayer in Main.LoversPlayers)
-                {
-                    //本人ならスキップ
-                    if (loversPlayer.PlayerId == partnerPlayer.PlayerId) continue;
-
-                    //残った恋人を全て殺す(2人以上可)
-                    //生きていて死ぬ予定もない場合は心中
-                    if (partnerPlayer.PlayerId != deathId && !partnerPlayer.Data.IsDead)
-                    {
-                        PlayerState.GetByPlayerId(partnerPlayer.PlayerId).DeathReason = CustomDeathReason.FollowingSuicide;
-                        if (isExiled)
-                        {
-                            if (now) partnerPlayer?.RpcExileV2();
-                            MeetingHudPatch.TryAddAfterMeetingDeathPlayers(CustomDeathReason.FollowingSuicide, partnerPlayer.PlayerId);
-                        }
-                        else
-                        {
-                            partnerPlayer.RpcMurderPlayer(partnerPlayer);
-                        }
-                        Utils.NotifyRoles(partnerPlayer);
-                    }
-                }
-            }
-        }
-    }
+    
 }
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Start))]
 class PlayerStartPatch
@@ -720,7 +728,11 @@ class CoEnterVentPatch
         Logger.Info($"{__instance.myPlayer.GetNameWithRole()} CoEnterVent: {id}", "CoEnterVent");
 
         var user = __instance.myPlayer;
-        if (user.CantDoAnyAct() || !user.CanUseSkill() && user.GetCustomRole() is CustomRoles.EvilInvisibler or CustomRoles.Arsonist or CustomRoles.Veteran or CustomRoles.NiceTimeStops or CustomRoles.TimeMaster or CustomRoles.Instigator or CustomRoles.Paranoia or CustomRoles.Mayor or CustomRoles.DoveOfPeace or CustomRoles.Grenadier)
+        if (user.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.EnterVent) 
+            || user.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.EnterVent, ExtendedPlayerControl.PlayerActionInUse.Skill) 
+            && user.GetCustomRole() is CustomRoles.EvilInvisibler or CustomRoles.Arsonist or CustomRoles.Veteran or CustomRoles.NiceTimeStops
+            or CustomRoles.TimeMaster or CustomRoles.Instigator or CustomRoles.Paranoia or CustomRoles.Mayor or CustomRoles.DoveOfPeace
+            or CustomRoles.NiceGrenadier or CustomRoles.Akujo or CustomRoles.Miner)
         {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, -1);
             writer.WritePacked(127);
@@ -734,9 +746,10 @@ class CoEnterVentPatch
             }, 0.5f, "Fix DesyncImpostor Stuck");
             return false;
         }
-        if ((!user.GetRoleClass()?.OnEnterVent(__instance, id) ?? false) ||
-                    (user.Data.Role.Role != RoleTypes.Engineer && //エンジニアでなく
-                !user.CanUseImpostorVentButton()) //インポスターベントも使えない
+
+        if ((!user.GetRoleClass()?.OnEnterVent(__instance, id) ?? false) 
+            || (user.Data.Role.Role != RoleTypes.Engineer //非工程师
+            && !user.CanUseImpostorVentButton()) //也不能使用内鬼管道
         )
         {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, -1);
@@ -754,6 +767,52 @@ class CoEnterVentPatch
         return true;
     }
 }
+[HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.CoExitVent))]
+class CoExitVentPatch
+{
+    public static bool Prefix(PlayerPhysics __instance, [HarmonyArgument(0)] int id)
+    {
+        if (!AmongUsClient.Instance.AmHost) return true;
+
+        Logger.Info($"{__instance.myPlayer.GetNameWithRole()} CoExitVent: {id}", "CoExitVent");
+        
+        var user = __instance.myPlayer;
+        if (user.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.ExitVent) 
+            || user.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.ExitVent, ExtendedPlayerControl.PlayerActionInUse.Skill))
+        {
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, -1);
+            writer.WritePacked(127);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            _ = new LateTask(() =>
+            {
+                int clientId = user.GetClientId();
+                MessageWriter writer2 = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, clientId);
+                writer2.Write(id);
+                AmongUsClient.Instance.FinishRpcImmediately(writer2);
+            }, 0.5f, "Fix DesyncImpostor Stuck");
+            return false;
+        }
+        if ((!user.GetRoleClass()?.OnExitVent(__instance, id) ?? false)
+             || (user.Data.Role.Role != RoleTypes.Engineer //非工程师
+             && !user.CanUseImpostorVentButton()) //也不能使用内鬼管道
+         )
+        {
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.EnterVent, SendOption.Reliable, -1);
+            writer.WritePacked(127);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            _ = new LateTask(() =>
+            {
+                int clientId = user.GetClientId();
+                MessageWriter writer2 = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.EnterVent, SendOption.Reliable, clientId);
+                writer2.Write(id);
+                AmongUsClient.Instance.FinishRpcImmediately(writer2);
+            }, 0.5f, "Fix DesyncImpostor Stuck");
+            return false;
+        }
+        return true;
+    }
+}
+
 #endregion
 [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetName))]
 class SetNamePatch
@@ -798,9 +857,16 @@ class PlayerControlProtectPlayerPatch
 {
     public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
     {
-        var player = __instance;      
-         if (!target.IsEaten()) player.GetRoleClass()?.OnProtectPlayer(target);
- 
+        var player = __instance;
+        if (!target.IsEaten())
+        {
+            if (!(player.GetRoleClass()?.OnProtectPlayer(target) ?? false))
+            {
+                Logger.Info($"凶手阻塞了击杀", "CheckMurder");
+                return;
+            }
+        }
+
 
         Logger.Info($"{__instance.GetNameWithRole()} => {target.GetNameWithRole()}", "ProtectPlayer");
     }
@@ -831,14 +897,15 @@ class PlayerControlSetRolePatch
                 var self = seer.PlayerId == target.PlayerId;
                 var seerIsKiller = seer.GetRoleClass() is IKiller;
 
-                if ((self && targetIsKiller && !target.Is(CustomRoles.EvilGuardian)) || (!seerIsKiller && target.Is(CustomRoleTypes.Impostor) && !target.Is(CustomRoles.EvilGuardian)))
+                
+                if(target.Is(CustomRoles.EvilAngle) || target.Is(CustomRoles.Phantom) || target.Is(CustomRoles.InjusticeSpirit))
+                {
+                   ghostRoles[seer] = RoleTypes.GuardianAngel;
+                }
+                else if ((self && targetIsKiller) || (!seerIsKiller && target.Is(CustomRoleTypes.Impostor)))
                 {
                     ghostRoles[seer] = RoleTypes.Impostor;
                 }
-               // else if(target.Is(CustomRoles.EvilGuardian))
-                //{
-                //    ghostRoles[seer] = RoleTypes.GuardianAngel;
-                //}
                 else
                 {
                     ghostRoles[seer] = RoleTypes.CrewmateGhost;
@@ -876,16 +943,76 @@ public static class PlayerControlDiePatch
     {
         if (AmongUsClient.Instance.AmHost)
         {
-           __instance.RpcSetScanner(false);
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.SetScanner, SendOption.Reliable, -1);
-            writer.Write(false);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            __instance.RpcSetScanner(false);
+         
             CustomRoleManager.AllActiveRoles.Values.Do(role => role.OnPlayerDeath(__instance, PlayerState.GetByPlayerId(__instance.PlayerId).DeathReason, GameStates.IsMeeting));
-           // Libertarian
-            foreach (var player in Libertarian.playerIdList)
+#if DEBUG
+            if (__instance.Is(CustomRoles.Madmate))
             {
-                var li = Utils.GetPlayerById(player);
-                if (Vector2.Distance(li.transform.position, __instance.transform.position) <= Libertarian.OptionRadius.GetFloat())li?.NoCheckStartMeeting(__instance?.Data);
+                if (!EvilAngle.SetYet && EvilAngle.EnableEvilAngle.GetBool())
+                {
+                    EvilAngle.SetYet = true;
+                    __instance.Notify(GetString("Surprise"));
+                    EvilAngle.SetPlayer = __instance;
+                }
+            }
+            else if (__instance.Is(CustomRoles.Wolfmate) || __instance.Is(CustomRoles.Charmed))
+            {
+                if (!Phantom.SetYet && Phantom.EnablePhantom.GetBool())
+                {
+                    Phantom.SetYet = true;
+                    __instance.Notify(GetString("Surprise"));
+                    Phantom.SetPlayer = __instance;
+                }
+            }
+            else if ((__instance.Is(CustomRoleTypes.Crewmate) || __instance.Is(CustomRoleTypes.Impostor))
+                && !__instance.Is(CustomRoles.Lovers) 
+                && !__instance.Is(CustomRoles.AdmirerLovers)
+                && !__instance.Is(CustomRoles.AkujoLovers) 
+                && !__instance.Is(CustomRoles.CupidLovers)
+                || __instance.Is(CustomRoleTypes.Neutral))
+            {
+                switch (__instance.GetCustomRole().GetCustomRoleTypes())
+                {
+                    case CustomRoleTypes.Crewmate:
+                        if (!InjusticeSpirit.SetYet && InjusticeSpirit.EnableInjusticeSpirit.GetBool())
+                        {
+                            InjusticeSpirit.SetYet = true;
+                            __instance.Notify(GetString("Surprise"));
+                            InjusticeSpirit.SetPlayer = __instance;
+                        }
+                        break;
+                    case CustomRoleTypes.Neutral:
+                        if (!Phantom.SetYet && Phantom.EnablePhantom.GetBool())
+                        {
+                            Phantom.SetYet = true;
+                            __instance.Notify(GetString("Surprise"));
+                            Phantom.SetPlayer = __instance;
+                        }
+                        break;
+                    case CustomRoleTypes.Impostor:
+                        if (!EvilAngle.SetYet && EvilAngle.EnableEvilAngle.GetBool())
+                        {
+                            EvilAngle.SetYet = true;
+                            __instance.Notify(GetString("Surprise"));
+                            EvilAngle.SetPlayer = __instance;
+                        }
+                        break;
+                }
+            }
+#endif
+            // Libertarian
+            if (!GameStates.IsMeeting)
+            {
+                var playerIdListCopy = Libertarian.playerIdList;
+                foreach (var player in playerIdListCopy)
+                {
+                    var li = Utils.GetPlayerById(player);
+                    if (li != null && Vector2.Distance(li.transform.position, __instance.transform.position) <= Libertarian.OptionRadius.GetFloat())
+                    {
+                        li.NoCheckStartMeeting(__instance?.Data);
+                    }
+                }
             }
             // 死者の最終位置にペットが残るバグ対応
             __instance.SetOutFitStatic(petId:"");

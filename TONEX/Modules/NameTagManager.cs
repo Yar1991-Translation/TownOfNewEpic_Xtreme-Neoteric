@@ -49,7 +49,7 @@ public static class NameTagManager
         string name = player.GetTrueName();
         if (Main.HostNickName != "" && player.AmOwner) name = Main.HostNickName;
 
-        if (AmongUsClient.Instance.IsGameStarted && player.AmOwner)
+        if (AmongUsClient.Instance.IsGameStarted && player.AmOwner )
         {
             if (Options.FormatNameMode.GetInt() == 1 && Main.HostNickName == "")
                 name = Palette.GetColorName(Camouflage.PlayerSkins[PlayerControl.LocalPlayer.PlayerId].ColorId);
@@ -233,8 +233,9 @@ public static class NameTagManager
             switch(Options.CurrentGameMode)
             {
                 case CustomGameMode.HotPotato:
-                    name = $"<color=#87cefa>{GetString("HotPotatoMode")}</color>" +
-                    $"<color=#87cefa>{Main.PluginShowVersion}</color>";
+                    var prefix = $"<size=80%><color=#F39C12>{GetString("HotPotatoMode")}</color>" +
+                    $"<color=#F39C12>{Main.PluginShowVersion}</color>";
+                    name = prefix + "</size>" +"\n"+ name;
                     break;
 
             };

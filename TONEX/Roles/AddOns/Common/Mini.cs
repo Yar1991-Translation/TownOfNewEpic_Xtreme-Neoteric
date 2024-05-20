@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using TONEX.Attributes;
-using TONEX.Modules;
+using TONEX.Modules.SoundInterface;
 using TONEX.Roles.Core;
 using UnityEngine;
 using static TONEX.Options;
+using System.Text;
+using static TONEX.Utils;
 using static UnityEngine.GraphicsBuffer;
 
 namespace TONEX.Roles.AddOns.Common;
 public static class Mini
 {
-    private static readonly int Id = 828893;
+    private static readonly int Id = 94_1_0_0700;
     private static List<byte> playerIdList = new();
     public static OptionItem OptionAgeTime;
     public static OptionItem OptionNotGrowInMeeting;
@@ -19,6 +21,8 @@ public static class Mini
     public static OptionItem OptionAdultKillCoolDown;
     public static Dictionary<byte,int> Age;
     public static int UpTime;
+    public static List<byte> MKL;
+    public static List<byte> MAL;
     public static void SetupCustomOption()
     {
         SetupAddonOptions(Id, TabGroup.Addons, CustomRoles.Mini);
@@ -47,23 +51,48 @@ public static class Mini
    public static void SendRPC()
     {
         MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.MiniAge, SendOption.Reliable, -1);
+        writer.Write(Age.Count);
         foreach (var pc in playerIdList)
         {
             writer.Write(pc);
             writer.Write(Age[pc]);
+        }
+        writer.Write(MKL.Count);
+        foreach (var pc in MKL)
+        {
+            writer.Write(pc);
+        }
+        writer.Write(MAL.Count);
+        foreach (var pc in MAL)
+        {
+            writer.Write(pc);
         }
         AmongUsClient.Instance.FinishRpcImmediately(writer);
     }
     public static void ReceiveRPC(MessageReader reader, CustomRPC rpcType)
     {
         if (rpcType != CustomRPC.MiniAge) return;
-        
-        for (int i = 0; 1 < Age.Count; i++)
+        var ages = reader.ReadInt32();
+        for (int i = 0; i < ages; i++)
         {
             var pc = reader.ReadByte();
             var age = reader.ReadInt32();
             Age.TryAdd(pc, age);
             Age[pc] = age;
+        }
+        var mkl = reader.ReadInt32();
+        for (int i = 0; i < mkl; i++)
+        {
+            var pc = reader.ReadByte();
+            if (!MKL.Contains(pc))
+                MKL.Add(pc);
+        }
+        var mal = reader.ReadInt32();
+        for (int i = 0; i < mal; i++)
+        {
+            var pc = reader.ReadByte();
+            if (!MAL.Contains(pc))
+                MAL.Add(pc);
         }
     }
     public static bool IsEnable => playerIdList.Count > 0;
@@ -116,5 +145,25 @@ public static class Mini
     {
         if (!playerIdList.Contains(playerId)) return "";
         return Age[playerId] < 18 ? Utils.ColorString(Color.yellow, $"({Age[playerId]})") : "";
+    }
+    public static void TargetSuffixs(PlayerControl seer, PlayerControl target, ref StringBuilder targetMark)
+    {
+        if (target.Is(CustomRoles.Mini) && seer != target)
+        {
+            targetMark.Append($"<color={GetRoleColorCode(CustomRoles.Judge)}>({Age[target.PlayerId]})</color>");
+        }
+    }
+    public static void MeetingHud(bool isLover, PlayerControl seer, PlayerControl target, ref StringBuilder sb)
+    {
+        if (target.Is(CustomRoles.Mini) && seer != target)
+            sb.Append(ColorString(Color.yellow, $"({Age[target.PlayerId]})"));
+    }
+    public static void Marks(PlayerControl __instance, ref StringBuilder Mark)
+    {
+        if (__instance.Is(CustomRoles.Mini) && __instance != PlayerControl.LocalPlayer)
+        {
+            Mark.Append($"<color={Utils.GetRoleColorCode(CustomRoles.Judge)}>({Age[__instance.PlayerId]})</color>");
+        }
+    
     }
 }

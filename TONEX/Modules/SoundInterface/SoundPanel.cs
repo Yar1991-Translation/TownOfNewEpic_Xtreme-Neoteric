@@ -23,6 +23,11 @@ public static class SoundPanel
     {
         if (CustomBackground != null)
             CustomBackground?.gameObject?.SetActive(false);
+        if (!GameStates.IsNotJoined)
+        {
+            Utils.LocationLocked = false;
+            PlayerControl.LocalPlayer.EnableAction(PlayerControl.LocalPlayer, ExtendedPlayerControl.PlayerActionType.Move, true);
+        }
     }
     public static void Init(OptionsMenuBehaviour optionsMenuBehaviour)
     {
@@ -48,7 +53,13 @@ public static class SoundPanel
             closePassiveButton.OnClick = new();
             closePassiveButton.OnClick.AddListener(new Action(() =>
             {
+                
                 CustomBackground.gameObject.SetActive(false);
+                if (!GameStates.IsNotJoined)
+                {
+                    Utils.LocationLocked = false;
+                    PlayerControl.LocalPlayer.EnableAction(PlayerControl.LocalPlayer, ExtendedPlayerControl.PlayerActionType.Move, true);
+                }
             }));
             /*var changeButton = Object.Instantiate(mouseMoveToggle, CustomBackground.transform);
             changeButton.transform.localPosition = new(0.65f, -1.88f, -15f);
@@ -83,7 +94,7 @@ public static class SoundPanel
             stopPassiveButton.OnClick = new();
             stopPassiveButton.OnClick.AddListener(new Action(() =>
             {
-                CustomSoundsManager.StopPlay();
+                                CustomSoundsManager.StopPlay();
             }));
             Logger.Info("c", "test");
             if (GameStates.IsNotJoined)
@@ -145,27 +156,10 @@ public static class SoundPanel
                 button.name = "Name Tag Item For " + sound;
                 Object.Destroy(button.GetComponent<UIScrollbarHelper>());
                 Object.Destroy(button.GetComponent<NumberButton>());
-                button.transform.GetChild(0).GetComponent<TextMeshPro>().text = AllTONEX.ContainsKey(sound) ? GetString($"{sound}") : sound;
+                button.transform.GetChild(0).GetComponent<TextMeshPro>().text = AllTONEX.ContainsKey(sound) ? GetString($"Mus.{sound}") : sound;
                 var path = @$"{Environment.CurrentDirectory.Replace(@"\", "/")}./TONEX_Data/Sounds/{sound}.wav";
-                int i = 0;
-                while (!File.Exists(path))
-                {
-                    i++;
-                    Logger.Error($"{path} No Found", "SoundsPanel");
-                    string matchingKey = formatMap.Keys.FirstOrDefault(key => path.Contains(key));
-                    if (matchingKey != null)
-                    {
-                        string newFormat = formatMap[matchingKey];
-                        path = path.Replace(matchingKey, newFormat);
-                        Logger.Warn($"Try To Find{path} ", "SoundsPanel");
-                    }
-                    if (i == formatMap.Count)
-                    {
-                        Logger.Error($"{path} Cannot Be Finded", "SoundsPanel");
-                        break;
-                    }
-                }
-                var renderer = button.GetComponent<SpriteRenderer>();
+            //GetPostfix(path);
+            var renderer = button.GetComponent<SpriteRenderer>();
                 var rollover = button.GetComponent<ButtonRolloverHandler>();
                 if  (File.Exists(path))
                 {
@@ -175,10 +169,10 @@ public static class SoundPanel
                 {
                     renderer.color = rollover.OutColor = Palette.DisabledGrey;
                 }
-                var passiveButton = button.GetComponent<PassiveButton>();
-                passiveButton.OnClick = new();
-                passiveButton.OnClick.AddListener(new Action(() =>
-                {
+            var passiveButton = button.GetComponent<PassiveButton>();
+            passiveButton.OnClick = new();
+            passiveButton.OnClick.AddListener(new Action(() =>
+            {
 
                     if (File.Exists(path))
                     {
@@ -201,13 +195,5 @@ public static class SoundPanel
         scroller.SetYBoundsMin(0f);
         scroller.SetYBoundsMax(0.6f * numItems);
     }
-    public static Dictionary<string, string> formatMap = new()
-    {
-    { ".wav", ".flac" },
-    { ".flac", ".aiff" },
-    { ".aiff", ".mp3" },
-    { ".mp3", ".aac" },
-    { ".aac", ".ogg" },
-    { ".ogg", ".m4a" }
-};
+
 }

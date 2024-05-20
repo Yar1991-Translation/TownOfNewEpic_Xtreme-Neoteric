@@ -25,8 +25,9 @@ public sealed class Adventurer : RoleBase
         player
     )
     {
-        ForAdventurer = new();
+        
     }
+    
     public static List<byte> ForAdventurer;
     static OptionItem OptionLimit;
     enum OptionName
@@ -56,20 +57,20 @@ public int SabotageFalseLimit;
     }
     public override bool OnSabotage(PlayerControl player, SystemTypes systemType)
     {
-        if(ForAdventurer.Contains(player.PlayerId)) return false;
-      if(SabotageFalseLimit >= 1)
-      {
-        SabotageFalseLimit--;
-        SendRPC();
+        if (ForAdventurer.Contains(player.PlayerId)) return false;
+        if (SabotageFalseLimit >= 1)
+        {
+            SabotageFalseLimit--;
+            SendRPC();
             ForAdventurer.Add(player.PlayerId);
-                    player.ResetKillCooldown();
+            player.ResetKillCooldown();
             player.SetKillCooldown();
-               player.SyncSettings();
-        player.RpcResetAbilityCooldown();
-        player.RpcProtectedMurderPlayer(player);
-        return false;
-      }
-return true;
+            player.SyncSettings();
+            player.RpcResetAbilityCooldown();
+            player.RpcProtectedMurderPlayer(player);
+            return false;
+        }
+        return true;
     }
     public override void AfterMeetingTasks()   => ForAdventurer.Clear(); 
     public override string GetProgressText(bool comms = false) => Utils.ColorString(SabotageFalseLimit >= 1 ? RoleInfo.RoleColor : Color.gray, $"({SabotageFalseLimit})");

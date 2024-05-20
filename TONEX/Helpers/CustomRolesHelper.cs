@@ -57,10 +57,7 @@ static class CustomRolesHelper
     public static bool IsTODO(this CustomRoles role)
     {
         if (role is
-            CustomRoles.EvilGuardian or//TODO 邪恶天使
-    CustomRoles.EvilTimeStops or //TODO 邪恶的时停者
     CustomRoles.MirrorSpirit or//TODO 镜妖
-    CustomRoles.Assaulter or//TODO 强袭者
     CustomRoles.MimicTeam or//TODO 模仿者团队
     CustomRoles.MimicKiller or//TODO 模仿者（杀手）
     CustomRoles.MimicAssistant or//TODO 模仿者（助手）
@@ -77,39 +74,23 @@ static class CustomRolesHelper
     CustomRoles.Sloth or//TODO 树懒
     CustomRoles.Bees or//TODO 蜜蜂
     CustomRoles.CopyCat or//TODO 效颦者
-    CustomRoles.Innocent or//TODO 冤罪师
     CustomRoles.Konan or//TODO 柯南
-    CustomRoles.Stalker or //TODO 潜藏者
-    CustomRoles.Collector or
-    CustomRoles.Provocateur or//TODO 自爆卡车,
     CustomRoles.PVPboss or//TODO PVP大佬
-   CustomRoles.Admirer or//TODO 暗恋者
-    CustomRoles.Akujo or //TODO 魅魔
-
+    CustomRoles.Revolutionist or//TODO 革命家
    CustomRoles.Changger or//TODO 连环交换师
     CustomRoles.Amnesiac or//TODO 失忆者
-    CustomRoles.Yandere or//TODO 病娇
     CustomRoles.PoliticalStrategists or//TODO 纵横家
 
     CustomRoles.Challenger or//TODO 挑战者
 
-    CustomRoles.NightWolf or//TORELRASE 月下狼人
-    CustomRoles.Moonshadow or//TODO 月影 or1.4限定
+    CustomRoles.NightWolf or//TORELRASE 月下狼人-1.4
+    CustomRoles.Moonshadow or//TODO 月影 1.4限定
      CustomRoles.Professional or//TODO 专业赌怪
     CustomRoles.Luckless or//TODO 倒霉蛋
     CustomRoles.FateFavor or//TODO 命运眷顾者
-    CustomRoles.Nihility or//TODO 虚无
     CustomRoles.IncorruptibleOfficial or//TODO 清廉之官
     CustomRoles.VIP or//TODO VIP
-    CustomRoles.Believer or //TODO 信徒
-    CustomRoles.Phantom or//TODO 幻影
-    CustomRoles.MeteorArbiter or//TODO 陨星判官,1.2限定
-    CustomRoles.MeteorMurder or//TODO 陨星戮者,1.2限定
-    CustomRoles.SharpShooter or//TODO 神射手
-    CustomRoles.Revolutionist or//TODO 革命家
-     CustomRoles.Sunnyboy or//TODO 革命家
-      CustomRoles.Non_Villain or//不演反派
-    CustomRoles.InjusticeSpirit//TODO 冤魂
+      CustomRoles.Non_Villain //不演反派
     
             )
             return true;
@@ -229,22 +210,25 @@ static class CustomRolesHelper
             _ => role.IsImpostor() ? RoleTypes.Impostor : RoleTypes.Crewmate,
         };
     }
+   
 }
 public enum CountTypes
 {
-    OutOfGame,
-    None,
-    Crew,
-    Impostor,
-    Jackal,
-    Pelican,
-    Demon,
-    BloodKnight,
-    Succubus,
-    FAFL,
-    Martyr,
-    NightWolf,
-    GodOfPlagues,
-    MeteorArbiter,
-    MeteorMurder,
+    OutOfGame = CustomWinner.None,
+    None = CustomWinner.None,
+    Crew = CustomWinner.Crewmate,
+    Impostor = CustomWinner.Impostor,
+    Jackal= CustomWinner.Jackal,
+    Pelican= CustomWinner.Pelican,
+    Demon= CustomWinner.Demon,
+    BloodKnight= CustomWinner.BloodKnight,
+    Succubus= CustomWinner.Succubus,
+    FAFL= CustomWinner.FAFL,
+    Martyr= CustomWinner.Martyr,
+    NightWolf= CustomWinner.NightWolf,
+    GodOfPlagues= CustomWinner.GodOfPlagues,
+    MeteorArbiter= CustomWinner.MeteorArbiter,
+    MeteorMurderer= CustomWinner.MeteorMurderer,
+    SharpShooter= CustomWinner.SharpShooter,
+    Yandere=CustomWinner.Yandere,
 }

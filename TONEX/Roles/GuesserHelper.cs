@@ -12,6 +12,8 @@ using TONEX.Roles.Impostor;
 using UnityEngine;
 using static TONEX.Translator;
 using TONEX.Roles.AddOns.Common;
+using TONEX.Modules.SoundInterface;
+using TONEX.Roles.Neutral;
 
 namespace TONEX;
 public static class GuesserHelper
@@ -91,6 +93,8 @@ public static class GuesserHelper
 
         if (operate == 1)
         {
+            spam = true;
+            Utils.ShowActiveRoles(pc.PlayerId, pc.GetCustomRole() ==CustomRoles.NiceGuesser && NiceGuesser.OptionJustShowExist.GetBool()|| pc.GetCustomRole() == CustomRoles.EvilGuesser && EvilGuesser.OptionJustShowExist.GetBool());
             Utils.SendMessage(GetFormatString(), pc.PlayerId);
             return true;
         }
@@ -135,6 +139,16 @@ public static class GuesserHelper
         {
             reason = GetString("GuessGM");
             return false;
+        }
+        if (role == CustomRoles.SchrodingerCat && target.Is(CustomRoles.SchrodingerCat))
+        {
+            var roleclass = target.GetRoleClass() as SchrodingerCat;
+            if (roleclass.Team == SchrodingerCat.TeamType.None)
+            {
+                roleclass.ChangeTeamOnKill(guesser);
+                reason = GetString("GuessSchrodingerCat");
+                return false;
+            }
         }
         if (role == CustomRoles.Mini )
         {
@@ -528,7 +542,7 @@ public static class GuesserHelper
                 if (EvilGuesser.OptionJustShowExist.GetBool() && PlayerControl.LocalPlayer.Is(CustomRoles.EvilGuesser) && !role.IsExistCountDeath()) continue;
                 if (role.IsTODO()) continue;
                 if (role is CustomRoles.GM or CustomRoles.NotAssigned or CustomRoles.SuperStar or CustomRoles.GuardianAngel or CustomRoles.HotPotato or CustomRoles.ColdPotato) continue;
-                if (role ==  CustomRoles.Mini) continue;
+                if (role is  CustomRoles.Mini or CustomRoles.InjusticeSpirit or CustomRoles.Phantom or CustomRoles.EvilAngle) continue;
                 CreateRole(role);
             }
             void CreateRole(CustomRoles role)

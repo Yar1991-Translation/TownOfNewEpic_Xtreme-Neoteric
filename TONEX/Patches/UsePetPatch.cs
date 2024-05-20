@@ -32,17 +32,17 @@ class TryPetPatch
 {
     public static void Prefix(PlayerControl __instance)
     {
-        if (!AmongUsClient.Instance.AmHost || GameStates.IsLobby || Options.CurrentGameMode != CustomGameMode.Standard) return;
-        if (!(AmongUsClient.Instance.AmHost && AmongUsClient.Instance.AmClient)) return;
-
+        if (AmongUsClient.Instance.AmHost && AmongUsClient.Instance.AmClient && !GameStates.IsLobby && (Options.IsStandard || Options.CurrentGameMode == CustomGameMode.AllCrewModMode))
+        {
             __instance.petting = true;
-        ExternalRpcPetPatch.Prefix(__instance.MyPhysics, 51, new MessageReader());
+            ExternalRpcPetPatch.Prefix(__instance.MyPhysics, 51, new MessageReader());
+        }
     }
 
     public static void Postfix(PlayerControl __instance)
     {
-        if (!AmongUsClient.Instance.AmHost || GameStates.IsLobby || Options.CurrentGameMode != CustomGameMode.Standard || !Options.UsePets.GetBool()) return;
-        var cancel = Options.CurrentGameMode == CustomGameMode.Standard;
+        if (!AmongUsClient.Instance.AmHost || GameStates.IsLobby || !Options.IsStandard || !Options.UsePets.GetBool()) return;
+        var cancel = Options.IsStandard;
 
             __instance.petting = false;
             if (__instance.AmOwner)
@@ -56,22 +56,25 @@ class ExternalRpcPetPatch
 {
     public static void Prefix(PlayerPhysics __instance, [HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
     {
-        if (!AmongUsClient.Instance.AmHost || GameStates.IsLobby || Options.CurrentGameMode != CustomGameMode.Standard || !Options.UsePets.GetBool()) return;
-        var rpcType = callId == 51 ? RpcCalls.Pet : (RpcCalls)callId;
-        if (rpcType != RpcCalls.Pet) return;
+        if (AmongUsClient.Instance.AmHost || !GameStates.IsLobby && Options.IsStandard && Options.UsePets.GetBool())
 
-        PlayerControl pc = __instance.myPlayer;
-
-        if (callId == 51)
-            __instance.CancelPet();
-        else
         {
-            __instance.CancelPet();
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
-                AmongUsClient.Instance.FinishRpcImmediately(AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, 50, SendOption.None, player.GetClientId()));
+            var rpcType = callId == 51 ? RpcCalls.Pet : (RpcCalls)callId;
+            if (rpcType != RpcCalls.Pet) return;
+
+            PlayerControl pc = __instance.myPlayer;
+
+            if (callId == 51)
+                __instance.CancelPet();
+            else
+            {
+                __instance.CancelPet();
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                    AmongUsClient.Instance.FinishRpcImmediately(AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, 50, SendOption.None, player.GetClientId()));
+            }
+            if (!(pc.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Pet, ExtendedPlayerControl.PlayerActionInUse.Skill) && pc.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Pet)))
+                pc.GetRoleClass()?.OnUsePet();
         }
-        if (pc.CanUseSkill() && !pc.CantDoAnyAct())
-            pc.GetRoleClass()?.OnUsePet();
     }
 }
 

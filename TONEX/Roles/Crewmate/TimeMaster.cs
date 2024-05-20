@@ -1,11 +1,11 @@
 ﻿using AmongUs.GameOptions;
-using TONEX.Modules;
 using TONEX.Roles.Core;
 using System;
 using static TONEX.Translator;
 using UnityEngine;
 using Hazel;
 using System.Collections.Generic;
+using TONEX.Modules.SoundInterface;
 
 namespace TONEX.Roles.Crewmate;
 public sealed class TimeMaster : RoleBase
@@ -109,6 +109,7 @@ public sealed class TimeMaster : RoleBase
         Player.Notify(GetString("TimeMasterOnGuard"));
         foreach (var player in Main.AllPlayerControls)
         {
+            Player.DisableAction(player);
             if (TimeMasterbacktrack.ContainsKey(player.PlayerId))
             {
                 player.RPCPlayCustomSound("Teleport");
@@ -133,7 +134,7 @@ public sealed class TimeMaster : RoleBase
         {
             ProtectStartTime = -1;
             player.RpcProtectedMurderPlayer();
-            player.Notify(string.Format(GetString("NiceTimeStopsOffGuard")));
+            player.Notify(string.Format(GetString("TimeMasterOffGuard")));
         }
         if (UsePetCooldown + (long)Cooldown < now && UsePetCooldown != -1 && Options.UsePets.GetBool())
         {
@@ -159,6 +160,7 @@ public sealed class TimeMaster : RoleBase
         Player.Notify(GetString("TimeMasterOnGuard"));
         foreach (var player in Main.AllPlayerControls)
         {
+            Player.DisableAction(player);
             if (TimeMasterbacktrack.ContainsKey(player.PlayerId))
             {
                 player.RPCPlayCustomSound("Teleport");
@@ -179,7 +181,7 @@ public sealed class TimeMaster : RoleBase
     {
         Player.RpcResetAbilityCooldown();
     }
-    public override bool OnCheckMurderAsTarget(MurderInfo info)
+    public override bool OnCheckMurderAsTargetAfter(MurderInfo info)
     {
         if (info.IsSuicide) return true;
         if (ProtectStartTime != -1 && ProtectStartTime + OptionSkillDuration.GetFloat() >= Utils.GetTimeStamp() && Marked)
@@ -187,6 +189,7 @@ public sealed class TimeMaster : RoleBase
             var (killer, target) = info.AttemptTuple;
             foreach (var player in Main.AllPlayerControls)
             {
+                Player.DisableAction(player);
                 if (TimeMasterbacktrack.ContainsKey(player.PlayerId))
                 {
                     var position = TimeMasterbacktrack[player.PlayerId];
@@ -205,5 +208,15 @@ public sealed class TimeMaster : RoleBase
     public override void OnStartMeeting()
     {
         ProtectStartTime = -1;
+    }
+    public override bool GetAbilityButtonSprite(out string buttonName)
+    {
+        buttonName = "KingOfTime";
+        return true;
+    }
+    public override bool GetPetButtonSprite(out string buttonName)
+    {
+        buttonName = "KingOfTime";
+        return !(UsePetCooldown != -1);
     }
 }

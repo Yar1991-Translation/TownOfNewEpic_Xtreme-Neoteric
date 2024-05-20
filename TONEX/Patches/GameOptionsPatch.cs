@@ -4,7 +4,7 @@ using HarmonyLib;
 using TONEX.Roles.Core;
 using static TONEX.Translator;
 
-namespace TONEX;
+namespace TONEX.Patches;
 
 [HarmonyPatch(typeof(RoleOptionSetting), nameof(RoleOptionSetting.UpdateValuesAndText))]
 class ChanceChangePatch

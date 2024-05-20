@@ -4,6 +4,7 @@ using Hazel;
 using TONEX.Roles.Core;
 using static TONEX.Translator;
 using System.Text;
+using TONEX.MoreGameModes;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
 
 namespace TONEX.Roles.GameModeRoles;
@@ -14,7 +15,7 @@ public sealed class ColdPotato : RoleBase, IKiller
             typeof(ColdPotato),
             player => new ColdPotato(player),
             CustomRoles.ColdPotato,
-            () => RoleTypes.Impostor,
+            () => RoleTypes.Shapeshifter,
             CustomRoleTypes.Neutral,
             94_1_0_0100,
             null,
@@ -30,7 +31,7 @@ public sealed class ColdPotato : RoleBase, IKiller
         RoleInfo,
         player,
         () => HasTask.False
-    )
+        )
     {
         CustomRoleManager.MarkOthers.Add(MarkOthers);
         LastTime = -1;
@@ -64,6 +65,6 @@ public sealed class ColdPotato : RoleBase, IKiller
         //seeおよびseenが自分である場合以外は関係なし
         if (!Is(seer) || !Is(seen)) return "";
 
-        return string.Format(GetString("HotPotatoTimeRemain"), HotPotatoManager.BoomTimes);
+        return string.Format(GetString("HotPotatoTimeRemain"), HotPotatoManager.RemainExplosionTime);
     }
 }

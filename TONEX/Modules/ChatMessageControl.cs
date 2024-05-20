@@ -44,7 +44,7 @@ public class MessageControl
         //IsCommand = Player.GetRoleClass()?.OnPlayerSendMessage(player, Message, out recallMode) ?? false;
         if (IsCommand && !AmongUsClient.Instance.AmHost) ForceSend = true;
         CustomRoleManager.ReceiveMessage.Do(a => a.Invoke(this));
-        
+
         RecallMode = recallMode;
         if (IsCommand || !AmongUsClient.Instance.AmHost) return;
 
@@ -71,9 +71,10 @@ public class MessageControl
                 Logger.Info($"Command: /{keyword}, Args: {Args}", "ChatControl");
 
                 (RecallMode, string msg) = command.Command(this);
-                if (!string.IsNullOrEmpty(msg)) 
-                    foreach ( var pid in SendToList)
-                       Utils.SendMessage(msg, pid);
+                if (!string.IsNullOrEmpty(msg))
+                    foreach (var pid in SendToList)
+                        Utils.SendMessage(msg, pid);
+                SendToList = new();
                 IsCommand = true;
                 return;
             }
@@ -98,17 +99,20 @@ public class MessageControl
         SendHistoryMessages(includeHost, includeModded);
     }
 
-    public static void SendHistoryMessages(bool includeHost = false, bool includeModded = false)
+    public static void SpamMessagesImmediately()
     {
-        if (!AmongUsClient.Instance.AmHost) return;
-
-        var sendList = History.Where(m => m.IsAlive && m.RecallMode == MsgRecallMode.None);
-        for (int i = 0; i <= 20 - sendList.Count(); i++)
+        for (int i = 0; i <= 40; i++)
         {
             // The number of historical messages is not enough to cover all messages
             var player = Main.AllAlivePlayerControls.ToArray()[IRandom.Instance.Next(0, Main.AllAlivePlayerControls.Count())];
-            SendMessageAsPlayerImmediately(player, "Hello " + Main.ModName, includeHost, includeModded);
+            SendMessageAsPlayerImmediately(player, "Hello " + Main.ModName, false, false);
         }
+    }
+    public static void SendHistoryMessages(bool includeHost = false, bool includeModded = false)
+    {
+        if (!AmongUsClient.Instance.AmHost) return;
+        
+        var sendList = History.Where(m => m.IsAlive && m.RecallMode == MsgRecallMode.None);
         foreach (var mc in sendList)
         {
             SendMessageAsPlayerImmediately(mc.Player, mc.Message, includeHost, includeModded);

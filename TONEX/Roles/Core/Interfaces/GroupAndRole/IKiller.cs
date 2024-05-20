@@ -9,14 +9,13 @@ public interface IKiller
     /// 可以使用击杀键击杀玩家
     /// </summary>
     public bool CanKill => true;
+
     /// <summary>
     /// 是按下击杀按键则击杀的职业吗<br/>
     /// 若设置为 false 则在您尝试击杀时不会请求目标进行任何检查
     /// 默认：返回 <see cref="CanKill"/> 的值
     /// </summary>
     public bool IsKiller => CanKill;
-
-
     /// <summary>
     /// 是否可以使用击杀按键
     /// 默认：返回 <see cref="CanKill"/> 的值
@@ -50,9 +49,11 @@ public interface IKiller
     /// 若您确定本次击杀不会发生，返回 false 立刻终止击杀事件，目标不会收到任何影响<br/>
     /// </summary>
     /// <param name="info">击杀事件的信息</param>
-    /// <returns>false：不再触发 OnCheckMurderAsTarget 函数</returns>
+    /// <returns>false：不再触发 OnCheckMurderAsTargetAfter 函数</returns>
     /// public bool CanUseImpostorVentButton() => true;
     public bool OnCheckMurderAsKiller(MurderInfo info) => true;
+
+    public void OnCheckMurderAfterCheck(MurderInfo info) { }
 
     /// <summary>
     /// MurderPlayer 作为击杀者时的处理函数

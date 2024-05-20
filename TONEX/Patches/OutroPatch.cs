@@ -6,7 +6,7 @@ using System.Text;
 using TMPro;
 using TONEX.Modules;
 using TONEX.Roles.Core;
-using TONEX.Roles.Core.Interfaces;
+using TONEX.Patches;
 using TONEX.Templates;
 using UnityEngine;
 using static TONEX.Translator;
@@ -22,7 +22,8 @@ class EndGamePatch
     {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         GameStates.InGame = false;
-
+        //SetRolePatch.playanima = true;
+        HudSpritePatch.IsEnd = true;
         Logger.Info("-----------游戏结束-----------", "Phase");
         if (!GameStates.IsModHost) return;
         SummaryText = new();
@@ -143,6 +144,15 @@ class SetEverythingUpPatch
             case CustomWinner.Lovers:
                 __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.Lovers);
                 break;
+            case CustomWinner.AdmirerLovers:
+                __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.AdmirerLovers);
+                break;
+            case CustomWinner.AkujoLovers:
+                __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.AkujoLovers);
+                break;
+            case CustomWinner.CupidLovers:
+                __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.CupidLovers);
+                break;
             //引き分け処理
             case CustomWinner.Draw:
                 __instance.WinText.text = GetString("ForceEnd");
@@ -171,7 +181,7 @@ class SetEverythingUpPatch
         foreach (var role in CustomWinnerHolder.AdditionalWinnerRoles)
         {
             var addWinnerRole = (CustomRoles)role;
-            AdditionalWinnerText.Append('＆').Append(Utils.ColorString(Utils.GetRoleColor(role), GetWinnerRoleName(addWinnerRole, 0) + GetString("Win")));
+            AdditionalWinnerText.Append('＆').Append(Utils.ColorString(Utils.GetRoleColor(role), GetWinnerRoleName(addWinnerRole, 0)));
             EndAdditionalWinnerText.Append('＆').Append(Utils.ColorString(Utils.GetRoleColor(role), GetWinnerRoleName(addWinnerRole, 1) + GetString("Win")));
         }
         if (CustomWinnerHolder.WinnerTeam is not CustomWinner.Draw and not CustomWinner.None and not CustomWinner.Error)

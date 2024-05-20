@@ -18,7 +18,7 @@ public static class UpdateFriendCodeUIPatch
         string versionText = $"<color={Main.ModColor}>{Main.ModName}</color> - <color=#ffff00>v{Main.PluginShowVersion}</color>";
 
 #if CANARY
-        versionText = $"<color=#cdfffd>{Main.ModName}</color> - {ThisAssembly.Git.Commit}";2 
+        versionText = $"<color=#cdfffd>{Main.ModName}</color> - {ThisAssembly.Git.Commit}";
 #endif
 
 #if DEBUG

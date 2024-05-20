@@ -11,8 +11,9 @@ namespace TONEX;
 public static class OptionsMenuBehaviourStartPatch
 {
     private static ClientOptionItem UnlockFPS;
-  //  private static ClientOptionItem CanPublic;
+    //private static ClientOptionItem CanPublic;
     private static ClientOptionItem HorseMode;
+    private static ClientOptionItem LongMode;
     private static ClientOptionItem AutoStartGame;
     private static ClientOptionItem AutoEndGame;
     private static ClientOptionItem ForceOwnLanguage;
@@ -54,14 +55,30 @@ public static class OptionsMenuBehaviourStartPatch
                 Logger.SendInGame(string.Format(Translator.GetString("FPSSetTo"), Application.targetFrameRate));
             }
         }
-       // if (CanPublic == null || CanPublic.ToggleButton == null)
-        //{
-            //CanPublic = ClientOptionItem.Create("CanPublic", Main.CanPublic, __instance);
-       // }
+     /*   if (CanPublic == null || CanPublic.ToggleButton == null)
+        {
+            CanPublic = ClientOptionItem.Create("CanPublic", Main.CanPublic, __instance);
+        }*/
        
         if (HorseMode == null || HorseMode.ToggleButton == null)
         {
-            HorseMode = ClientOptionItem.Create("HorseMode", Main.HorseMode, __instance);
+            HorseMode = ClientOptionItem.Create("HorseMode", Main.HorseMode, __instance, SwitchHorseMode);
+            static void SwitchHorseMode()
+            {
+                HorseMode.UpdateToggle();
+                foreach (var pc in PlayerControl.AllPlayerControls)
+                {
+                    pc.MyPhysics.SetBodyType(pc.BodyType);
+                    if (pc.BodyType == PlayerBodyTypes.Normal)
+                    {
+                        pc.cosmetics.currentBodySprite.BodySprite.transform.localScale = new(0.5f, 0.5f, 1f);
+                    }
+                }
+            }
+        }
+        if (LongMode == null || LongMode.ToggleButton == null)
+        {
+            LongMode = ClientOptionItem.Create("LongMode", Main.LongMode, __instance);
         }
         if (AutoStartGame == null || AutoStartGame.ToggleButton == null)
         {
@@ -133,7 +150,14 @@ public static class OptionsMenuBehaviourStartPatch
             {
                 try
                 {
+                    if (!GameStates.IsNotJoined)
+                    {
+                        Utils.LocalPlayerLastTp = PlayerControl.LocalPlayer.GetTruePosition();
+                        Utils.LocationLocked = true;
+                        PlayerControl.LocalPlayer.DisableAction(PlayerControl.LocalPlayer, ExtendedPlayerControl.PlayerActionType.Move, ExtendedPlayerControl.PlayerActionInUse.All, true);
+                    }
                     SoundPanel.CustomBackground.gameObject.SetActive(true);
+                    
                 }
                 catch (System.Exception ex)
                 {

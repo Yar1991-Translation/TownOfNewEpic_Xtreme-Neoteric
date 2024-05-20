@@ -31,9 +31,11 @@ public static class SabotageSystemTypeUpdateSystemPatch
         }
 
         var nextSabotage = (SystemTypes)amount;
-        if (player.CantDoAnyAct()) return false;
+
+        if (player.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Sabotage, ExtendedPlayerControl.PlayerActionInUse.All)) return false;
         logger.Info($"PlayerName: {player.GetNameWithRole()}, SabotageType: {nextSabotage}");
-        
+
+        if (!player.IsDisabledAction(ExtendedPlayerControl.PlayerActionType.Sabotage, ExtendedPlayerControl.PlayerActionInUse.Skill)) 
         if (!CustomRoleManager.OnSabotage(player, nextSabotage))
         {
             return false;

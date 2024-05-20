@@ -1,11 +1,11 @@
 ﻿using AmongUs.GameOptions;
-using TONEX.Modules;
 using TONEX.Roles.Core;
 using UnityEngine;
 using static TONEX.Translator;
 using Hazel;
 using System.Collections.Generic;
 using TONEX.Roles.Neutral;
+using TONEX.Modules.SoundInterface;
 
 namespace TONEX.Roles.Crewmate;
 public sealed class NiceTimeStops : RoleBase
@@ -107,11 +107,11 @@ public sealed class NiceTimeStops : RoleBase
     public override bool OnEnterVent(PlayerPhysics physics, int ventId)
     {
         ReduceNowCooldown();
-       Player.SyncSettings();
+        Player.SyncSettings();
         Player.RpcResetAbilityCooldown();
         ProtectStartTime = Utils.GetTimeStamp();
-            if (!Player.IsModClient()) Player.RpcProtectedMurderPlayer(Player);
-            Player.Notify(GetString("NiceTimeStopsOnGuard"));
+        if (!Player.IsModClient()) Player.RpcProtectedMurderPlayer(Player);
+        Player.Notify(GetString("NiceTimeStopsOnGuard"));
         Player.ColorFlash(Utils.GetRoleColor(CustomRoles.SchrodingerCat));
         CustomSoundsManager.RPCPlayCustomSoundAll("TheWorld");
         foreach (var player in Main.AllAlivePlayerControls)
@@ -119,19 +119,14 @@ public sealed class NiceTimeStops : RoleBase
             if (Player == player) continue;
             if (!player.IsAlive() || Pelican.IsEaten(player.PlayerId)) continue;
             NameNotifyManager.Notify(player, Utils.ColorString(Utils.GetRoleColor(CustomRoles.NiceTimeStops), GetString("ForNiceTimeStops")));
-            var tmpSpeed1 = Main.AllPlayerSpeed[player.PlayerId];
             NiceTimeStopsstop.Add(player.PlayerId);
-            Main.AllPlayerSpeed[player.PlayerId] = Main.MinSpeed;
-            Main.CantDoActList.Add(player.PlayerId);
-            ExtendedPlayerControl.SendCantDoActPlayer(true);
-            player.MarkDirtySettings();
+            Player.DisableAction(player, ExtendedPlayerControl.PlayerActionType.All);
+
+
             new LateTask(() =>
             {
-                Main.AllPlayerSpeed[player.PlayerId] = Main.AllPlayerSpeed[player.PlayerId] - Main.MinSpeed + tmpSpeed1;
-                Main.CantDoActList.Remove(player.PlayerId);
-                ExtendedPlayerControl.SendCantDoActPlayer(false);
-                player.MarkDirtySettings();
-              NiceTimeStopsstop.Remove(player.PlayerId);
+                Player.EnableAction(player, ExtendedPlayerControl.PlayerActionType.All);
+                NiceTimeStopsstop.Remove(player.PlayerId);
                 RPC.PlaySoundRPC(player.PlayerId, Sounds.TaskComplete);
             }, OptionSkillDuration.GetFloat(), "Time Stop");
         }
@@ -175,18 +170,13 @@ public sealed class NiceTimeStops : RoleBase
             if (Player == player) continue;
             if (!player.IsAlive() || Pelican.IsEaten(player.PlayerId)) continue;
             NameNotifyManager.Notify(player, Utils.ColorString(Utils.GetRoleColor(CustomRoles.NiceTimeStops), GetString("ForNiceTimeStops")));
-            var tmpSpeed1 = Main.AllPlayerSpeed[player.PlayerId];
             NiceTimeStopsstop.Add(player.PlayerId);
-            Main.AllPlayerSpeed[player.PlayerId] = Main.MinSpeed;
-            Main.CantDoActList.Add(player.PlayerId);
-            ExtendedPlayerControl.SendCantDoActPlayer(true);
-            player.MarkDirtySettings();
+            Player.DisableAction(player, ExtendedPlayerControl.PlayerActionType.All);
+
+
             new LateTask(() =>
             {
-                Main.AllPlayerSpeed[player.PlayerId] = Main.AllPlayerSpeed[player.PlayerId] - Main.MinSpeed + tmpSpeed1;
-                Main.CantDoActList.Remove(player.PlayerId);
-                ExtendedPlayerControl.SendCantDoActPlayer(false);
-                player.MarkDirtySettings();
+                Player.EnableAction(player, ExtendedPlayerControl.PlayerActionType.All);
                 NiceTimeStopsstop.Remove(player.PlayerId);
                 RPC.PlaySoundRPC(player.PlayerId, Sounds.TaskComplete);
             }, OptionSkillDuration.GetFloat(), "Time Stop");
@@ -194,7 +184,8 @@ public sealed class NiceTimeStops : RoleBase
     }
     public override bool OnCheckReportDeadBody(PlayerControl reporter, GameData.PlayerInfo target)
     {
-        if (NiceTimeStopsstop.Contains(reporter.PlayerId))    return false;
+        if (NiceTimeStopsstop.Contains(reporter.PlayerId))    
+            return false;
         return true;
     }
     public override void OnExileWrapUp(GameData.PlayerInfo exiled, ref bool DecidedWinner)

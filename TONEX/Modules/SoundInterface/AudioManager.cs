@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using TONEX.Modules;
+using TONEX.Modules.SoundInterface;
 using UnityEngine;
 using static TONEX.Translator;
 
@@ -25,36 +25,34 @@ public static class AudioManager
     public static IReadOnlyDictionary<string, bool> AllFiles => AllSounds.Concat(AllMusic).ToDictionary(x => x.Key.ToString(), x => x.Value, StringComparer.OrdinalIgnoreCase);
     public static IReadOnlyDictionary<string, bool> AllTONEX => AllSounds.Concat(TONEXMusic).ToDictionary(x => x.Key.ToString(), x => x.Value, StringComparer.OrdinalIgnoreCase);
 
-    private static List<string> TONEXOfficialMusicList = new()
+    public static List<string> TONEXOfficialMusicList = new()
     {
         "GongXiFaCaiLiuDeHua",
         "RejoiceThisSEASONRespectThisWORLD",
         "SpringRejoicesinParallelUniverses",
-        "StarFallsWithDomeCrumbles_V4",
-        "TheDomeofTruth",
-        "HopeStillExists_V2",
-        "HeartGuidedbyLight",
-        "Thesorrowofpartingacrosslifetimes",
-        "GuardianandDream",
-        "AFamiliarPromise",
-        "DeterminationWithJustice",
+"AFamiliarPromise",
+"GuardianandDream",
+"HeartGuidedbyLight",
+"HopeStillExists",
+"Mendax",
+"MendaxsTimeForExperiment",
+"StarfallIntoDarkness",
+"StarsFallWithDomeCrumbles",
+"TheDomeofTruth",
+"TheTruthFadesAway",
+"unavoidable",
+"NeverGonnaGiveYouUp",
+
     };
     public static List<string> NotUp = new()
     {
-        "RejoiceThisSEASONRespectThisWORLD",
-        "StarFallsWithDomeCrumbles_V4",
-        "TheDomeofTruth",
-        "HopeStillExists_V2",
-        "HeartGuidedbyLight",
-        "GuardianandDream",
-        "AFamiliarPromise",
-        "DeterminationWithJustice",
     };
 
     public static Dictionary<string, bool> TONEXOfficialMusic = new();
     public static Dictionary<string, bool> TONEXSounds = new();
-    private static List<string> TONEXSoundList = new()
+    public static List<string> TONEXSoundList = new()
     {
+        "Birthday",
         "AWP",
         "Bet",
         "Bite",
@@ -102,7 +100,7 @@ public static class AudioManager
             try { ReadTagsFromFile(path); }
             catch (Exception ex)
             {
-                Logger.Error($"Load Sounds From: {path} Failed\n" + ex.ToString(), "SoundManager", false);
+                Logger.Error($"Load Sounds From: {path} Failed\n" + ex.ToString(), "AudioManager", false);
             }
         }
     }
@@ -129,11 +127,11 @@ public static class AudioManager
             try { ReadTagsFromFile(file); }
             catch (Exception ex)
             {
-                Logger.Error($"Load Tag From: {file} Failed\n" + ex.ToString(), "SoundManager", false);
+                Logger.Error($"Load Tag From: {file} Failed\n" + ex.ToString(), "AudioManager", false);
             }
         }
 
-        Logger.Msg($"{CustomMusic.Count} Sounds Loaded", "SoundManager");
+        Logger.Msg($"{CustomMusic.Count} Sounds Loaded", "AudioManager");
     }
     public static void ReadTagsFromFile(string path)
     {
@@ -142,8 +140,39 @@ public static class AudioManager
         if (sound != null && !AllSounds.ContainsKey(sound) && !TONEXMusic.ContainsKey(sound))
         {
             CustomMusic.TryAdd(sound,false);
-            Logger.Info($"Sound Loaded: {sound}", "SoundManager");
+            Logger.Info($"Sound Loaded: {sound}", "AudioManager");
         }
     }
+    public static void GetPostfix(string path)
+    {
+        int i = 0;
+        if (path == null) return;
+        while (!File.Exists(path))
+        {
+            i++;
+            string matchingKey = formatMap.Keys.FirstOrDefault(key => path.Contains(key));
+            if (matchingKey != null)
+            {
+                string newFormat = formatMap[matchingKey];
+                path = path.Replace(matchingKey, newFormat);
+                Logger.Warn($"{path} Founded", "AudioManager");
+                break;
+            }
+            if (i == formatMap.Count)
+            {
+                Logger.Error($"{path} Cannot Be Finded", "AudioManager");
+                break;
+            }
+        }
+    }
+    public static Dictionary<string, string> formatMap = new()
+    {
+    { ".wav", ".flac" },
+    { ".flac", ".aiff" },
+    { ".aiff", ".mp3" },
+    { ".mp3", ".aac" },
+    { ".aac", ".ogg" },
+    { ".ogg", ".m4a" }
+};
 }
 #nullable disable

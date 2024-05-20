@@ -2,7 +2,7 @@ using AmongUs.GameOptions;
 using Hazel;
 using System.Collections.Generic;
 using System.Text;
-using TONEX.Modules;
+using TONEX.Modules.SoundInterface;
 using TONEX.Roles.Core;
 using TONEX.Roles.Core.Interfaces.GroupAndRole;
 using static TONEX.Translator;
@@ -40,6 +40,12 @@ public sealed class Witch : RoleBase, IImpostor
     {
         WitchModeSwitchAction,
     }
+
+    public static List<Witch> Witches = new();
+    public bool IsSpellMode;
+    public List<byte> SpelledPlayer = new();
+    public SwitchTrigger NowSwitchTrigger;
+
     public enum SwitchTrigger
     {
         TriggerKill,
@@ -47,11 +53,7 @@ public sealed class Witch : RoleBase, IImpostor
         TriggerDouble,
     };
 
-    public bool IsSpellMode;
-    public List<byte> SpelledPlayer = new();
-    public SwitchTrigger NowSwitchTrigger;
 
-    public static List<Witch> Witches = new();
     public static void SetupOptionItem()
     {
         OptionModeSwitchAction = StringOptionItem.Create(RoleInfo, 10, OptionName.WitchModeSwitchAction, EnumHelper.GetAllNames<SwitchTrigger>(), 2, false);
@@ -226,10 +228,19 @@ public sealed class Witch : RoleBase, IImpostor
     }
     public override bool OnEnterVent(PlayerPhysics physics, int ventId)
     {
+        if (Options.UsePets.GetBool()) return true;
         if (NowSwitchTrigger is SwitchTrigger.TriggerVent)
         {
             SwitchSpellMode(false);
         }
         return true;
+    }
+    public override void OnUsePet()
+    {
+        if (NowSwitchTrigger is SwitchTrigger.TriggerVent)
+        {
+            SwitchSpellMode(false);
+        }
+        return;
     }
 }

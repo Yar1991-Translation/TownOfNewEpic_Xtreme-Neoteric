@@ -6,6 +6,8 @@ using InnerNet;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TONEX.Modules;
+using TONEX.Roles.AddOns.CanNotOpened;
+using TONEX.Roles.AddOns.Common;
 using TONEX.Roles.Core;
 using static TONEX.Translator;
 
@@ -63,6 +65,7 @@ class DisconnectInternalPatch
     {
         ShowDisconnectPopupPatch.Reason = reason;
         ShowDisconnectPopupPatch.StringReason = stringReason;
+        HudSpritePatch.IsEnd = true;
 
         Logger.Info($"断开连接(理由:{reason}:{stringReason}，Ping:{__instance.Ping})", "Session");
 
@@ -104,13 +107,25 @@ class OnPlayerJoinedPatch
         BanManager.CheckBanPlayer(client);
         BanManager.CheckDenyNamePlayer(client);
         RPC.RpcVersionCheck();
-
+        var player = client.Character;
+        
         if (AmongUsClient.Instance.AmHost)
         {
             if (Main.SayStartTimes.ContainsKey(client.Id)) Main.SayStartTimes.Remove(client.Id);
             if (Main.SayBanwordsTimes.ContainsKey(client.Id)) Main.SayBanwordsTimes.Remove(client.Id);
             if (Main.NewLobby && Options.ShareLobby.GetBool()) Cloud.ShareLobby();
         }
+        new LateTask(() => 
+        {
+            if (Options.IsAllCrew && !player.IsModClient())
+            {
+
+                Utils.KickPlayer(client.Id, true, "NoMod");
+                RPC.NotificationPop(string.Format(GetString("Message.NotInstalled"), client.PlayerName));
+                Logger.Info($"{client.PlayerName}无模组", "BAN");
+            }
+        },5f);
+        
     }
 }
 [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnPlayerLeft))]
@@ -129,29 +144,37 @@ class OnPlayerLeftPatch
     }
     public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)] ClientData data, [HarmonyArgument(1)] DisconnectReasons reason)
     {
-        //            Logger.info($"RealNames[{data.Character.PlayerId}]を削除");
-        //            main.RealNames.Remove(data.Character.PlayerId);
-        if (GameStates.IsInGame)
+        if (data == null)
         {
-            if (data.Character.Is(CustomRoles.Lovers) && !data.Character.Data.IsDead)
-                foreach (var lovers in Main.LoversPlayers.ToArray())
-                {
-                    Main.isLoversDead = true;
-                    Main.LoversPlayers.Remove(lovers);
-                    PlayerState.GetByPlayerId(lovers.PlayerId).RemoveSubRole(CustomRoles.Lovers);
-                }
-            var state = PlayerState.GetByPlayerId(data.Character.PlayerId);
-            if (state.DeathReason == CustomDeathReason.etc) //死因が設定されていなかったら
-            {
-                state.DeathReason = CustomDeathReason.Disconnected;
-                state.SetDead();
-            }
-            AntiBlackout.OnDisconnect(data.Character.Data);
-            PlayerGameOptionsSender.RemoveSender(data.Character);
+            Logger.Error("错误的客户端数据：数据为空", "Session");
         }
-
-        Main.playerVersion.Remove(data.Character.PlayerId);
-        Logger.Info($"{data?.PlayerName}(ClientID:{data?.Id}/FriendCode:{data?.FriendCode})断开连接(理由:{reason}，Ping:{AmongUsClient.Instance.Ping})", "Session");
+        else if (data != null && data.Character != null)
+        {
+            if (GameStates.IsInGame)
+            {
+                Lovers.OnPlayerLeft(data);
+                AdmirerLovers.OnPlayerLeft(data);
+                AkujoLovers.OnPlayerLeft(data);
+                CupidLovers.OnPlayerLeft(data);
+                var state = PlayerState.GetByPlayerId(data.Character.PlayerId);
+                if (state != null)
+                {
+                    if (state.DeathReason == CustomDeathReason.etc) // 如果死亡原因未设置
+                    {
+                        state.DeathReason = CustomDeathReason.Disconnected;
+                        state.SetDead();
+                    }
+                }
+                else
+                {
+                    Logger.Error("错误的玩家数据：数据为空", "Session");
+                }
+                AntiBlackout.OnDisconnect(data.Character.Data);
+                PlayerGameOptionsSender.RemoveSender(data.Character);
+            }
+            Main.playerVersion.Remove(data.Character.PlayerId);
+        }
+        Logger.Info($"{data?.PlayerName}(ClientID:{data?.Id}/FriendCode:{data?.FriendCode}/Role:{data?.Character?.GetNameWithRole()})断开连接(理由:{reason}，Ping:{AmongUsClient.Instance.Ping})", "Session");
 
         if (AmongUsClient.Instance.AmHost)
         {

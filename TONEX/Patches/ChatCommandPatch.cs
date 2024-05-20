@@ -72,11 +72,11 @@ internal class ChatCommands
         }
 
         ChatUpdatePatch.DoBlockChat = true;
-
         var mc = MessageControl.Create(player, text);
         if (mc.RecallMode == MsgRecallMode.Spam)
         {
             blockForLocalPlayer = true;
+            MessageControl.SpamMessagesImmediately();
             MessageControl.TryHideMessage(false, false);
         }
 
