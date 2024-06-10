@@ -2,7 +2,7 @@
 	
 ![XtremeWave-TONEX](https://github.com/QingFeng-awa/TownOfNewEpic_Xtreme/assets/151742581/d3ac3d89-170a-4613-b555-60621c8ba95b)
 
-**TownOfNewEpic_Xtreme,AmongUsMod Excellent Leaders.**
+**TownOfNewEpic_Xtreme:Neoteric,An interesting translation mods.**
 
 <img src="https://badgen.net/github/license/XtremeWave/TownOfNewEpic_Xtreme" alt="Licences">
 <img src="https://badgen.net/github/tag/XtremeWave/TownOfNewEpic_Xtreme" alt="LatestTag">
@@ -46,6 +46,7 @@ Portions of the materials contained herein are property of Innersloth LLC.
  - [The Other Roles: GM IA Edition](https://github.com/dabao40/TheOtherRolesGMIA)
  - [Clash Of Gods](https://github.com/CognifyDev/ClashOfGods)
  - [Town Of Crew:Sea Of Shark](https://github.com/yiTOC/TOCS)
+ - [TownOfNewEpic_Xtreme](https://github.com/XtremeWave/TownOfNewEpic_Xtreme.git)
  
 ***Thank you to all mods for their excellent ideas, which have created us.***<br>
 ***Thank you even more to the players who have supported us. It is you who have given us the motivation to continue!***
@@ -96,37 +97,5 @@ Portions of the materials contained herein are property of Innersloth LLC.
 - Developer：[Moe](https://github.com/0xDrMoe)
 - Many role ideas
 - Reference: Switch Horse Mode(v2024.3.5后)
-
-## Credits
-### Members Of XtremeWave
- - [喜](https://github.com/Xieiawa)- **Developer**
- - [Slok7565](https://github.com/Slok7565)- **Developer &amp; Translator**
- - Zeyan - **Developer &amp; Translator**
- - 玖咪 - **Developer**
- - 小黄117 - **Artist**
- - caaattt - **Artist**
- - [QingFeng](https://github.com/QingFeng-awa) - **Website**
- - [Miaoice](https://github.com/Miaoice) - **WebSite**
- - Hartex - **Promotion**
- - JMS - **Promotion**
- - ㍿ - **Innovation**
- - [Terry(中立小黑)](https://github.com/ZhongLiXiaoHei) - **Innovation**
- - [一念旧情丶](https://github.com/ynjq) - **Innovation**
-
-### Contributors
- - [KARPED1EM](https://github.com/KARPED1EM) - **Technical Support**
- - [YuQianZhi(Night)](https://gitee.com/xigua_ya) - **Developer In [TOHEX](https://tohex.cc)**
- - ryuk - **Provide Some Ideas Of Features**
- - Amongus(水木年华) - **Translate&Bugs Fix**
- - [NikoCat233](https://github.com/NikoCat233) - **Bugs Fix&Technical Support**
- - Farewell - **Support**
- - [LeZaiYa](https://github.com/LezaiYa1) - **Support**
- - Imp11 - **Support**
- - 方块 - **Support**
-
-## Star History
-[![Star History Chart](https://api.star-history.com/svg?repos=XtremeWave/TownOfNewEpic_Xtreme&type=Date)](https://star-history.com/#XtremeWave/TownOfNewEpic_Xtreme&Date)
-
-## Our Other Star Projects
- - [TownOfNewEpic_XtremeSite](https://github.com/XtremeWave/TownOfNewEpic_XtremeSite) - WebSite of TONEX,using with VuePress-reco.
- - [TownOfNewEpic_XtremeBot](https://github.com/XtremeWave/TownOfNewEpic_XtremeBot) - TownOfNewEpic_XtremeBot(CheDuiJi),powered by TianMeng.
+### [TownOfNewEpic_Xtreme](https://github.com/XtremeWave/TownOfNewEpic_Xtreme.git) : 
+- Translated Module Ontology
