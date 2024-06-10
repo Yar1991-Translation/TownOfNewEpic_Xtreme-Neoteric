@@ -23,6 +23,7 @@ Since May 20, TOHE stopped development due to some reasons.<br>
 At the request of many players, TOHE will maintain the most basic adaptation and synchronize updates with TOH to ensure that players in need can still play normally.<br>
 Because Of this, we no longer in the "name of inheritance", so we restart our project, named it "TONEX".
 > TOHE has renamed TONX.
+> This branch is only used to make TownOfNeoteric's version of TownOfNewEpic_Xtreme
 
 ## Regarding
 This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC.<br>
